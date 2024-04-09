@@ -29,7 +29,7 @@ function_pointer
     ;
 
 parameters
-    : (IDENTIFIER)*
+    : IDENTIFIER(,IDENTIFIER)*
     ;
 
 BEGIN_COMMENT
