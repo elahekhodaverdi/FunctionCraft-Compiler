@@ -19,6 +19,14 @@ oneline_comment
     : HASH (~'\n')* '\n'
     ;
 
+boolean
+    : TRUE
+    | FALSE
+    ;
+
+function_pointer
+    : METHOD LCB COLON IDENTIFIER RCB
+    ;
 
 BEGIN_COMMENT
     : '=begin'
