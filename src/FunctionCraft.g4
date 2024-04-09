@@ -28,6 +28,10 @@ function_pointer
     : METHOD LCB COLON IDENTIFIER RCB
     ;
 
+parameters
+    : (IDENTIFIER)*
+    ;
+
 BEGIN_COMMENT
     : '=begin'
     ;
