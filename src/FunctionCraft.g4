@@ -190,6 +190,93 @@ FOR
 IN 
     : 'in'
     ;      
- 
+
+PLUS
+    : '+'
+    ;
+
+MINUS
+    : '-'
+    ;
+
+MULTIPLY
+    : '*'
+    ;
+
+DIVIDE
+    : '/'
+    ;
+
+DOUNLE_MINUS 
+    : '--'
+    ;
+
+DOUNLE_PLUS
+    : '++'
+    ;
+
+ASSIGN
+    : '='
+    ;
+
+GREATER_THAN
+    : '>'
+    ;
+
+LESS_THAN
+    : '<'
+    ;
+
+LESS_EQUAL
+    : '<='
+    ;
+
+GREATER_EQUAL
+    : '>='
+    ;
+
+AND
+    : '&&'
+    ;
+
+OR
+    : '||'
+    ;
+
+NOT
+    : '!'
+    ;
+
+APPEND
+    : '<<'
+    ;
+
+PLUS_EQUAL
+    : '+='
+    ;
+
+MINUS_EQUAL
+    : '-='
+    ;
+
+MULTIPLY_EQUAL
+    : '*='
+    ;
+
+DIVIDE_EQUAL 
+    :  '/='
+    ;
+
+REMAINDER
+    : '%='
+    ;
+
+EQUAL
+    : '=='
+    ;
+
+NOT_EQUAL
+    : '!='
+    ;
 
 
