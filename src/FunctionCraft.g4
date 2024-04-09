@@ -6,8 +6,18 @@ grammar FunctionCraft;
 
 
 
+comment 
+    : oneline_comment 
+    | multiline_comment
+    ;
 
+multiline_comment
+    : BEGIN_COMMENT (~END_COMMENT)* END_COMMENT
+    ; 
 
+oneline_comment
+    : HASH (~'\n')* '\n'
+    ;
 
 
 BEGIN_COMMENT
