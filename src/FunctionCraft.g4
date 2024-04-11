@@ -52,7 +52,12 @@ boolean
     ;
 
 parameters
-    : (IDENTIFIER ( COMMA IDENTIFIER )*)?
+    : (parameter ( COMMA parameter)*)?
+    ;
+
+parameter 
+    : IDENTIFIER (ASSIGN INT)? 
+    | LSB IDENTIFIER (ASSIGN literal)? (COMMA IDENTIFIER (ASSIGN literal)?)* RSB
     ;
 
 arguments
