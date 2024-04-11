@@ -22,7 +22,7 @@ function_body
     ;
     
 lambda_function
-    : RARROW LPAR parameters RPAR LCB function_body RCB (LPAR arguments RPAR SEMICOLON)?
+    : RARROW LPAR parameters RPAR LCB function_body RCB
     ;
 
 function_call
