@@ -10,14 +10,24 @@ main
     ;
 
 function
-    : DEF IDENTIFIER LPAR parameters RPAR function_body END
+    : function_prototype function_body END
+    ;
+
+function_prototype
+    : DEF IDENTIFIER LPAR parameters RPAR
     ;
 
 function_body
     : statement* return_statement
     ;
     
+lambda_function
+    : RARROW LPAR parameters RPAR LCB function_body RCB (LPAR arguments RPAR SEMICOLON)?
+    ;
 
+function_pointer
+    : METHOD LCB COLON IDENTIFIER RCB
+    ;
 
 comment 
     : ONELINE_COMMENT 
@@ -29,12 +39,26 @@ boolean
     | FALSE
     ;
 
-function_pointer
-    : METHOD LCB COLON IDENTIFIER RCB
+parameters
+    : (IDENTIFIER ( COMMA IDENTIFIER )*)?
     ;
 
-parameters
-    : (IDENTIFIER(,IDENTIFIER)*)?
+arguments
+    : (argument (COMMA argument)*)?
+    ;
+
+argument
+    : expr
+    | IDENTIFIER
+    | literal
+    ;
+
+literal
+    : INTEGER
+    | FLOAT
+    | STRING
+    | boolean
+    | list
     ;
 
 MULTILINE_COMMENT
@@ -99,6 +123,10 @@ COLON
 
 SEMICOLON
     : ';'
+    ;
+
+COMMA
+    : ','
     ;
 
 DEF
