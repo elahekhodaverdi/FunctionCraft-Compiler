@@ -25,6 +25,10 @@ lambda_function
     : RARROW LPAR parameters RPAR LCB function_body RCB (LPAR arguments RPAR SEMICOLON)?
     ;
 
+function_call
+    : IDENTIFIER LPAR arguments RPAR
+    ;
+    
 function_pointer
     : METHOD LCB COLON IDENTIFIER RCB
     ;
