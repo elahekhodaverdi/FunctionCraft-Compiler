@@ -2,7 +2,7 @@ grammar FunctionCraft;
 
 
 function_craft
-    : (comment | function)* main comment*
+    : (comment | function | pattern_matching)* main comment*
     ;
 
 main
@@ -31,6 +31,14 @@ function_call
     
 function_pointer
     : METHOD LCB COLON IDENTIFIER RCB
+    ;
+
+primitive_function_call
+    : puts
+    | push
+    | len
+    | chop
+    | chomp
     ;
 
 comment 
@@ -62,8 +70,28 @@ literal
     | FLOAT
     | STRING
     | boolean
+    | list
     ;
 
+puts
+    : PUTS LPAR (expr) RPAR
+    ;
+
+push
+    : PUSH LPAR (expr, expr) RPAR 
+    ;
+
+len
+    : LEN LPAR (expr) RPAR
+    ;
+
+chop 
+    : CHOP LPAR (expr) RPAR
+    ;
+
+chomp
+    : CHOMP LPAR (expr) RPAR
+    ;
 
 LPAR: '(';
 RPAR: ')';
