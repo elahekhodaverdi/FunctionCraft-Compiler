@@ -2,9 +2,21 @@ grammar FunctionCraft;
 
 
 function_craft
-    : 
+    : (function)* main
+    ;
 
+main
+    : DEF MAIN LPAR RPAR function_body END
+    ;
 
+function
+    : DEF IDENTIFIER LPAR parameters RPAR function_body END
+    ;
+
+function_body
+    : statement* return_statement
+    ;
+    
 
 
 comment 
@@ -22,7 +34,7 @@ function_pointer
     ;
 
 parameters
-    : IDENTIFIER(,IDENTIFIER)*
+    : (IDENTIFIER(,IDENTIFIER)*)?
     ;
 
 MULTILINE_COMMENT
@@ -34,7 +46,7 @@ ONELINE_COMMENT
     ;
 
 IDENTIFIER
-    : [A-Za-z][A-Za-z0-9]*
+    : [A-Za-z_][A-Za-z_0-9]*
     ;
 
 FLOAT
