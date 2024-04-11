@@ -1,14 +1,15 @@
 grammar FunctionCraft;
 
 
-
+function_craft
+    : 
 
 
 
 
 comment 
-    : oneline_comment 
-    | multiline_comment
+    : ONELINE_COMMENT 
+    | MULTILINE_COMMENT
     ;
 
 boolean
