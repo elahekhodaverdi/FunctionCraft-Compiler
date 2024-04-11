@@ -11,14 +11,6 @@ comment
     | multiline_comment
     ;
 
-multiline_comment
-    : BEGIN_COMMENT (~END_COMMENT)* END_COMMENT
-    ; 
-
-oneline_comment
-    : HASH (~'\n')* '\n'
-    ;
-
 boolean
     : TRUE
     | FALSE
@@ -32,12 +24,12 @@ parameters
     : IDENTIFIER(,IDENTIFIER)*
     ;
 
-BEGIN_COMMENT
-    : '=begin'
-    ;
+MULTILINE_COMMENT
+    : '=begin' .*? '=end' -> skip
+    ; 
 
-END_COMMENT
-    : '=end'
+ONELINE_COMMENT
+    : '#' ~('\r' | '\n')* -> skip
     ;
 
 IDENTIFIER
@@ -90,10 +82,6 @@ RARROW
 
 COLON
     : ':'
-    ;
-
-HASH
-    : '#'
     ;
 
 SEMICOLON
