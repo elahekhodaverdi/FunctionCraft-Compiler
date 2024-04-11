@@ -78,7 +78,7 @@ puts
     ;
 
 push
-    : PUSH LPAR (expr, expr) RPAR 
+    : PUSH LPAR (expr COMMA expr) RPAR 
     ;
 
 len
@@ -154,8 +154,8 @@ EQUAL: '==';
 NOT_EQUAL: '!=';
 
 IDENTIFIER: [A-Za-z_][A-Za-z_0-9]*;
-FLOAT:  ([1-9][0-9]* | 0) '.' ([0-9]+);
-INTEGER: [1-9][0-9]* | 0;
+FLOAT:  ([1-9][0-9]* | '0') '.' ([0-9]+);
+INTEGER: [1-9][0-9]* | '0';
 STRING : '"' (~'"')* '"';
 
 MULTILINE_COMMENT: '=begin' .*? '=end' -> skip; 
