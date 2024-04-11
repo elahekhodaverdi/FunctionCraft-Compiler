@@ -2,7 +2,7 @@ grammar FunctionCraft;
 
 
 function_craft
-    : (function)* main
+    : (comment | function)* main comment*
     ;
 
 main
@@ -58,7 +58,6 @@ literal
     | FLOAT
     | STRING
     | boolean
-    | list
     ;
 
 
@@ -128,6 +127,8 @@ INTEGER: [1-9][0-9]* | 0;
 STRING : '"' (~'"')* '"';
 
 MULTILINE_COMMENT: '=begin' .*? '=end' -> skip; 
-ONELINE_COMMENT: '#' ~('\r' | '\n')* -> skip;
+ONELINE_COMMENT : '#' ~[\r\n]* -> skip ;
+
+WS: [ \t\r\n]+ -> skip;
 
 
