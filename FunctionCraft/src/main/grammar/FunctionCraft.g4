@@ -86,6 +86,10 @@ loop_statement
     : LOOP DO body END
     ;
 
+for_statement
+    : FOR IDENTIFIER IN (list | range) body END
+    ;
+
 
 body
     : statement*
