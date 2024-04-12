@@ -143,20 +143,8 @@ default_parameter
     ;
 
 arguments
-    : (argument (COMMA argument)*)?
+    : (value (COMMA value)*)?
     ;
-
-argument
-    : expr
-    | IDENTIFIER
-    | literal
-    ;
-
-
-
-
-
-
 
 range
     : LPAR INTEGER DOUBLE_DOT INTEGER RPAR  // TODO: add identifier to
