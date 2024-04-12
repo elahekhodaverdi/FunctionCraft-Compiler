@@ -159,10 +159,8 @@ range
     ;
 
 list
-    :
+    : LSB (value (COMMA value)*)? RSB
     ;
-
-
 
 puts
     : PUTS LPAR value RPAR
