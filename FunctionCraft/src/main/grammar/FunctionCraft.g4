@@ -66,6 +66,26 @@ argument
     | literal
     ;
 
+if_statement
+    : IF condition body elseif_statement* else_statement? END
+    ;
+
+elseif_statement
+    : ELSEIF condition body
+    ;
+
+else_statement
+    : ELSE body
+    ;
+
+condition
+    :
+    ;
+
+body
+    : statement*
+    ;
+
 literal
     : INTEGER
     | FLOAT
