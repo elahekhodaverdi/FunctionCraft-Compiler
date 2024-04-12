@@ -130,12 +130,16 @@ boolean
     ;
 
 parameters
-    : (parameter ( COMMA parameter)*)?
+    : IDENTIFIER ( COMMA IDENTIFIER)* (COMMA default_parameters)?
+    | default_parameters?
     ;
 
-parameter
-    : IDENTIFIER (ASSIGN INT)?
-    | LSB IDENTIFIER (ASSIGN literal)? (COMMA IDENTIFIER (ASSIGN literal)?)* RSB
+default_parameters
+    : LSB (default_parameter (COMMA default_parameter)*)? RSB
+    ;
+
+default_parameter
+    : IDENTIFIER ASSIGN literal
     ;
 
 arguments
