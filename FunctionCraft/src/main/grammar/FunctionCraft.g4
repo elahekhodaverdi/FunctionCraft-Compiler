@@ -163,7 +163,7 @@ arguments
     ;
 
 range
-    : LPAR INTEGER DOUBLE_DOT INTEGER RPAR  // TODO: add identifier to
+    : LPAR (INTEGER | IDENTIFIER) DOUBLE_DOT (INTEGER RPAR | IDENTIFIER)  RPAR
     ;
 
 list
