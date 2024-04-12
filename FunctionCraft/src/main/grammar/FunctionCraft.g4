@@ -19,7 +19,89 @@ function_prototype
     ;
 
 function_body
-    : statement* return_statement
+    : block return_statement
+    ;
+
+return_statement
+    : value SEMICOLON
+    ;
+
+pattern_matching
+    : PATTERN IDENTIFIER LPAR parameters RPAR pattern_body SEMICOLON
+    ;
+
+pattern_body
+    : (PATTERN_CONDITION condition ASSIGN value)+
+    ;
+
+block
+    : statement*
+    ;
+
+statement
+    : if_statement
+    | loop_statement
+    | for_statement
+    | function_call
+    | assignment
+    ;
+
+if_statement
+    : IF condition block elseif_statement* else_statement? END
+    ;
+
+elseif_statement
+    : ELSEIF condition block
+    ;
+
+else_statement
+    : ELSE block
+    ;
+
+condition
+    : LPAR (condition | (value rational_operator value)) RPAR (logical_operator condition)?
+    ;
+
+logical_operator
+    : AND
+    | OR
+    ;
+
+rational_operator
+    : LESS_THAN
+    | LESS_EQUAL
+    | GREATER_THAN
+    | GREATER_EQUAL
+    | EQUAL
+    | NOT_EQUAL
+    ;
+
+loop_statement
+    : LOOP DO block END
+    ;
+
+for_statement
+    : FOR IDENTIFIER IN (list | range) block END
+    ;
+
+assignment
+    : IDENTIFIER ASSIGN value SEMICOLON
+    ;
+
+value
+    : literal
+    | function_call
+    | lambda_function
+    | IDENTIFIER
+    | condition
+    ;
+
+literal
+    : INTEGER
+    | FLOAT
+    | STRING
+    | boolean
+    | list
     ;
 
 lambda_function
@@ -66,34 +148,11 @@ argument
     | literal
     ;
 
-if_statement
-    : IF condition body elseif_statement* else_statement? END
-    ;
-
-elseif_statement
-    : ELSEIF condition body
-    ;
-
-else_statement
-    : ELSE body
-    ;
-
-condition
-    :
-    ;
-
-loop_statement
-    : LOOP DO body END
-    ;
-
-for_statement
-    : FOR IDENTIFIER IN (list | range) body END
-    ;
 
 
-body
-    : statement*
-    ;
+
+
+
 
 range
     : LPAR INTEGER DOUBLE_DOT INTEGER RPAR  // TODO: add identifier to
@@ -103,13 +162,7 @@ list
     :
     ;
 
-literal
-    : INTEGER
-    | FLOAT
-    | STRING
-    | boolean
-    | list
-    ;
+
 
 puts
     : PUTS LPAR (expr) RPAR
@@ -196,6 +249,7 @@ IDENTIFIER: [A-Za-z_][A-Za-z_0-9]*;
 FLOAT:  ([1-9][0-9]* | '0') '.' ([0-9]+);
 INTEGER: [1-9][0-9]* | '0';
 STRING : '"' (~'"')* '"';
+PATTERN_CONDITION: '    |' | [\t]'|';
 
 MULTILINE_COMMENT: '=begin' .*? '=end' -> skip;
 SINGLELINE_COMMENT : '#' ~[\r\n]* -> skip ;
