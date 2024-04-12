@@ -159,7 +159,7 @@ INTEGER: [1-9][0-9]* | '0';
 STRING : '"' (~'"')* '"';
 
 MULTILINE_COMMENT: '=begin' .*? '=end' -> skip; 
-ONELINE_COMMENT : '#' ~[\r\n]* -> skip ;
+SINGLELINE_COMMENT : '#' ~[\r\n]* -> skip ;
 
 WS: [ \t\r\n]+ -> skip;
 
