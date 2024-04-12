@@ -1,7 +1,6 @@
 grammar FunctionCraft;
 
 
-
 program
     : (function | pattern_matching)* main
     ;
@@ -23,7 +22,7 @@ function_body
     ;
 
 return_statement
-    : value SEMICOLON
+    : RETURN value SEMICOLON
     ;
 
 pattern_matching
@@ -92,6 +91,7 @@ value
     : literal
     | function_call
     | lambda_function
+    | function_pointer
     | IDENTIFIER
     | condition
     ;
@@ -110,10 +110,11 @@ lambda_function
 
 function_call
     : IDENTIFIER LPAR arguments RPAR
+    | primitive_function_call
     ;
 
 function_pointer
-    : METHOD LCB COLON IDENTIFIER RCB
+    : METHOD LPAR COLON IDENTIFIER RPAR
     ;
 
 primitive_function_call
@@ -124,9 +125,24 @@ primitive_function_call
     | chomp
     ;
 
-boolean
-    : TRUE
-    | FALSE
+puts
+    : PUTS LPAR value RPAR
+    ;
+
+push
+    : PUSH LPAR value COMMA value RPAR
+    ;
+
+len
+    : LEN LPAR value RPAR
+    ;
+
+chop
+    : CHOP LPAR value RPAR
+    ;
+
+chomp
+    : CHOMP LPAR value RPAR
     ;
 
 parameters
@@ -154,24 +170,9 @@ list
     : LSB (value (COMMA value)*)? RSB
     ;
 
-puts
-    : PUTS LPAR value RPAR
-    ;
-
-push
-    : PUSH LPAR value COMMA value RPAR
-    ;
-
-len
-    : LEN LPAR value RPAR
-    ;
-
-chop
-    : CHOP LPAR value RPAR
-    ;
-
-chomp
-    : CHOMP LPAR value RPAR
+boolean
+    : TRUE
+    | FALSE
     ;
 
 LPAR: '(';
