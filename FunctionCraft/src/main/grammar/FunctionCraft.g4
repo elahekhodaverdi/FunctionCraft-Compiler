@@ -82,6 +82,11 @@ condition
     :
     ;
 
+loop_statement
+    : LOOP DO body END
+    ;
+
+
 body
     : statement*
     ;
@@ -183,4 +188,5 @@ MULTILINE_COMMENT: '=begin' .*? '=end' -> skip;
 SINGLELINE_COMMENT : '#' ~[\r\n]* -> skip ;
 
 WS: [ \t\r\n]+ -> skip;
+
 
