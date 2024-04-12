@@ -41,11 +41,6 @@ primitive_function_call
     | chomp
     ;
 
-comment 
-    : ONELINE_COMMENT 
-    | MULTILINE_COMMENT
-    ;
-
 boolean
     : TRUE
     | FALSE
