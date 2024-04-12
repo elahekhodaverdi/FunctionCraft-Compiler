@@ -3,7 +3,7 @@ grammar FunctionCraft;
 
 
 function_craft
-    : (comment | function | pattern_matching)* main comment*
+    : (function | pattern_matching)* main
     ;
 
 main
@@ -97,6 +97,10 @@ body
 
 range
     : LPAR INTEGER DOUBLE_DOT INTEGER RPAR  // TODO: add identifier to
+    ;
+
+list
+    :
     ;
 
 literal
