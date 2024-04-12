@@ -43,6 +43,7 @@ statement
     | for_statement
     | function_call
     | assignment
+    | jump_statement
     ;
 
 if_statement
@@ -102,6 +103,29 @@ literal
     | STRING
     | boolean
     | list
+    ;
+
+jump_statement
+    : break
+    | break_if
+    | next
+    | next_if
+    ;
+
+break
+    : BREAK SEMICOLON
+    ;
+
+next
+    : NEXT SEMICOLON
+    ;
+
+break_if
+    : BREAK IF condition SEMICOLON
+    ;
+
+next_if
+    : NEXT IF condition SEMICOLON
     ;
 
 lambda_function
