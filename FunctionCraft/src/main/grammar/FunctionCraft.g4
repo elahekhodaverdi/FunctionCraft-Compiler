@@ -91,6 +91,10 @@ body
     : statement*
     ;
 
+range
+    : LPAR INTEGER DOUBLE_DOT INTEGER RPAR  // TODO: add identifier to
+    ;
+
 literal
     : INTEGER
     | FLOAT
@@ -169,6 +173,7 @@ GREATER_EQUAL: '>=';
 AND: '&&';
 OR: '||';
 NOT: '!';
+DOUBLE_DOT: '..';
 
 APPEND: '<<';
 PLUS_EQUAL: '+=';
@@ -188,5 +193,4 @@ MULTILINE_COMMENT: '=begin' .*? '=end' -> skip;
 SINGLELINE_COMMENT : '#' ~[\r\n]* -> skip ;
 
 WS: [ \t\r\n]+ -> skip;
-
 
