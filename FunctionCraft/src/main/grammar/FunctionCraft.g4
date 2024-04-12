@@ -1,6 +1,7 @@
 grammar FunctionCraft;
 
 
+
 function_craft
     : (comment | function | pattern_matching)* main comment*
     ;
@@ -20,7 +21,7 @@ function_prototype
 function_body
     : statement* return_statement
     ;
-    
+
 lambda_function
     : RARROW LPAR parameters RPAR LCB function_body RCB
     ;
@@ -28,7 +29,7 @@ lambda_function
 function_call
     : IDENTIFIER LPAR arguments RPAR
     ;
-    
+
 function_pointer
     : METHOD LCB COLON IDENTIFIER RCB
     ;
@@ -50,8 +51,8 @@ parameters
     : (parameter ( COMMA parameter)*)?
     ;
 
-parameter 
-    : IDENTIFIER (ASSIGN INT)? 
+parameter
+    : IDENTIFIER (ASSIGN INT)?
     | LSB IDENTIFIER (ASSIGN literal)? (COMMA IDENTIFIER (ASSIGN literal)?)* RSB
     ;
 
@@ -78,14 +79,14 @@ puts
     ;
 
 push
-    : PUSH LPAR (expr COMMA expr) RPAR 
+    : PUSH LPAR (expr COMMA expr) RPAR
     ;
 
 len
     : LEN LPAR (expr) RPAR
     ;
 
-chop 
+chop
     : CHOP LPAR (expr) RPAR
     ;
 
@@ -127,7 +128,7 @@ BREAK : 'break';
 LOOP : 'loop';
 DO : 'do';
 FOR : 'for';
-IN : 'in';  
+IN : 'in';
 
 PLUS: '+';
 MINUS: '-';
@@ -158,9 +159,8 @@ FLOAT:  ([1-9][0-9]* | '0') '.' ([0-9]+);
 INTEGER: [1-9][0-9]* | '0';
 STRING : '"' (~'"')* '"';
 
-MULTILINE_COMMENT: '=begin' .*? '=end' -> skip; 
+MULTILINE_COMMENT: '=begin' .*? '=end' -> skip;
 SINGLELINE_COMMENT : '#' ~[\r\n]* -> skip ;
 
 WS: [ \t\r\n]+ -> skip;
-
 
