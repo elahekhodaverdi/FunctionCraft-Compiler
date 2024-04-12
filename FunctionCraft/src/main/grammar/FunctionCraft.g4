@@ -2,7 +2,7 @@ grammar FunctionCraft;
 
 
 
-function_craft
+program
     : (function | pattern_matching)* main
     ;
 
