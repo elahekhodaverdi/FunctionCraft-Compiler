@@ -165,23 +165,23 @@ list
 
 
 puts
-    : PUTS LPAR (expr) RPAR
+    : PUTS LPAR value RPAR
     ;
 
 push
-    : PUSH LPAR (expr COMMA expr) RPAR
+    : PUSH LPAR value COMMA value RPAR
     ;
 
 len
-    : LEN LPAR (expr) RPAR
+    : LEN LPAR value RPAR
     ;
 
 chop
-    : CHOP LPAR (expr) RPAR
+    : CHOP LPAR value RPAR
     ;
 
 chomp
-    : CHOMP LPAR (expr) RPAR
+    : CHOMP LPAR value RPAR
     ;
 
 LPAR: '(';
