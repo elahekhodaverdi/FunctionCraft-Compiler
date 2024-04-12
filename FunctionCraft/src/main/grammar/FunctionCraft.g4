@@ -270,4 +270,3 @@ MULTILINE_COMMENT: '=begin' .*? '=end' -> skip;
 SINGLELINE_COMMENT : '#' ~[\r\n]* -> skip ;
 
 WS: [ \t\r\n]+ -> skip;
-
