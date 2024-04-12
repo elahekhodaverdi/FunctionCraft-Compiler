@@ -18,11 +18,11 @@ function_prototype
     ;
 
 function_body
-    : block return_statement
+    : block return_statement?
     ;
 
 return_statement
-    : RETURN value SEMICOLON
+    : RETURN value? SEMICOLON
     ;
 
 pattern_matching
