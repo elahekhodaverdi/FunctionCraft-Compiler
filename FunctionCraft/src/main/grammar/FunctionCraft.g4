@@ -22,7 +22,7 @@ function_body
     ;
 
 return_statement
-    : RETURN value? SEMICOLON
+    : RETURN expr? SEMICOLON
     ;
 
 pattern_matching
@@ -30,7 +30,11 @@ pattern_matching
     ;
 
 pattern_body
-    : (PATTERN_CONDITION condition ASSIGN value)+
+    : (PATTERN_CONDITION condition ASSIGN expr)+
+    ;
+
+pattern_call
+    : IDENTIFIER SINGLE_DOT MATCH LPAR parameters RPAR
     ;
 
 block
@@ -41,28 +45,19 @@ statement
     : if_statement
     | loop_statement
     | for_statement
-    | (function_call | assignment | expr) SEMICOLON
+    | (pattern_call | function_call | assignment | expr) SEMICOLON
     ;
 
 if_statement
-    : IF if_condition block elseif_statement* else_statement? END
+    : IF condition block elseif_statement* else_statement? END
     ;
 
 elseif_statement
-    : ELSEIF if_condition block
+    : ELSEIF condition block
     ;
 
 else_statement
     : ELSE block
-    ;
-
-// condition
-//     : LPAR (condition | (value rational_operator value)) RPAR (logical_operator condition)?
-//     ;
-
-logical_operator
-    : AND
-    | OR
     ;
 
 loop_statement
@@ -114,11 +109,11 @@ next
     ;
 
 break_if
-    : BREAK IF if_condition SEMICOLON
+    : BREAK IF condition SEMICOLON
     ;
 
 next_if
-    : NEXT IF if_condition SEMICOLON
+    : NEXT IF condition SEMICOLON
     ;
 
 lambda_function
@@ -142,8 +137,9 @@ primitive_function_call
     | chomp
     ;
 
-if_condition
-    : ( NOT? LPAR expr  RPAR) (logical_operator ( NOT? LPAR expr  RPAR))*
+condition
+    : ( NOT? LPAR expr  RPAR) (AND ( NOT? LPAR expr  RPAR))*
+    | ( NOT? LPAR expr  RPAR) (OR ( NOT? LPAR expr  RPAR))*
     ;
 
 expr
@@ -230,6 +226,7 @@ single_operator_prefix_expr
 other_expr
     : LPAR expr RPAR
     | function_call
+    | pattern_call
     | lambda_function
     | array
     | array_access
@@ -238,23 +235,23 @@ other_expr
     ;
 
 puts
-    : PUTS LPAR value RPAR
+    : PUTS LPAR expr RPAR
     ;
 
 push
-    : PUSH LPAR value COMMA value RPAR
+    : PUSH LPAR expr COMMA expr RPAR
     ;
 
 len
-    : LEN LPAR value RPAR
+    : LEN LPAR expr RPAR
     ;
 
 chop
-    : CHOP LPAR value RPAR
+    : CHOP LPAR expr RPAR
     ;
 
 chomp
-    : CHOMP LPAR value RPAR
+    : CHOMP LPAR expr RPAR
     ;
 
 parameters
@@ -338,6 +335,7 @@ AND: '&&';
 OR: '||';
 NOT: '!';
 DOUBLE_DOT: '..';
+SINGLE_DOT: '.';
 
 APPEND: '<<';
 PLUS_EQUAL: '+=';
