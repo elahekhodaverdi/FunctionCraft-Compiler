@@ -164,6 +164,7 @@ append_expr2
 
 or_expr
     : LPAR and_expr RPAR or_expr2
+    | and_expr
     ;
 
 or_expr2
@@ -173,6 +174,7 @@ or_expr2
 
 and_expr
     : LPAR eq_expr RPAR and_expr2
+    | eq_expr
     ;
 
 and_expr2
