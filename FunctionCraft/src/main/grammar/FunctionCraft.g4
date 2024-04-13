@@ -149,6 +149,95 @@ primitive_function_call
     | chomp
     ;
 
+expr
+    : append_expr
+    ;
+
+append_expr
+    : or_expr append_expr2
+    ;
+
+append_expr2
+    : APPEND or_expr append_expr2
+    |
+    ;
+
+or_expr
+    : LPAR and_expr RPAR or_expr2
+    ;
+
+or_expr2
+    : OR LPAR and_expr RPAR or_expr2
+    |
+    ;
+
+and_expr
+    : LPAR eq_expr RPAR and_expr2
+    ;
+
+and_expr2
+    : AND LPAR and_expr RPAR and_expr2
+    |
+    ;
+
+eq_expr
+    : comp_expr eq_expr2
+    ;
+
+eq_expr2
+    : EQUAL comp_expr eq_expr2
+    : NOT_EQUAL comp_expr eq_expr2
+    |
+    ;
+
+comp_expr
+    : plus_minus_expr comp_expr2
+    ;
+
+comp_expr2
+    : GREATER_THAN plus_minus_expr comp_expr2
+    | LESS_THAN plus_minus_expr comp_expr2
+    | LESS_EQUAL  plus_minus_expr comp_expr2
+    | GREATER_EQUAL  plus_minus_expr comp_expr2
+    |
+    ;
+
+plus_minus_expr
+    : plus_minus_expr2 divide_mult_expr
+    ;
+
+plus_minus_expr2
+    : PLUS plus_minus_expr2 divide_mult_expr
+    | MINUS plus_minus_expr2 divide_mult_expr
+    |
+    ;
+
+divide_mult_expr
+    : single_operator_prefix_expr divide_mult_expr2
+    ;
+
+divide_mult_expr2
+    : DIVIDE single_operator_prefix_expr divide_mult_expr2
+    | MULT single_operator_prefix_expr divide_mult_expr2
+    |
+    ;
+
+single_operator_prefix_expr
+    : NOT other_expr
+    | MINUS other_expr
+    | other_expr
+    ;
+
+other_expr
+    : LPAR expr RPAR
+    | function_call
+    | lambda_function
+    | array
+    | array_access
+    | IDENTIFIER
+    | literal
+    ;
+
 puts
     : PUTS LPAR value RPAR
     ;
