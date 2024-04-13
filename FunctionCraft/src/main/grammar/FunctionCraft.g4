@@ -41,9 +41,7 @@ statement
     : if_statement
     | loop_statement
     | for_statement
-    | function_call
-    | assignment
-    | jump_statement
+    | (function_call | assignment | expr) SEMICOLON
     ;
 
 if_statement
@@ -67,15 +65,6 @@ logical_operator
     | OR
     ;
 
-rational_operator
-    : LESS_THAN
-    | LESS_EQUAL
-    | GREATER_THAN
-    | GREATER_EQUAL
-    | EQUAL
-    | NOT_EQUAL
-    ;
-
 loop_statement
     : LOOP DO block END
     ;
@@ -85,7 +74,7 @@ for_statement
     ;
 
 assignment
-    : IDENTIFIER ASSIGN value SEMICOLON
+    : IDENTIFIER ASSIGN expr
     ;
 
 value
