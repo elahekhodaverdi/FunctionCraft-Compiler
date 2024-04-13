@@ -66,11 +66,15 @@ logical_operator
     ;
 
 loop_statement
-    : LOOP DO block END
+    : LOOP DO loop_body END
+    ;
+
+loop_body   
+    : (statement | jump_statement)*
     ;
 
 for_statement
-    : FOR IDENTIFIER IN (list | range) block END
+    : FOR IDENTIFIER IN (list | range) loop_body END
     ;
 
 assignment
