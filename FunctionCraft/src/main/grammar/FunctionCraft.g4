@@ -47,20 +47,20 @@ statement
     ;
 
 if_statement
-    : IF condition block elseif_statement* else_statement? END
+    : IF if_condition block elseif_statement* else_statement? END
     ;
 
 elseif_statement
-    : ELSEIF condition block
+    : ELSEIF if_condition block
     ;
 
 else_statement
     : ELSE block
     ;
 
-condition
-    : LPAR (condition | (value rational_operator value)) RPAR (logical_operator condition)?
-    ;
+// condition
+//     : LPAR (condition | (value rational_operator value)) RPAR (logical_operator condition)?
+//     ;
 
 logical_operator
     : AND
@@ -121,11 +121,11 @@ next
     ;
 
 break_if
-    : BREAK IF condition SEMICOLON
+    : BREAK IF if_condition SEMICOLON
     ;
 
 next_if
-    : NEXT IF condition SEMICOLON
+    : NEXT IF if_condition SEMICOLON
     ;
 
 lambda_function
@@ -147,6 +147,10 @@ primitive_function_call
     | len
     | chop
     | chomp
+    ;
+
+if_condition
+    : ( NOT? LPAR expr  RPAR) (logical_operator ( NOT? LPAR expr  RPAR))*
     ;
 
 expr
