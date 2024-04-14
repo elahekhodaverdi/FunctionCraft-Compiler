@@ -179,7 +179,7 @@ unary_prefix_operator_expr
     ;
 
 unary_postfix_operator_expr
-    : other_expr (DOUNLE_PLUS | DOUNLE_MINUS)
+    : other_expr (DOUNLE_PLUS | DOUNLE_MINUS)?
     ;
 
 other_expr
