@@ -110,7 +110,7 @@ lambda_function
     ;
 
 function_call
-    : expr LPAR arguments RPAR
+    : IDENTIFIER LPAR arguments RPAR // TODO
     | primitive_function_call
     ;
 
