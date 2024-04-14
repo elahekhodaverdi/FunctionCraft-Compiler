@@ -154,7 +154,7 @@ append_expr
     ;
 
 or_expr
-    : LPAR and_expr RPAR or_expr2
+    : and_epxr? LPAR and_expr RPAR OR LPAR or_expr RPAR or_expr?
     | and_expr
     ;
 
@@ -174,48 +174,28 @@ and_expr2
     ;
 
 eq_expr
-    : comp_expr eq_expr2
-    ;
-
-eq_expr2
-    : EQUAL comp_expr eq_expr2
-    : NOT_EQUAL comp_expr eq_expr2
-    |
+    : comp_expr (EQUAL | NOT_EQUAL) eq_expr
+    | comp_expr
     ;
 
 comp_expr
-    : plus_minus_expr comp_expr2
-    ;
-
-comp_expr2
-    : GREATER_THAN plus_minus_expr comp_expr2
-    | LESS_THAN plus_minus_expr comp_expr2
-    | LESS_EQUAL  plus_minus_expr comp_expr2
-    | GREATER_EQUAL  plus_minus_expr comp_expr2
-    |
+    : plus_minus_expr 
+    (GREATER_THAN | LESS_THAN | LESS_EQUAL |GREATER_EQUAL) 
+    comp_expr
+    | plus_minus_expr
     ;
 
 plus_minus_expr
-    : plus_minus_expr2 divide_mult_expr
-    ;
-
-plus_minus_expr2
-    : PLUS plus_minus_expr2 divide_mult_expr
-    | MINUS plus_minus_expr2 divide_mult_expr
-    |
+    : divide_mult_expr (PLUS | MINUS) plus_minus_expr 
+    | divide_mult_expr
     ;
 
 divide_mult_expr
-    : single_operator_prefix_expr divide_mult_expr2
+    : unary_prefix_operator_expr (DIVIDE | MULT | REMAINDER) divide_mult_expr
+    | unary_prefix_operator_expr
     ;
 
-divide_mult_expr2
-    : DIVIDE single_operator_prefix_expr divide_mult_expr2
-    | MULT single_operator_prefix_expr divide_mult_expr2
-    |
-    ;
-
-single_operator_prefix_expr
+unary_prefix_operator_expr
     : NOT other_expr
     | MINUS other_expr
     | other_expr
@@ -322,6 +302,7 @@ PLUS: '+';
 MINUS: '-';
 MULTIPLY: '*';
 DIVIDE: '/';
+REMAINDER: '%';
 DOUNLE_MINUS : '--';
 DOUNLE_PLUS: '++';
 ASSIGN: '=';
@@ -340,7 +321,7 @@ PLUS_EQUAL: '+=';
 MINUS_EQUAL: '-=';
 MULTIPLY_EQUAL: '*=';
 DIVIDE_EQUAL :  '/=';
-REMAINDER: '%=';
+REMAINDER_EQUAL: '%=';
 EQUAL: '==';
 NOT_EQUAL: '!=';
 
