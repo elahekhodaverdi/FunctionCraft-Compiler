@@ -6,7 +6,7 @@ program
     ;
 
 main
-    : DEF MAIN { System.out.println("MAIN");}
+    : DEF MAIN                      { System.out.println("MAIN"); }
      LPAR RPAR block END
     ;
 
@@ -15,7 +15,7 @@ function
     ;
 
 function_prototype
-    : DEF (name = IDENTIFIER )  { System.out.println($name.text);}
+    : DEF (name = IDENTIFIER )      { System.out.println("FuncDec:" + $name.text); }
      LPAR parameters RPAR
     ;
 
@@ -24,11 +24,12 @@ block
     ;
 
 return_statement
-    : RETURN expr? SEMICOLON
+    : RETURN expr? SEMICOLON        { System.out.println("RETURN"); }
     ;
 
 pattern_matching
-    : PATTERN IDENTIFIER LPAR parameters RPAR pattern_body SEMICOLON
+    : PATTERN (name = IDENTIFIER)   { System.out.println("PatternDec:" + $name.text); }
+     LPAR parameters RPAR pattern_body SEMICOLON
     ;
 
 pattern_body
@@ -47,23 +48,33 @@ statement
     ;
 
 if_statement
-    : IF condition block elseif_statement* else_statement? END
+    : IF                            { System.out.println("Desicion: IF"); }
+    condition               
+    block
+    elseif_statement*       
+    else_statement?
+    END
     ;
 
 elseif_statement
-    : ELSEIF condition block
+    : ELSEIF                        { System.out.println("Desicion: ELSE IF"); }
+    condition
+    block
     ;
 
 else_statement
-    : ELSE block
+    : ELSE                          { System.out.println("Desicion: ELSE"); }
+    block
     ;
 
 loop_statement
-    : LOOP DO loop_body END
+    : LOOP DO                       { System.out.println("Loop: DO"); }
+    loop_body END
     ;
 
 for_statement
-    : FOR IDENTIFIER IN (list | range) loop_body END
+    : FOR                           { System.out.println("Loop: FOR"); }
+    IDENTIFIER IN (list | range) loop_body END
     ;
 
 loop_body
@@ -71,7 +82,7 @@ loop_body
     ;
 
 assignment
-    : IDENTIFIER
+    : (name = IDENTIFIER)           { System.out.println("Assignment: " + $name.text); }
     (ASSIGN | MINUS_EQUAL | MULTIPLY_EQUAL | DIVIDE_EQUAL | REMAINDER_EQUAL | PLUS_EQUAL)
      expr
     ;
@@ -85,34 +96,40 @@ literal
     ;
 
 jump_statement
-    : break
+    : break                 { System.out.println("Control: BREAK"); }
     | break_if
     | next
     | next_if
     ;
 
 break
-    : BREAK SEMICOLON
+    : BREAK                 { System.out.println("Control: BREAK"); }
+    SEMICOLON
     ;
 
 next
-    : NEXT SEMICOLON
+    : NEXT                  { System.out.println("Control: NEXT"); }
+    SEMICOLON
     ;
 
 break_if
-    : BREAK IF condition SEMICOLON
+    : BREAK IF              { System.out.println("Control: BREAK"); }
+    condition SEMICOLON
     ;
 
 next_if
-    : NEXT IF condition SEMICOLON
+    : NEXT IF               { System.out.println("Control: NEXT"); }
+    condition SEMICOLON
     ;
 
 lambda_function
-    : RARROW LPAR parameters RPAR LCB block RCB
+    : RARROW                { System.out.println("Control: BREAK"); }
+     LPAR parameters RPAR LCB block RCB
     ;
 
 function_call
-    : IDENTIFIER LPAR arguments RPAR // TODO
+    : IDENTIFIER            { System.out.println("Function Call"); }
+     LPAR arguments RPAR // TODO
     | primitive_function_call
     ;
 
@@ -138,50 +155,57 @@ expr
     ;
 
 append_expr
-    : or_expr APPEND append_expr
+    : or_expr APPEND append_expr                                { System.out.println("Operator: <<"); }
     | or_expr
     ;
 
 or_expr
-    : LPAR (expr) RPAR OR LPAR (expr) RPAR
+    : LPAR (expr) RPAR OR LPAR (expr) RPAR                      { System.out.println("Operator: ||"); }
     | and_expr
     ;
 
 and_expr
-    : LPAR (expr) RPAR AND LPAR (expr) RPAR
+    : LPAR (expr) RPAR AND LPAR (expr) RPAR                     { System.out.println("Operator: &&"); }
     | eq_expr
     ;
 
 eq_expr
-    : comp_expr (EQUAL | NOT_EQUAL) eq_expr
+    : comp_expr NOT_EQUAL eq_expr                               { System.out.println("Operator: !="); }
+    | comp_expr EQUAL eq_expr                                   { System.out.println("Operator: =="); }
     | comp_expr
     ;
 
 comp_expr
-    : plus_minus_expr 
-    (GREATER_THAN | LESS_THAN | LESS_EQUAL |GREATER_EQUAL) 
-    comp_expr
+    : plus_minus_expr GREATER_THAN  comp_expr                   { System.out.println("Operator: >"); }
+    | plus_minus_expr LESS_THAN comp_expr                       { System.out.println("Operator: <"); }
+    | plus_minus_expr LESS_EQUAL comp_expr                      { System.out.println("Operator: <="); }
+    | plus_minus_expr GREATER_EQUAL comp_expr                   { System.out.println("Operator: >="); }
     | plus_minus_expr
     ;
 
 plus_minus_expr
-    : divide_mult_expr (PLUS | MINUS) plus_minus_expr 
+    : divide_mult_expr PLUS  plus_minus_expr                    { System.out.println("Operator: +"); }
+    | divide_mult_expr MINUS plus_minus_expr                    { System.out.println("Operator: -"); }
     | divide_mult_expr
     ;
 
 divide_mult_expr
-    : unary_prefix_operator_expr (DIVIDE | MULTIPLY | REMAINDER) divide_mult_expr
+    : unary_prefix_operator_expr DIVIDE divide_mult_expr        { System.out.println("Operator: /"); }
+    | unary_prefix_operator_expr  MULTIPLY divide_mult_expr     { System.out.println("Operator: *"); }
+    | unary_prefix_operator_expr  REMAINDER divide_mult_expr    { System.out.println("Operator: %"); }
     | unary_prefix_operator_expr
     ;
 
 unary_prefix_operator_expr
-    : NOT LPAR unary_postfix_operator_expr RPAR
-    | MINUS unary_postfix_operator_expr
+    : NOT LPAR unary_postfix_operator_expr RPAR                 { System.out.println("Operator: !"); }
+    | MINUS unary_postfix_operator_expr                         { System.out.println("Operator: -"); }
     | unary_postfix_operator_expr
     ;
 
 unary_postfix_operator_expr
-    : other_expr (DOUNLE_PLUS | DOUNLE_MINUS)?
+    : other_expr DOUNLE_PLUS                                    { System.out.println("Operator: ++"); }
+    | other_expr DOUNLE_MINUS                                   { System.out.println("Operator: --"); }
+    | other_expr
     ;
 
 other_expr
@@ -199,23 +223,28 @@ list_access
     ;
 
 puts
-    : PUTS LPAR expr RPAR
+    : PUTS                  { System.out.println("Built-In: PUTS"); }
+    LPAR expr RPAR
     ;
 
 push
-    : PUSH LPAR expr COMMA expr RPAR
+    : PUSH                  { System.out.println("Built-In: PUSH"); }
+    LPAR expr COMMA expr RPAR
     ;
 
 len
-    : LEN LPAR expr RPAR
+    : LEN                   { System.out.println("Built-In: LEN"); }
+    LPAR expr RPAR
     ;
 
 chop
-    : CHOP LPAR expr RPAR
+    : CHOP                  { System.out.println("Built-In: CHOP"); }
+    LPAR expr RPAR
     ;
 
 chomp
-    : CHOMP LPAR expr RPAR
+    : CHOMP                 { System.out.println("Built-In: CHOMP"); }
+    LPAR expr RPAR
     ;
 
 parameters
