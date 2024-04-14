@@ -7,11 +7,11 @@ program
 
 main
     : DEF MAIN { System.out.println("MAIN");}
-     LPAR RPAR function_body END
+     LPAR RPAR block END
     ;
 
 function
-    : function_prototype function_body END
+    : function_prototype block END
     ;
 
 function_prototype
@@ -19,8 +19,8 @@ function_prototype
      LPAR parameters RPAR
     ;
 
-function_body
-    : block return_statement?
+block
+    : statement* return_statement?
     ;
 
 return_statement
@@ -37,10 +37,6 @@ pattern_body
 
 pattern_call
     : IDENTIFIER SINGLE_DOT MATCH LPAR parameters RPAR
-    ;
-
-block
-    : statement*
     ;
 
 statement
@@ -66,25 +62,16 @@ loop_statement
     : LOOP DO loop_body END
     ;
 
-loop_body   
-    : (statement | jump_statement)*
-    ;
-
 for_statement
     : FOR IDENTIFIER IN (list | range) loop_body END
     ;
 
-assignment
-    : IDENTIFIER ASSIGN expr
+loop_body
+    : (statement | jump_statement)* return_statement?
     ;
 
-value
-    : literal
-    | function_call
-    | lambda_function
-    | function_pointer
-    | IDENTIFIER
-    | condition
+assignment
+    : IDENTIFIER ASSIGN expr
     ;
 
 literal
@@ -119,11 +106,11 @@ next_if
     ;
 
 lambda_function
-    : RARROW LPAR parameters RPAR LCB function_body RCB
+    : RARROW LPAR parameters RPAR LCB block RCB
     ;
 
 function_call
-    : IDENTIFIER LPAR arguments RPAR
+    : (IDENTIFIER | lambda_function) LPAR arguments RPAR
     | primitive_function_call
     ;
 
@@ -205,6 +192,10 @@ other_expr
     | literal
     ;
 
+list_access
+    : expr LSB expr RSB
+    ;
+
 puts
     : PUTS LPAR expr RPAR
     ;
@@ -239,7 +230,7 @@ default_parameter
     ;
 
 arguments
-    : (value (COMMA value)*)?
+    : (expr (COMMA expr)*)?
     ;
 
 range
@@ -247,7 +238,7 @@ range
     ;
 
 list
-    : LSB (value (COMMA value)*)? RSB
+    : LSB (expr (COMMA expr)*)? RSB
     ;
 
 boolean
