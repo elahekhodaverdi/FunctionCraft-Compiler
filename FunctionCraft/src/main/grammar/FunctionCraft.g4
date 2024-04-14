@@ -6,7 +6,8 @@ program
     ;
 
 main
-    : DEF MAIN LPAR RPAR function_body END
+    : DEF MAIN { System.out.println("MAIN");}
+     LPAR RPAR function_body END
     ;
 
 function
@@ -14,7 +15,8 @@ function
     ;
 
 function_prototype
-    : DEF IDENTIFIER LPAR parameters RPAR
+    : DEF (name = IDENTIFIER )  { System.out.println(" $name.value");"}
+     LPAR parameters RPAR
     ;
 
 function_body
@@ -147,12 +149,8 @@ expr
     ;
 
 append_expr
-    : or_expr append_expr2
-    ;
-
-append_expr2
-    : APPEND or_expr append_expr2
-    |
+    : or_expr APPEND append_expr
+    | or_expr
     ;
 
 or_expr
