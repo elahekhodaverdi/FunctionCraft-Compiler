@@ -154,23 +154,13 @@ append_expr
     ;
 
 or_expr
-    : and_epxr? LPAR and_expr RPAR OR LPAR or_expr RPAR or_expr?
+    : LPAR or_expr RPAR OR LPAR or_expr RPAR 
     | and_expr
     ;
 
-or_expr2
-    : OR LPAR and_expr RPAR or_expr2
-    |
-    ;
-
 and_expr
-    : LPAR eq_expr RPAR and_expr2
+    : LPAR and_expr RPAR AND LPAR and_expr RPAR
     | eq_expr
-    ;
-
-and_expr2
-    : AND LPAR and_expr RPAR and_expr2
-    |
     ;
 
 eq_expr
@@ -196,9 +186,13 @@ divide_mult_expr
     ;
 
 unary_prefix_operator_expr
-    : NOT other_expr
-    | MINUS other_expr
-    | other_expr
+    : NOT LPAR unary_postfix_operator_expr RPAR
+    | MINUS unary_postfix_operator_expr
+    | unary_postfix_operator_expr
+    ;
+
+unary_postfix_operator_expr
+    : other_expr (DOUNLE_PLUS | DOUNLE_MINUS)
     ;
 
 other_expr
@@ -206,8 +200,7 @@ other_expr
     | function_call
     | pattern_call
     | lambda_function
-    | array
-    | array_access
+    | list_access
     | IDENTIFIER
     | literal
     ;
