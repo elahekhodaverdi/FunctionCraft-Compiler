@@ -1,0 +1,7 @@
+pattern fib(n)
+    | (n == 0) = 1
+;
+
+def main()
+
+end
