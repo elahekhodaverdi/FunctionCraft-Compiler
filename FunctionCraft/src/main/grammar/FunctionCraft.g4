@@ -141,12 +141,12 @@ append_expr
     ;
 
 or_expr
-    : LPAR or_expr RPAR OR LPAR or_expr RPAR 
+    : LPAR (expr) RPAR OR LPAR (expr) RPAR
     | and_expr
     ;
 
 and_expr
-    : LPAR and_expr RPAR AND LPAR and_expr RPAR
+    : LPAR (expr) RPAR AND LPAR (expr) RPAR
     | eq_expr
     ;
 
@@ -188,8 +188,8 @@ other_expr
     | function_pointer
     | pattern_call
     | lambda_function
-    | IDENTIFIER) list_access?
-    | literal
+    | IDENTIFIER
+    | literal) list_access?
     ;
 
 list_access
