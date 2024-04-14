@@ -15,7 +15,7 @@ function
     ;
 
 function_prototype
-    : DEF (name = IDENTIFIER )  { System.out.println(" $name.value");"}
+    : DEF (name = IDENTIFIER )  { System.out.println($name.text);}
      LPAR parameters RPAR
     ;
 
@@ -168,7 +168,7 @@ plus_minus_expr
     ;
 
 divide_mult_expr
-    : unary_prefix_operator_expr (DIVIDE | MULT | REMAINDER) divide_mult_expr
+    : unary_prefix_operator_expr (DIVIDE | MULTIPLY | REMAINDER) divide_mult_expr
     | unary_prefix_operator_expr
     ;
 
