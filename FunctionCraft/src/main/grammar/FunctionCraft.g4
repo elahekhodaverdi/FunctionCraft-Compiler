@@ -36,7 +36,7 @@ pattern_body
     ;
 
 pattern_call
-    : IDENTIFIER SINGLE_DOT MATCH LPAR parameters RPAR
+    : IDENTIFIER SINGLE_DOT MATCH LPAR arguments RPAR
     ;
 
 statement
