@@ -185,6 +185,7 @@ unary_postfix_operator_expr
 other_expr
     : LPAR expr RPAR
     | function_call
+    | function_pointer
     | pattern_call
     | lambda_function
     | list_access
