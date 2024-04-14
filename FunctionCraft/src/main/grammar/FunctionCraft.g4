@@ -71,7 +71,9 @@ loop_body
     ;
 
 assignment
-    : IDENTIFIER ASSIGN expr
+    : IDENTIFIER
+    (ASSIGN | MINUS_EQUAL | MULTIPLY_EQUAL | DIVIDE_EQUAL | REMAINDER_EQUAL | PLUS_EQUAL)
+     expr
     ;
 
 literal
