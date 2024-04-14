@@ -110,7 +110,7 @@ lambda_function
     ;
 
 function_call
-    : (IDENTIFIER | lambda_function) LPAR arguments RPAR
+    : expr LPAR arguments RPAR
     | primitive_function_call
     ;
 
@@ -226,7 +226,7 @@ default_parameters
     ;
 
 default_parameter
-    : IDENTIFIER ASSIGN literal
+    : IDENTIFIER ASSIGN value_literal
     ;
 
 arguments
@@ -239,6 +239,25 @@ range
 
 list
     : LSB (expr (COMMA expr)*)? RSB
+    ;
+
+value_list
+    : LSB (value (COMMA value)*)? RSB
+    ;
+
+value
+    : INTEGER
+    | FLOAT
+    | STRING
+    |boolean
+    ;
+
+value_literal
+    : INTEGER
+    | FLOAT
+    | STRING
+    | boolean
+    | value_list
     ;
 
 boolean
