@@ -188,7 +188,7 @@ other_expr
     | function_pointer
     | pattern_call
     | lambda_function
-    | IDENTIFIER) list_access
+    | IDENTIFIER) list_access?
     | literal
     ;
 
