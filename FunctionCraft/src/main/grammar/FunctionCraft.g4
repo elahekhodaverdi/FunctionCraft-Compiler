@@ -15,7 +15,7 @@ function
     ;
 
 function_prototype
-    : DEF (name = IDENTIFIER )      { System.out.println("FuncDec:" + $name.text); }
+    : DEF (name = IDENTIFIER )      { System.out.println("FuncDec: " + $name.text); }
      LPAR parameters RPAR
     ;
 
@@ -28,7 +28,7 @@ return_statement
     ;
 
 pattern_matching
-    : PATTERN (name = IDENTIFIER)   { System.out.println("PatternDec:" + $name.text); }
+    : PATTERN (name = IDENTIFIER)   { System.out.println("PatternDec: " + $name.text); }
      LPAR parameters RPAR pattern_body SEMICOLON
     ;
 
@@ -37,7 +37,7 @@ pattern_body
     ;
 
 pattern_call
-    : IDENTIFIER SINGLE_DOT MATCH LPAR arguments RPAR
+    : IDENTIFIER SINGLE_DOT MATCH { System.out.println("Built-In: MATCH"); } LPAR arguments RPAR
     ;
 
 statement
