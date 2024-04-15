@@ -143,7 +143,7 @@ list_access
     ;
 
 inner_list_access
-    : LPAR arguments RPAR
+    : { System.out.println("FunctionCall"); } LPAR arguments RPAR
     | primitive_function_call list_indexing inner_list_access
     |
     ;
