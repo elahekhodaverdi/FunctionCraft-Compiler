@@ -258,6 +258,26 @@ public interface FunctionCraftListener extends ParseTreeListener {
 	 */
 	void exitFunction_call(FunctionCraftParser.Function_callContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link FunctionCraftParser#list_access}.
+	 * @param ctx the parse tree
+	 */
+	void enterList_access(FunctionCraftParser.List_accessContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FunctionCraftParser#list_access}.
+	 * @param ctx the parse tree
+	 */
+	void exitList_access(FunctionCraftParser.List_accessContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link FunctionCraftParser#inner_list_access}.
+	 * @param ctx the parse tree
+	 */
+	void enterInner_list_access(FunctionCraftParser.Inner_list_accessContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link FunctionCraftParser#inner_list_access}.
+	 * @param ctx the parse tree
+	 */
+	void exitInner_list_access(FunctionCraftParser.Inner_list_accessContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link FunctionCraftParser#function_pointer}.
 	 * @param ctx the parse tree
 	 */
@@ -398,15 +418,15 @@ public interface FunctionCraftListener extends ParseTreeListener {
 	 */
 	void exitOther_expr(FunctionCraftParser.Other_exprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link FunctionCraftParser#list_access}.
+	 * Enter a parse tree produced by {@link FunctionCraftParser#list_indexing}.
 	 * @param ctx the parse tree
 	 */
-	void enterList_access(FunctionCraftParser.List_accessContext ctx);
+	void enterList_indexing(FunctionCraftParser.List_indexingContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link FunctionCraftParser#list_access}.
+	 * Exit a parse tree produced by {@link FunctionCraftParser#list_indexing}.
 	 * @param ctx the parse tree
 	 */
-	void exitList_access(FunctionCraftParser.List_accessContext ctx);
+	void exitList_indexing(FunctionCraftParser.List_indexingContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link FunctionCraftParser#puts}.
 	 * @param ctx the parse tree

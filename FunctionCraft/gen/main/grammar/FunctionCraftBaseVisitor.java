@@ -193,6 +193,20 @@ public class FunctionCraftBaseVisitor<T> extends AbstractParseTreeVisitor<T> imp
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitList_access(FunctionCraftParser.List_accessContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitInner_list_access(FunctionCraftParser.Inner_list_accessContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitFunction_pointer(FunctionCraftParser.Function_pointerContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -291,7 +305,7 @@ public class FunctionCraftBaseVisitor<T> extends AbstractParseTreeVisitor<T> imp
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitList_access(FunctionCraftParser.List_accessContext ctx) { return visitChildren(ctx); }
+	@Override public T visitList_indexing(FunctionCraftParser.List_indexingContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

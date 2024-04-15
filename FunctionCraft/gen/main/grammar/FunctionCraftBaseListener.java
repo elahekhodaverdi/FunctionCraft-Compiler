@@ -317,6 +317,30 @@ public class FunctionCraftBaseListener implements FunctionCraftListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterList_access(FunctionCraftParser.List_accessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitList_access(FunctionCraftParser.List_accessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterInner_list_access(FunctionCraftParser.Inner_list_accessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitInner_list_access(FunctionCraftParser.Inner_list_accessContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterFunction_pointer(FunctionCraftParser.Function_pointerContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -485,13 +509,13 @@ public class FunctionCraftBaseListener implements FunctionCraftListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterList_access(FunctionCraftParser.List_accessContext ctx) { }
+	@Override public void enterList_indexing(FunctionCraftParser.List_indexingContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitList_access(FunctionCraftParser.List_accessContext ctx) { }
+	@Override public void exitList_indexing(FunctionCraftParser.List_indexingContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

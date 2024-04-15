@@ -128,13 +128,24 @@ lambda_function
     ;
 
 function_call
-    : IDENTIFIER            { System.out.println("Function Call"); }
+    : (IDENTIFIER | function_pointer | list_access | lambda_function )          { System.out.println("FunctionCall"); }
      LPAR arguments RPAR // TODO
     | primitive_function_call
     ;
 
+list_access
+    : (lambda_function | function_pointer | IDENTIFIER | IDENTIFIER LPAR arguments RPAR) list_indexing inner_list_access
+    ;
+
+inner_list_access
+    : LPAR arguments RPAR
+    | primitive_function_call list_indexing inner_list_access
+    |
+    ;
+
 function_pointer
     : METHOD LPAR COLON IDENTIFIER RPAR
+    | lambda_function
     ;
 
 primitive_function_call
@@ -213,12 +224,11 @@ other_expr
     | function_call
     | function_pointer
     | pattern_call
-    | lambda_function
     | IDENTIFIER
-    | literal) list_access?
+    | literal) list_indexing?
     ;
 
-list_access
+list_indexing
     : (LSB expr RSB)+
     ;
 

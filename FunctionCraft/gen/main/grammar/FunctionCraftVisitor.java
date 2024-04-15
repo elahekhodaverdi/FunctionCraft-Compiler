@@ -161,6 +161,18 @@ public interface FunctionCraftVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunction_call(FunctionCraftParser.Function_callContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link FunctionCraftParser#list_access}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitList_access(FunctionCraftParser.List_accessContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link FunctionCraftParser#inner_list_access}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitInner_list_access(FunctionCraftParser.Inner_list_accessContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link FunctionCraftParser#function_pointer}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -245,11 +257,11 @@ public interface FunctionCraftVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitOther_expr(FunctionCraftParser.Other_exprContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link FunctionCraftParser#list_access}.
+	 * Visit a parse tree produced by {@link FunctionCraftParser#list_indexing}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitList_access(FunctionCraftParser.List_accessContext ctx);
+	T visitList_indexing(FunctionCraftParser.List_indexingContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FunctionCraftParser#puts}.
 	 * @param ctx the parse tree
