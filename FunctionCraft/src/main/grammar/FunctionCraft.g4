@@ -134,7 +134,12 @@ function_call
     ;
 
 list_access
-    : (lambda_function | function_pointer | IDENTIFIER | IDENTIFIER LPAR arguments RPAR) list_indexing inner_list_access
+    : (lambda_function
+    | function_pointer
+    | IDENTIFIER
+    | IDENTIFIER { System.out.println("FunctionCall"); }
+     LPAR arguments RPAR)
+     list_indexing inner_list_access
     ;
 
 inner_list_access
@@ -201,9 +206,9 @@ plus_minus_expr
     ;
 
 divide_mult_expr
-    : unary_prefix_operator_expr DIVIDE { System.out.println("Operator: /"); } divide_mult_expr
-    | unary_prefix_operator_expr  MULTIPLY { System.out.println("Operator: *"); } divide_mult_expr
-    | unary_prefix_operator_expr  REMAINDER { System.out.println("Operator: %"); }divide_mult_expr
+    : unary_prefix_operator_expr DIVIDE  divide_mult_expr       { System.out.println("Operator: /"); }
+    | unary_prefix_operator_expr  MULTIPLY  divide_mult_expr    { System.out.println("Operator: *"); }
+    | unary_prefix_operator_expr  REMAINDER divide_mult_expr    { System.out.println("Operator: %"); }
     | unary_prefix_operator_expr
     ;
 
