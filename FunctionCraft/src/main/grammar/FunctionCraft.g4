@@ -219,7 +219,7 @@ other_expr
     ;
 
 list_access
-    : LSB expr RSB
+    : (LSB expr RSB)+
     ;
 
 puts
