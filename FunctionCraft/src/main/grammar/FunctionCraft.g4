@@ -363,7 +363,7 @@ IDENTIFIER: [A-Za-z_][A-Za-z_0-9]*;
 FLOAT:  ([1-9][0-9]* | '0') '.' ([0-9]+);
 INTEGER: [1-9][0-9]* | '0';
 STRING : '"' (~'"')* '"';
-PATTERN_CONDITION: [\n]'    |' | [\n\t]'|';
+PATTERN_CONDITION: ('\n'|'\r\n') ('    ' | '\t') '|';
 
 MULTILINE_COMMENT: '=begin' .*? '=end' -> skip;
 SINGLELINE_COMMENT : '#' ~[\r\n]* -> skip ;
