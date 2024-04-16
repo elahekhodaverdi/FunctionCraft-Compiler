@@ -24,7 +24,7 @@ block
     ;
 
 return_statement
-    : RETURN { System.out.println("RETURN"); } expr? SEMICOLON
+    : RETURN { System.out.println("RETURN"); } expr[""]? SEMICOLON
     ;
 
 pattern_matching
@@ -33,7 +33,7 @@ pattern_matching
     ;
 
 pattern_body
-    : (PATTERN_CONDITION condition ASSIGN expr)+
+    : (PATTERN_CONDITION condition ASSIGN expr[""])+
     ;
 
 pattern_call
@@ -44,7 +44,7 @@ statement
     : if_statement
     | loop_statement
     | for_statement
-    | (pattern_call | function_call | assignment | expr) SEMICOLON
+    | (pattern_call | function_call | assignment | expr[""]) SEMICOLON
     ;
 
 if_statement
@@ -84,7 +84,7 @@ loop_body
 assignment
     : (name = IDENTIFIER)           { System.out.println("Assignment: " + $name.text); }
     (ASSIGN | MINUS_EQUAL | MULTIPLY_EQUAL | DIVIDE_EQUAL | REMAINDER_EQUAL | PLUS_EQUAL)
-     expr
+     expr[""]
     ;
 
 literal
@@ -146,54 +146,55 @@ primitive_function_call
     ;
 
 condition
-    : ( NOT? LPAR expr  RPAR) (AND ( NOT? LPAR expr  RPAR))*
-    | ( NOT? LPAR expr  RPAR) (OR ( NOT? LPAR expr  RPAR))*
+    : ( NOT? LPAR expr[""]  RPAR) (AND ( NOT? LPAR expr[""]  RPAR))*
+    | ( NOT? LPAR expr[""]  RPAR) (OR ( NOT? LPAR expr[""]  RPAR))*
     ;
 
-expr
-    : append_expr
+expr [String prev]
+    @init {$prev = ""}
+    : append_expr[$prev]
     ;
 
-append_expr
-    : or_expr APPEND append_expr                                { System.out.println("Operator: <<"); }
-    | or_expr
+append_expr [String prev]
+    : or_expr  { System.out.print($prev); } APPEND append_expr["Operator: <<\n"]
+    | or_expr  { System.out.print($prev); }
     ;
 
 or_expr
-    : LPAR (expr) RPAR OR LPAR (expr) RPAR                      { System.out.println("Operator: ||"); }
+    : LPAR (expr[""]) RPAR OR LPAR (expr[""]) RPAR              { System.out.println("Operator: ||"); }
     | and_expr
     ;
 
 and_expr
-    : LPAR (expr) RPAR AND LPAR (expr) RPAR                     { System.out.println("Operator: &&"); }
-    | eq_expr
+    : LPAR (expr[""]) RPAR AND LPAR (expr[""]) RPAR                     { System.out.println("Operator: &&"); }
+    | eq_expr[""]
     ;
 
-eq_expr
-    : comp_expr NOT_EQUAL eq_expr                               { System.out.println("Operator: !="); }
-    | comp_expr EQUAL eq_expr                                   { System.out.println("Operator: =="); }
-    | comp_expr
+eq_expr [String prev]
+    : comp_expr[""] { System.out.print($prev); } NOT_EQUAL eq_expr["Operator: !=\n"]
+    | comp_expr[""] { System.out.print($prev); } EQUAL eq_expr["Operator: !=\n"]
+    | comp_expr[""] { System.out.print($prev); }
     ;
 
-comp_expr
-    : plus_minus_expr GREATER_THAN  comp_expr                   { System.out.println("Operator: >"); }
-    | plus_minus_expr LESS_THAN comp_expr                       { System.out.println("Operator: <"); }
-    | plus_minus_expr LESS_EQUAL comp_expr                      { System.out.println("Operator: <="); }
-    | plus_minus_expr GREATER_EQUAL comp_expr                   { System.out.println("Operator: >="); }
-    | plus_minus_expr
+comp_expr [String prev]
+    : plus_minus_expr[""] { System.out.print($prev); } GREATER_THAN comp_expr["Operator: >\n"]
+    | plus_minus_expr[""] { System.out.print($prev); } LESS_THAN comp_expr["Operator: <\n"]
+    | plus_minus_expr[""] { System.out.print($prev); } LESS_EQUAL comp_expr["Operator: <=\n"]
+    | plus_minus_expr[""] { System.out.print($prev); } GREATER_EQUAL comp_expr["Operator: >=\n"]
+    | plus_minus_expr[""] { System.out.print($prev); }
     ;
 
-plus_minus_expr
-    : divide_mult_expr PLUS  plus_minus_expr                    { System.out.println("Operator: +"); }
-    | divide_mult_expr MINUS plus_minus_expr                    { System.out.println("Operator: -"); }
-    | divide_mult_expr
+plus_minus_expr [String prev]
+    : divide_mult_expr[""] { System.out.print($prev); } PLUS plus_minus_expr["Operator: +\n"]
+    | divide_mult_expr[""] { System.out.print($prev); } MINUS plus_minus_expr["Operator: -\n"]
+    | divide_mult_expr[""] { System.out.print($prev); }
     ;
 
-divide_mult_expr
-    : unary_prefix_operator_expr DIVIDE  divide_mult_expr       { System.out.println("Operator: /"); }
-    | unary_prefix_operator_expr  MULTIPLY  divide_mult_expr    { System.out.println("Operator: *"); }
-    | unary_prefix_operator_expr  REMAINDER divide_mult_expr    { System.out.println("Operator: %"); }
-    | unary_prefix_operator_expr
+divide_mult_expr [String prev]
+    : unary_prefix_operator_expr { System.out.print($prev); } DIVIDE  divide_mult_expr["Operator: /\n"]
+    | unary_prefix_operator_expr { System.out.print($prev); } MULTIPLY  divide_mult_expr["Operator: *\n"]
+    | unary_prefix_operator_expr { System.out.print($prev); } REMAINDER divide_mult_expr["Operator: %\n"]
+    | unary_prefix_operator_expr { System.out.print($prev); }
     ;
 
 unary_prefix_operator_expr
@@ -209,7 +210,7 @@ unary_postfix_operator_expr
     ;
 
 other_expr
-    :(LPAR expr RPAR
+    :(LPAR expr[""] RPAR
     | function_call
     | function_pointer
     | primitive_function_call
@@ -219,32 +220,32 @@ other_expr
     ;
 
 list_indexing
-    : LSB expr RSB
+    : LSB expr[""] RSB
     ;
 
 puts
     : PUTS                  { System.out.println("Built-In: PUTS"); }
-    LPAR expr RPAR
+    LPAR expr[""] RPAR
     ;
 
 push
     : PUSH                  { System.out.println("Built-In: PUSH"); }
-    LPAR expr COMMA expr RPAR
+    LPAR expr[""] COMMA expr[""] RPAR
     ;
 
 len
     : LEN                   { System.out.println("Built-In: LEN"); }
-    LPAR expr RPAR
+    LPAR expr[""] RPAR
     ;
 
 chop
     : CHOP                  { System.out.println("Built-In: CHOP"); }
-    LPAR expr RPAR
+    LPAR expr[""] RPAR
     ;
 
 chomp
     : CHOMP                 { System.out.println("Built-In: CHOMP"); }
-    LPAR expr RPAR
+    LPAR expr[""] RPAR
     ;
 
 parameters
@@ -261,7 +262,7 @@ default_parameter
     ;
 
 arguments
-    : (expr (COMMA expr)*)?
+    : (expr[""] (COMMA expr[""])*)?
     ;
 
 range
@@ -269,7 +270,7 @@ range
     ;
 
 list
-    : LSB (expr (COMMA expr)*)? RSB
+    : LSB (expr[""] (COMMA expr[""])*)? RSB
     ;
 
 value_list

@@ -1,15 +1,4 @@
-def fibo()
-    for i in (1..10)
-        break;
-    end
-end
-
-pattern fib(n)
-    | (n == 0) = 1
-    | (n == 1) = 1
-    | (n > 2) = fib (n-1) + fib (n-2)
-;
 
 def main()
-fibio()[1]();
+y = x + x - x * x / x % x;
 end
