@@ -74,7 +74,7 @@ loop_statement
 
 for_statement
     : FOR                           { System.out.println("Loop: FOR"); }
-    IDENTIFIER IN (list | range) loop_body END
+    IDENTIFIER IN (expr[""] | range) loop_body END
     ;
 
 loop_body
