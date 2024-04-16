@@ -44,7 +44,7 @@ statement
     : if_statement
     | loop_statement
     | for_statement
-    | (pattern_call | assignment | expr[""](function_call)+ | IDENTIFIER) SEMICOLON
+    | (pattern_call | assignment | expr[""]) SEMICOLON
     ;
 
 if_statement
