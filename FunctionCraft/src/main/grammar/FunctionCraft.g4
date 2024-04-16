@@ -96,7 +96,7 @@ literal
     ;
 
 jump_statement
-    : break                 { System.out.println("Control: BREAK"); }
+    : break
     | break_if
     | next
     | next_if
