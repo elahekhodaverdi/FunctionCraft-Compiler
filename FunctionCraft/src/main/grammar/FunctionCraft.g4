@@ -48,7 +48,7 @@ statement
     ;
 
 if_statement
-    : IF                            { System.out.println("Desicion: IF"); }
+    : IF                            { System.out.println("Decision: IF"); }
     condition               
     block
     elseif_statement*       
@@ -57,13 +57,13 @@ if_statement
     ;
 
 elseif_statement
-    : ELSEIF                        { System.out.println("Desicion: ELSE IF"); }
+    : ELSEIF                        { System.out.println("Decision: ELSE IF"); }
     condition
     block
     ;
 
 else_statement
-    : ELSE                          { System.out.println("Desicion: ELSE"); }
+    : ELSE                          { System.out.println("Decision: ELSE"); }
     block
     ;
 
@@ -128,7 +128,7 @@ lambda_function
     ;
 
 function_call
-    :                       { System.out.println("Function Call"); }
+    :                       { System.out.println("FunctionCall"); }
     LPAR arguments RPAR
     ;
 
