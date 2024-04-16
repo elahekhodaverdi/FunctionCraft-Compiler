@@ -151,7 +151,7 @@ condition
     ;
 
 expr [String prev]
-    @init {$prev = ""}
+    @init {$prev = "";}
     : append_expr[$prev]
     ;
 

@@ -932,7 +932,7 @@ public class FunctionCraftParser extends Parser {
 			{
 			setState(193);
 			match(IF);
-			 System.out.println("Desicion: IF"); 
+			 System.out.println("Decision: IF"); 
 			setState(195);
 			condition();
 			setState(196);
@@ -1012,7 +1012,7 @@ public class FunctionCraftParser extends Parser {
 			{
 			setState(208);
 			match(ELSEIF);
-			 System.out.println("Desicion: ELSE IF"); 
+			 System.out.println("Decision: ELSE IF"); 
 			setState(210);
 			condition();
 			setState(211);
@@ -1063,7 +1063,7 @@ public class FunctionCraftParser extends Parser {
 			{
 			setState(213);
 			match(ELSE);
-			 System.out.println("Desicion: ELSE"); 
+			 System.out.println("Decision: ELSE"); 
 			setState(215);
 			block();
 			}
@@ -1870,7 +1870,7 @@ public class FunctionCraftParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			 System.out.println("Function Call"); 
+			 System.out.println("FunctionCall"); 
 			setState(292);
 			match(LPAR);
 			setState(293);
@@ -2264,7 +2264,7 @@ public class FunctionCraftParser extends Parser {
 	public final ExprContext expr(String prev) throws RecognitionException {
 		ExprContext _localctx = new ExprContext(_ctx, getState(), prev);
 		enterRule(_localctx, 56, RULE_expr);
-		_localctx.prev = "";
+		((ExprContext)_localctx).prev =  "";
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
@@ -2594,7 +2594,7 @@ public class FunctionCraftParser extends Parser {
 				setState(396);
 				match(EQUAL);
 				setState(397);
-				eq_expr("Operator: !=\n");
+				eq_expr("Operator: ==\n");
 				}
 				break;
 			case 3:
