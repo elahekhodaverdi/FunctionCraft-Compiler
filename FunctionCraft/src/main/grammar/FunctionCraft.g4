@@ -212,6 +212,7 @@ other_expr
     :(LPAR expr RPAR
     | function_call
     | function_pointer
+    | primitive_function_call
     | pattern_call
     | IDENTIFIER
     | literal) (list_indexing | function_call)*
