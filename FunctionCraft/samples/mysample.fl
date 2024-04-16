@@ -1,0 +1,3 @@
+def main()
+fibio()[1]();
+end

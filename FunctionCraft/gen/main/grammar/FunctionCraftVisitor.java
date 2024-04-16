@@ -1,4 +1,4 @@
-// Generated from E:/elahe/git/PLC/FunctionCraft/src/main/grammar/FunctionCraft.g4 by ANTLR 4.13.1
+// Generated from /home/mehdi/elearn/PLC/CAs/FunctionCraft/src/main/grammar/FunctionCraft.g4 by ANTLR 4.13.1
 package main.grammar;
 import org.antlr.v4.runtime.tree.ParseTreeVisitor;
 
@@ -160,18 +160,6 @@ public interface FunctionCraftVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunction_call(FunctionCraftParser.Function_callContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link FunctionCraftParser#list_access}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitList_access(FunctionCraftParser.List_accessContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link FunctionCraftParser#inner_list_access}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInner_list_access(FunctionCraftParser.Inner_list_accessContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link FunctionCraftParser#function_pointer}.
 	 * @param ctx the parse tree
