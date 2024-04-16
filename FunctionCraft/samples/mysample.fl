@@ -1,4 +1,4 @@
 
 def main()
-y = x << ((x) || (x)) * x / x % x;
+123;
 end
