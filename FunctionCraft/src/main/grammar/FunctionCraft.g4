@@ -172,7 +172,7 @@ and_expr
 
 eq_expr [String prev]
     : comp_expr[""] { System.out.print($prev); } NOT_EQUAL eq_expr["Operator: !=\n"]
-    | comp_expr[""] { System.out.print($prev); } EQUAL eq_expr["Operator: !=\n"]
+    | comp_expr[""] { System.out.print($prev); } EQUAL eq_expr["Operator: ==\n"]
     | comp_expr[""] { System.out.print($prev); }
     ;
 
