@@ -123,12 +123,13 @@ next_if
     ;
 
 lambda_function
-    : RARROW                { System.out.println("Control: BREAK"); }
+    : RARROW                { System.out.println("Structure: LAMBDA"); }
      LPAR parameters RPAR LCB block RCB
     ;
 
 function_call
-    : LPAR arguments RPAR    { System.out.println("Function Call"); }
+    :                       { System.out.println("Function Call"); }
+    LPAR arguments RPAR
     ;
 
 function_pointer
