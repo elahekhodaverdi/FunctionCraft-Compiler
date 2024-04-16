@@ -82,9 +82,9 @@ loop_body
     ;
 
 assignment
-    : (name = IDENTIFIER)           { System.out.println("Assignment: " + $name.text); }
+    : (name = IDENTIFIER)
     (ASSIGN | MINUS_EQUAL | MULTIPLY_EQUAL | DIVIDE_EQUAL | REMAINDER_EQUAL | PLUS_EQUAL)
-     expr[""]
+     expr[""] { System.out.println("Assignment: " + $name.text); }
     ;
 
 literal

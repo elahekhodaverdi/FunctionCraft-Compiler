@@ -1373,8 +1373,7 @@ public class FunctionCraftParser extends Parser {
 			setState(244);
 			((AssignmentContext)_localctx).name = match(IDENTIFIER);
 			}
-			 System.out.println("Assignment: " + (((AssignmentContext)_localctx).name!=null?((AssignmentContext)_localctx).name.getText():null)); 
-			setState(246);
+			setState(245);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & 279227574943481856L) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -1384,8 +1383,9 @@ public class FunctionCraftParser extends Parser {
 				_errHandler.reportMatch(this);
 				consume();
 			}
-			setState(247);
+			setState(246);
 			expr("");
+			 System.out.println("Assignment: " + (((AssignmentContext)_localctx).name!=null?((AssignmentContext)_localctx).name.getText():null)); 
 			}
 		}
 		catch (RecognitionException re) {
@@ -4526,8 +4526,8 @@ public class FunctionCraftParser extends Parser {
 		"\u00f0\u00ee\u0001\u0000\u0000\u0000\u00f1\u00f3\u0003\n\u0005\u0000\u00f2"+
 		"\u00f1\u0001\u0000\u0000\u0000\u00f2\u00f3\u0001\u0000\u0000\u0000\u00f3"+
 		"\u001f\u0001\u0000\u0000\u0000\u00f4\u00f5\u0005<\u0000\u0000\u00f5\u00f6"+
-		"\u0006\u0010\uffff\uffff\u0000\u00f6\u00f7\u0007\u0000\u0000\u0000\u00f7"+
-		"\u00f8\u00038\u001c\u0000\u00f8!\u0001\u0000\u0000\u0000\u00f9\u00ff\u0005"+
+		"\u0007\u0000\u0000\u0000\u00f6\u00f7\u00038\u001c\u0000\u00f7\u00f8\u0006"+
+		"\u0010\uffff\uffff\u0000\u00f8!\u0001\u0000\u0000\u0000\u00f9\u00ff\u0005"+
 		">\u0000\u0000\u00fa\u00ff\u0005=\u0000\u0000\u00fb\u00ff\u0005?\u0000"+
 		"\u0000\u00fc\u00ff\u0003l6\u0000\u00fd\u00ff\u0003d2\u0000\u00fe\u00f9"+
 		"\u0001\u0000\u0000\u0000\u00fe\u00fa\u0001\u0000\u0000\u0000\u00fe\u00fb"+
