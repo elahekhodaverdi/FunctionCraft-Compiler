@@ -129,6 +129,19 @@ public class NameAnalyzer extends Visitor<Void> {
         }
         return null;
     }
+
+    @Override
+    public Void visit(PatternDeclaration patternDeclaration) {
+        patternDeclaration.getPatternName().accept(this);
+        patternDeclaration.getTargetVariable().accept(this);
+        for (Expression condition : patternDeclaration.getConditions()){
+            condition.accept(this);
+        }
+        for (Expression returnExp : patternDeclaration.getReturnExp()) {
+            returnExp.accept(this);
+        }
+        return null;
+    }
     //TODO:visit all other AST nodes and find name errors
 
 
