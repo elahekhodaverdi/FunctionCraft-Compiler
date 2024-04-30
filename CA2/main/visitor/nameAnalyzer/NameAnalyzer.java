@@ -255,6 +255,12 @@ public class NameAnalyzer extends Visitor<Void> {
         lambdaExpression.getBody().forEach(statement -> statement.accept(this));
         return null;
     }
+
+    @Override
+    public Void visit(ListValue listValue) {
+        listValue.getElements().forEach(element -> element.accept(this));
+        return null;
+    }
     //TODO:visit all other AST nodes and find name errors
 
 
