@@ -35,7 +35,30 @@ public class NameAnalyzer extends Visitor<Void> {
 
         //TODO: addFunctions,
         //Code handles duplicate function declarations by renaming and adding them to the symbol table.
+        int duplicateFunctionId = 0;
+        ArrayList<FunctionItem> functionItems = new ArrayList<>();
+        for (FunctionDeclaration functionDeclaration : program.getFunctionDeclarations()) {
+            FunctionItem functionItem = new FunctionItem(functionDeclaration);
+            try {
+                SymbolTable.root.put(functionItem);
+                functionItems.add(functionItem);
 
+            } catch (ItemAlreadyExists e) {
+                nameErrors.add(new RedefinitionOfFunction(functionDeclaration.getLine(),
+                         functionDeclaration.getFunctionName().getName()));
+                duplicateFunctionId += 1;
+                String freshName = functionItem.getName() + "#" + String.valueOf(duplicateFunctionId);
+                Identifier newId = functionDeclaration.getFunctionName();
+                newId.setName(freshName);
+                functionDeclaration.setFunctionName(newId);
+                FunctionItem newItem = new FunctionItem(functionDeclaration);
+                functionItems.add(newItem);
+                try {
+                    SymbolTable.root.put(newItem);
+                } catch (ItemAlreadyExists ignored) {}
+
+            }
+        }
         //addPatterns
         int duplicatePatternId = 0;
         ArrayList<PatternItem> patternItems = new ArrayList<>();
@@ -56,8 +79,7 @@ public class NameAnalyzer extends Visitor<Void> {
                 patternItems.add(newItem);
                 try {
                     SymbolTable.root.put(newItem);
-                } catch (ItemAlreadyExists ignored) {
-                }
+                } catch (ItemAlreadyExists ignored) {}
             }
         }
         //TODO:visitFunctions
