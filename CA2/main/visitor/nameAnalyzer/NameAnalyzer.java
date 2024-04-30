@@ -110,6 +110,14 @@ public class NameAnalyzer extends Visitor<Void> {
         return null;
     }
 
+    @Override
+    public Void visit(VarDeclaration varDeclaration){
+        var varItem = new VarItem(varDeclaration.getName());
+        try {
+            SymbolTable.top.put(varItem);
+        } catch (ItemAlreadyExists ignored) {}
+        return null;
+    }
     //TODO:visit all other AST nodes and find name errors
 
 
