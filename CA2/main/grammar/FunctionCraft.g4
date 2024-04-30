@@ -383,7 +383,7 @@ body returns [ArrayList<Statement> bodyRet]:
 expression returns [Expression expRet]:
     e1 = expression a = APPEND e2 = eqaulityExpression
     {
-        if ($e1 instanceof AppendExpression appendExp)
+        if ($e1.expRet instanceof AppendExpression appendExp)
             $expRet = appendExp;
         else
             $expRet = new AppendExpression($e1.expRet);
