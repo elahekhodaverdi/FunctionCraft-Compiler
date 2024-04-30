@@ -143,6 +143,14 @@ public class NameAnalyzer extends Visitor<Void> {
         returnStatement.accept(this);
         return null;
     }
+
+    @Override
+    public Void visit(IfStatement ifStatement) {
+        ifStatement.getConditions().forEach(condition -> condition.accept(this));
+        ifStatement.getThenBody().forEach(thenBody -> thenBody.accept(this));
+        ifStatement.getElseBody().forEach(elseBody -> elseBody.accept(this));
+        return null;
+    }
     //TODO:visit all other AST nodes and find name errors
 
 
