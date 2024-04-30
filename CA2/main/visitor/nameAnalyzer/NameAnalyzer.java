@@ -261,6 +261,12 @@ public class NameAnalyzer extends Visitor<Void> {
         listValue.getElements().forEach(element -> element.accept(this));
         return null;
     }
+
+    @Override
+    public Void visit(FunctionPointer functionPointer) {
+        functionPointer.getId().accept(this);
+        return null;
+    }
     //TODO:visit all other AST nodes and find name errors
 
 
