@@ -151,6 +151,27 @@ public class NameAnalyzer extends Visitor<Void> {
         ifStatement.getElseBody().forEach(elseBody -> elseBody.accept(this));
         return null;
     }
+
+    @Override
+    public Void visit(PutStatement putStatement) {
+        putStatement.getExpression().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(LenStatement lenStatement) {
+        lenStatement.getExpression().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(PushStatement pushStatement) {
+        pushStatement.getInitial().accept(this);
+        pushStatement.getToBeAdded().accept(this);
+        return null;
+    }
+
+
     //TODO:visit all other AST nodes and find name errors
 
 
