@@ -62,7 +62,16 @@ public class NameAnalyzer extends Visitor<Void> {
         }
         //TODO:visitFunctions
         //Iterates over function declarations, assigns symbol tables, visits declarations, and manages symbol table stack.
-
+        int visitingFunctionIndex = 0;
+        for (FunctionDeclaration functionDeclaration : program.getFunctionDeclarations()) {
+            FunctionItem functionItem = functionItems.get(visitingFunctionIndex);
+            SymbolTable functionSymbolTable = new SymbolTable();
+            functionItem.setFunctionSymbolTable(functionSymbolTable);
+            SymbolTable.push(functionSymbolTable);
+            functionDeclaration.accept(this);
+            SymbolTable.pop();
+            visitingFunctionIndex += 1;
+        }
         //visitPatterns
         int visitingPatternIndex = 0;
         for (PatternDeclaration patternDeclaration : program.getPatternDeclarations()) {
