@@ -383,9 +383,12 @@ body returns [ArrayList<Statement> bodyRet]:
 expression returns [Expression expRet]:
     e1 = expression a = APPEND e2 = eqaulityExpression
     {
-        Expression apendee = new AppendExpression();
+        if ($e1 instanceof AppendExpression appendExp)
+            $expRet = appendExp;
+        else
+            $expRet = new AppendExpression($e1.expRet);
+        $expRet.addAppendedExpression($e2.exprRet);
     }
-    //TODO:construct append expression node.the left most expression is appendee and others are appended.
     | e3 = eqaulityExpression {$expRet = $e3.expRet;};
 
 
