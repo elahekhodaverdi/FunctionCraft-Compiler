@@ -118,6 +118,17 @@ public class NameAnalyzer extends Visitor<Void> {
         } catch (ItemAlreadyExists ignored) {}
         return null;
     }
+
+    @Override
+    public Void visit(FunctionDeclaration functionDeclaration){
+        for (VarDeclaration varDeclaration : functionDeclaration.getArgs()) {
+            varDeclaration.accept(this);
+        }
+        for (Statement statement : functionDeclaration.getBody()) {
+            statement.accept(this);
+        }
+        return null;
+    }
     //TODO:visit all other AST nodes and find name errors
 
 
