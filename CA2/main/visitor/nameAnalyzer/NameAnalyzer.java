@@ -171,7 +171,21 @@ public class NameAnalyzer extends Visitor<Void> {
         return null;
     }
 
-
+    @Override
+    public Void visit(LoopDoStatement loopDoStatement) {
+        loopDoStatement.getLoopConditions().forEach(condition -> condition.accept(this));
+        loopDoStatement.getLoopBodyStmts().forEach(statement -> statement.accept(this));
+        loopDoStatement.getLoopRetStmt().accept(this);
+        return null;
+    }
+    @Override
+    public Void visit(ForStatement forStatement) {
+        forStatement.getIteratorId().accept(this);
+        forStatement.getLoopBody().forEach(statement -> statement.accept(this));
+        forStatement.getLoopBodyExpressions().forEach(expression -> expression.accept(this));
+        forStatement.getReturnStatement().accept(this);
+        return null;
+    }
     //TODO:visit all other AST nodes and find name errors
 
 
