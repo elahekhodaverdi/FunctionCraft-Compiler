@@ -205,6 +205,17 @@ public class NameAnalyzer extends Visitor<Void> {
         chompStatement.getChompExpression().accept(this);
         return null;
     }
+
+    @Override
+    public Void visit(AssignStatement assignStatement) {
+        assignStatement.getAssignedId().accept(this);
+        assignStatement.getAssignExpression().accept(this);
+        if (assignStatement.isAccessList())
+            assignStatement.getAccessListExpression().accept(this);
+        return null;
+    }
+
+    
     //TODO:visit all other AST nodes and find name errors
 
 
