@@ -27,14 +27,11 @@ import java.util.ArrayList;
 
 public class NameAnalyzer extends Visitor<Void> {
     public ArrayList<CompileError> nameErrors = new ArrayList<>();
-
     @Override
     public Void visit(Program program) {
         SymbolTable.root = new SymbolTable();
         SymbolTable.top = new SymbolTable();
 
-        //TODO: addFunctions,
-        //Code handles duplicate function declarations by renaming and adding them to the symbol table.
         int duplicateFunctionId = 0;
         ArrayList<FunctionItem> functionItems = new ArrayList<>();
         for (FunctionDeclaration functionDeclaration : program.getFunctionDeclarations()) {
@@ -82,8 +79,7 @@ public class NameAnalyzer extends Visitor<Void> {
                 } catch (ItemAlreadyExists ignored) {}
             }
         }
-        //TODO:visitFunctions
-        //Iterates over function declarations, assigns symbol tables, visits declarations, and manages symbol table stack.
+
         int visitingFunctionIndex = 0;
         for (FunctionDeclaration functionDeclaration : program.getFunctionDeclarations()) {
             FunctionItem functionItem = functionItems.get(visitingFunctionIndex);
@@ -121,12 +117,9 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(FunctionDeclaration functionDeclaration){
-        for (VarDeclaration varDeclaration : functionDeclaration.getArgs()) {
-            varDeclaration.accept(this);
-        }
-        for (Statement statement : functionDeclaration.getBody()) {
-            statement.accept(this);
-        }
+        functionDeclaration.getFunctionName().accept(this);
+        functionDeclaration.getArgs().forEach(varDec -> varDec.accept(this));
+        functionDeclaration.getBody().forEach(statment -> statment.accept(this));
         return null;
     }
 
@@ -134,12 +127,8 @@ public class NameAnalyzer extends Visitor<Void> {
     public Void visit(PatternDeclaration patternDeclaration) {
         patternDeclaration.getPatternName().accept(this);
         patternDeclaration.getTargetVariable().accept(this);
-        for (Expression condition : patternDeclaration.getConditions()){
-            condition.accept(this);
-        }
-        for (Expression returnExp : patternDeclaration.getReturnExp()) {
-            returnExp.accept(this);
-        }
+        patternDeclaration.getConditions().forEach(condition -> condition.accept(this));
+        patternDeclaration.getReturnExp().forEach(exp -> exp.accept(this));
         return null;
     }
     //TODO:visit all other AST nodes and find name errors
