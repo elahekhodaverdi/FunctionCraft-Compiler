@@ -22,7 +22,7 @@ program returns [Program flProgram]:
     )*
     m = main{$flProgram.setMain($m.mainRet);};
 
-functionDeclaration returns [FunctionDeclaration functionDeclarationRet]: //TODO:construct functionDeclaration node
+functionDeclaration returns [FunctionDeclaration functionDeclarationRet]:
     {
         $functionDeclarationRet = new FunctionDeclaration();
     }
@@ -264,7 +264,7 @@ loopBody returns [ArrayList<Statement> loopStmts, ArrayList<Expression> loopExps
 
 forStatement returns [ForStatement forStRet]://TODO:construct forStatement node
     {
-        $forSttRet = new ForStatement()
+        $forStRet = new ForStatement()
     }
     f = FOR id = IDENTIFIER IN r = range
     l = loopBody
@@ -387,7 +387,7 @@ expression returns [Expression expRet]:
             $expRet = appendExp;
         else
             $expRet = new AppendExpression($e1.expRet);
-        $expRet.addAppendedExpression($e2.exprRet);
+        $expRet.addAppendedExpression($e2.expRet);
     }
     | e3 = eqaulityExpression {$expRet = $e3.expRet;};
 
