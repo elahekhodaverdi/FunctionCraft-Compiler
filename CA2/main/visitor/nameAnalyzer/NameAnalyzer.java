@@ -119,7 +119,7 @@ public class NameAnalyzer extends Visitor<Void> {
     public Void visit(FunctionDeclaration functionDeclaration){
         functionDeclaration.getFunctionName().accept(this);
         functionDeclaration.getArgs().forEach(varDec -> varDec.accept(this));
-        functionDeclaration.getBody().forEach(statment -> statment.accept(this));
+        functionDeclaration.getBody().forEach(statement -> statement.accept(this));
         return null;
     }
 
@@ -131,6 +131,13 @@ public class NameAnalyzer extends Visitor<Void> {
         patternDeclaration.getReturnExp().forEach(exp -> exp.accept(this));
         return null;
     }
+
+    @Override
+    public Void visit(MainDeclaration mainDeclaration) {
+        mainDeclaration.getBody().forEach(statement -> statement.accept(this));
+        return null;
+    }
+    
     //TODO:visit all other AST nodes and find name errors
 
 
