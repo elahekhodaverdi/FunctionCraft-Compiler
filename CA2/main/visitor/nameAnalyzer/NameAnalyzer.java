@@ -107,6 +107,16 @@ public class NameAnalyzer extends Visitor<Void> {
     }
 
     @Override
+    public Void visit(Identifier identifier) {
+        try {
+            SymbolTable.top.getItem(identifier.getName());
+        } catch (ItemNotFound e) {
+            nameErrors.add(new VariableNotDeclared(identifier.getLine(), identifier.getName()));
+        }
+        return null;
+    }
+
+    @Override
     public Void visit(VarDeclaration varDeclaration){
         var varItem = new VarItem(varDeclaration.getName());
         try {
@@ -267,8 +277,4 @@ public class NameAnalyzer extends Visitor<Void> {
         functionPointer.getId().accept(this);
         return null;
     }
-    //TODO:visit all other AST nodes and find name errors
-
-
-
 }

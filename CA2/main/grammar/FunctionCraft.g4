@@ -17,30 +17,23 @@ program returns [Program flProgram]:
         $flProgram.setLine(1);
     }
     (
-        f = functionDeclaration {$flProgram.addFunctionDeclaration($f.functionDeclarationRet);}
-        | p = patternMatching {$flProgram.addPatternDeclaration($p.patternRet);}
+        f = functionDeclaration     {$flProgram.addFunctionDeclaration($f.functionDeclarationRet);}
+        | p = patternMatching       {$flProgram.addPatternDeclaration($p.patternRet);}
     )*
-    m = main{$flProgram.setMain($m.mainRet);};
+    m = main                        {$flProgram.setMain($m.mainRet);};
 
 functionDeclaration returns [FunctionDeclaration functionDeclarationRet]:
     {
         $functionDeclarationRet = new FunctionDeclaration();
     }
-    def = DEF  id = IDENTIFIER 
+    def = DEF  id = IDENTIFIER
     {
-        Identifier id_ = new Identifier($id.text);
-        id_.setLine($id.line); 
+        Identifier id_ = new Identifier($id.text, $id.line);
         $functionDeclarationRet.setFunctionName(id_);
         $functionDeclarationRet.setLine($def.line);
     }
-    f = functionArgumentsDeclaration 
-    {
-        $functionDeclarationRet.setArgs($f.argRet);
-    }
-    b = body 
-    {
-        $functionDeclarationRet.setBody($b.bodyRet);
-    }
+    f = functionArgumentsDeclaration    {$functionDeclarationRet.setArgs($f.argRet);}
+    b = body                            {$functionDeclarationRet.setBody($b.bodyRet);}
     END
     ;
 
@@ -49,7 +42,8 @@ functionArgumentsDeclaration returns [ArrayList<VarDeclaration> argRet]:
         $argRet = new ArrayList<VarDeclaration>();
     }
     LPAR
-    (id1 = IDENTIFIER
+    (
+        id1 = IDENTIFIER
         {
             Identifier id_ = new Identifier($id1.text);
             id_.setLine($id1.line);
