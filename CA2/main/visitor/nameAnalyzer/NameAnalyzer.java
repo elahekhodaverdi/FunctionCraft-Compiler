@@ -20,6 +20,7 @@ import main.symbolTable.exceptions.ItemAlreadyExists;
 import main.symbolTable.exceptions.ItemNotFound;
 import main.symbolTable.item.FunctionItem;
 import main.symbolTable.item.PatternItem;
+import main.symbolTable.item.SymbolTableItem;
 import main.symbolTable.item.VarItem;
 import main.visitor.Visitor;
 
@@ -253,13 +254,18 @@ public class NameAnalyzer extends Visitor<Void> {
     public Void visit(AccessExpression accessExpression) {
         accessExpression.getAccessedExpression().accept(this);
         if (accessExpression.isFunctionCall()) {
+            SymbolTableItem symbolTableItem = null;
             if (accessExpression.getAccessedExpression() instanceof Identifier identifier) {
                 try {
-                    SymbolTable.root.getItem(identifier.getName());
+                    symbolTableItem = SymbolTable.root.getItem(identifier.getName());
                 } catch (ItemNotFound e) {
                     nameErrors.add(new FunctionNotDeclared(identifier.getLine(), identifier.getName()));
                 }
-
+            }
+            if (symbolTableItem instanceof FunctionItem functionItem) {
+                if (accessExpression.getArguments().size() != functionItem.getFunctionDeclaration().getArgs().size()){
+                    nameErrors.add(new ArgMisMatch(accessExpression.getLine(), functionItem.getName()));
+                }
             }
             accessExpression.getArguments().forEach(arg -> arg.accept(this));
         }
