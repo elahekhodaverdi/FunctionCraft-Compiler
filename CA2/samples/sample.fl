@@ -39,7 +39,7 @@ def aa(a, b, c)
     return a+b+c;
 end
 
-def main()
+def src.main()
     a = 5;
     b = 6;
     puts("salam");
