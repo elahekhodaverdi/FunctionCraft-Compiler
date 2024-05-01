@@ -256,12 +256,18 @@ loopBody returns [ArrayList<Statement> loopStmts, ArrayList<Expression> loopExps
     r = returnStatement {$loopRetStmt = $r.returnStmtRet;$loopRetStmt.setLine($r.returnStmtRet.getLine());}
     )?;
 
-forStatement returns [ForStatement forStRet]://TODO:construct forStatement node
+forStatement returns [ForStatement forStRet]:
     {
         $forStRet = new ForStatement()
     }
     f = FOR id = IDENTIFIER IN r = range
     l = loopBody
+    {
+        $forStRet.setRangeExpressions($r.rangeRet);
+        $forStRet.setLoopStmts($l.loopStmts);
+        $forStRet.setLoopExps($l.loopExps);
+        $forStRet.setRetStmt($l.retStmt);
+    }
     END
     ;
 
