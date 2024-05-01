@@ -252,8 +252,17 @@ public class NameAnalyzer extends Visitor<Void> {
     @Override
     public Void visit(AccessExpression accessExpression) {
         accessExpression.getAccessedExpression().accept(this);
-        if (accessExpression.isFunctionCall())
+        if (accessExpression.isFunctionCall()) {
+            if (accessExpression.getAccessedExpression() instanceof Identifier identifier) {
+                try {
+                    SymbolTable.root.getItem(identifier.getName());
+                } catch (ItemNotFound e) {
+                    nameErrors.add(new FunctionNotDeclared(identifier.getLine(), identifier.getName()));
+                }
+
+            }
             accessExpression.getArguments().forEach(arg -> arg.accept(this));
+        }
         else
             accessExpression.getDimentionalAccess().forEach(dim -> dim.accept(this));
         return null;
