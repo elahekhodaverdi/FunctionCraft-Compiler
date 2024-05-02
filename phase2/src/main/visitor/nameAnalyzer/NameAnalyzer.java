@@ -128,7 +128,6 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(FunctionDeclaration functionDeclaration){
-        functionDeclaration.getFunctionName().accept(this);
         functionDeclaration.getArgs().forEach(varDec -> varDec.accept(this));
         functionDeclaration.getBody().forEach(statement -> statement.accept(this));
         return null;
@@ -252,24 +251,7 @@ public class NameAnalyzer extends Visitor<Void> {
     @Override
     public Void visit(AccessExpression accessExpression) {
         accessExpression.getAccessedExpression().accept(this);
-        if (accessExpression.isFunctionCall()) {
-            SymbolTableItem symbolTableItem = null;
-            if (accessExpression.getAccessedExpression() instanceof Identifier identifier) {
-                try {
-                    symbolTableItem = SymbolTable.root.getItem(identifier.getName());
-                } catch (ItemNotFound e) {
-                    nameErrors.add(new FunctionNotDeclared(identifier.getLine(), identifier.getName()));
-                }
-            }
-            if (symbolTableItem instanceof FunctionItem functionItem) {
-                if (accessExpression.getArguments().size() != functionItem.getFunctionDeclaration().getArgs().size()){
-                    nameErrors.add(new ArgMisMatch(accessExpression.getLine(), functionItem.getName()));
-                }
-            }
-            accessExpression.getArguments().forEach(arg -> arg.accept(this));
-        }
-        else
-            accessExpression.getDimentionalAccess().forEach(dim -> dim.accept(this));
+        accessExpression.getAccesses().forEach(access -> access.accept(this));
         return null;
     }
 

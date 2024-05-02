@@ -127,14 +127,8 @@ functionArguments returns [ArrayList<Expression> funcArgsRet]:
     {
         $funcArgsRet = new ArrayList<Expression>();
     }
-    (e1 = expression
-    {
-       $funcArgsRet.add($e1.expRet);
-    }
-    (COMMA e2 = expression
-    {
-       $funcArgsRet.add($e2.expRet);
-    }
+    (e1 = expression        {$funcArgsRet.add($e1.expRet);}
+    (COMMA e2 = expression  {$funcArgsRet.add($e2.expRet);}
     )* )?;
 
 
@@ -462,43 +456,29 @@ preUnaryExpression returns [Expression expRet]:
     | a2 = accessExpression {$expRet = $a2.expRet;};
 
 
-accessExpression returns [Expression expRet]:
-    {
-        boolean isAccessExpression = false;
-        boolean isMultiDimentional = false;
-        ArrayList<Expression> args = new ArrayList<Expression>();
-        ArrayList<Expression> dimentions = new ArrayList<Expression>();
-    }
-    o = otherExpression
-    (LPAR f = functionArguments //arrayList of expression
-    {
-        isAccessExpression = true;
-        args.addAll($f.funcArgsRet);
-    }
-    RPAR)*
-    (a = accessList //single expression
-    {
-        isMultiDimentional = true;
-        dimentions.add($a.accessListExp);
-    }
-    )*
-    {
-        if(!isAccessExpression){
-            $expRet = $o.expRet;
-        }
-        else{
-            AccessExpression accessExp = new AccessExpression($o.expRet, args);
-            accessExp.setIsFunctionCall(isAccessExpression);
-            if(isMultiDimentional){
-
-                accessExp.setDimentionalAccess(dimentions);
-            }
-            $expRet = accessExp;
-            $expRet.setLine($o.expRet.getLine());
-
-        }
-    }
+accessExpression returns [Expression expRet]
+    : o = otherExpression       {AccessExpression accessExp = new AccessExpression($o.expRet);}
+    ( l = list_indexing         {accessExp.addAccess($l.expRet);}
+    | f = function_call         {accessExp.addAccess($f.expRet);}
+    )*                          {$expRet = accessExp;}
     ;
+
+list_indexing returns [Expression expRet]
+    : LBRACK e = expression RBRACK {$expRet = new IndexExpression($e.expRet);}
+    ;
+
+function_call returns [Expression expRet]
+    : LPAR a = arguments RPAR   {$expRet = new ArgExpression($a.argsRet);}
+    ;
+
+arguments returns [ArrayList<Expression> argsRet]
+    :                           {$argsRet = new ArrayList<Expression>();}
+    (e1 = expression            {$argsRet.add($e1.expRet);}
+    (COMMA e2 = expression      {$argsRet.add($e1.expRet);}
+    )*
+    )?
+    ;
+
 
 otherExpression returns [Expression expRet]:
     v = values {$expRet = $v.valRet;}

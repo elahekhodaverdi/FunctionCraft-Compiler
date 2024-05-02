@@ -44,4 +44,6 @@ public interface IVisitor<T> {
     T visit(IntValue intValue);
     T visit(StringValue stringValue);
     T visit(FloatValue floatValue);
+    T visit(ArgExpression argExpression);
+    T visit(IndexExpression indexExpression);
 }

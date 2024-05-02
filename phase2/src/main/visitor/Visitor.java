@@ -73,4 +73,8 @@ public class Visitor<T> implements IVisitor<T> {
     public T visit(StringValue stringValue){return null;}
     @Override
     public T visit(FloatValue floatValue){return null;}
+    @Override
+    public T visit(ArgExpression argExpression){return null;}
+    @Override
+    public T visit(IndexExpression indexExpression){return null;}
 }
