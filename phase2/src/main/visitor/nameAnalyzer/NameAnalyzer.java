@@ -151,7 +151,6 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(ReturnStatement returnStatement) {
-        returnStatement.accept(this);
         return null;
     }
 
