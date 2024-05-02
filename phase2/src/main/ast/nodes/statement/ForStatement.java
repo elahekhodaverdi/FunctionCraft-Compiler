@@ -14,6 +14,7 @@ public class ForStatement extends Statement{
     //expressions that satisfy break or continue conditions
     private ArrayList<Statement> loopBody = new ArrayList<>();
     private ReturnStatement returnStatement;
+    public ForStatement() {}
     public ForStatement(Identifier identifierId, ArrayList<Expression> rangeExpressions
                         , ArrayList<Expression> loopBodyExpressions, ArrayList<Statement> loopBody
                         , ReturnStatement returnStatement){
