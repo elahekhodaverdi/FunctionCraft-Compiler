@@ -128,6 +128,12 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(FunctionDeclaration functionDeclaration){
+        Identifier functionName = functionDeclaration.getFunctionName();
+        for (VarDeclaration arg : functionDeclaration.getArgs()) {
+            if (arg.getName().getName().equals(functionName.getName())) {
+                nameErrors.add(new IdenticalArgFunctionName(functionName.getLine(), arg.getName().getName()));
+            }
+        }
         functionDeclaration.getArgs().forEach(varDec -> varDec.accept(this));
         functionDeclaration.getBody().forEach(statement -> statement.accept(this));
         return null;
