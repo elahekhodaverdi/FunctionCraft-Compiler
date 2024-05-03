@@ -48,10 +48,16 @@ public class DependencyDetector extends Visitor<Void> {
 
         return null;
     }
-    
-    public Void findDependency(){
-        //TODO:find dependencies by analyzing dependency graph
+
+public Void findDependency(){
+        ArrayList<List<String>> cycles = dependencyGraph.findCycles();
+        if (cycles == null)
+            return null;
+        for(List<String> cycle : cycles) {
+                dependencyError.add(new CircularDependency(cycle));
+            }
         return null;
     }
+
 
 }
