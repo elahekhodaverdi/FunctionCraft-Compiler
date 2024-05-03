@@ -48,16 +48,15 @@ public class Graph {
         beingVisited.remove(vertex);
         return false;
     }
-    public Void printGraph(){
-        for(String vertex : adjacencyList.keySet()){
-            System.out.println(vertex + "----");
-            for(String adj : adjacencyList.get(vertex)){
-                System.out.println(adj);
-            }
-            System.out.println("--------");
+    public Void printGraph() {
+        for (Map.Entry<String, List<String>> entry : adjacencyList.entrySet()) {
+            System.out.println("Vertex: " + entry.getKey());
+            System.out.println("Adjacent vertices: " + String.join(", ", entry.getValue()));
+            System.out.println("--------------------");
         }
         return null;
     }
+
 
 
 }

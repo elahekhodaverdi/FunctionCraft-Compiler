@@ -70,9 +70,8 @@ public class DependencyDetector extends Visitor<Void> {
                 return;
             if (exp == null) return;
             findFunctionCalls(exp, dependencies);
-
         });
-        
+
         dependencies.forEach(dependency -> dependencyGraph.addEdge(functionName, dependency));
         return null;
     }
