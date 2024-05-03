@@ -3,6 +3,8 @@ package main.visitor.nameAnalyzer;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.expression.AccessExpression;
+import main.ast.nodes.expression.AppendExpression;
+import main.ast.nodes.expression.BinaryExpression;
 import main.ast.nodes.expression.Expression;
 import main.ast.nodes.expression.Identifier;
 import main.ast.nodes.expression.LambdaExpression;
@@ -23,11 +25,35 @@ public class DependencyDetector extends Visitor<Void> {
     @Override
     public Void visit(Program program){
         for(FunctionDeclaration functionDeclaration : program.getFunctionDeclarations()){
-            dependencyGraph.addEdge("main", functionDeclaration.getFunctionName().getName());
             functionDeclaration.accept(this);
         }
 
         return null;
+    }
+
+    public void findFunctionCalls(Expression expr, ArrayList<String> dependencies) {
+        if (expr instanceof AccessExpression accessExpr) {
+            Expression accessedExpression = accessExpr.getAccessedExpression(); 
+            if (accessExpr.getAccesses().size() != 0 && accessedExpression instanceof Identifier id) 
+                dependencies.add(id.getName());
+            else return;
+            for (Expression expression : accessExpr.getAccesses())
+                findFunctionCalls(expression, dependencies);
+        }
+        
+        if (expr instanceof AppendExpression appendExpr) {
+            Expression appendeeExpr = appendExpr.getAppendee(); 
+            findFunctionCalls(appendeeExpr, dependencies);
+            for (Expression expression : appendExpr.getAppendeds())
+                findFunctionCalls(expression, dependencies);
+        }
+
+        if (expr instanceof BinaryExpression binaryExpr) {
+            Expression firstExpr = binaryExpr.getFirstOperand(); 
+            Expression secondExpr = binaryExpr.getSecondOperand(); 
+            findFunctionCalls(firstExpr, dependencies);
+            findFunctionCalls(secondExpr, dependencies);
+        }
     }
 
     @Override
@@ -35,21 +61,25 @@ public class DependencyDetector extends Visitor<Void> {
         String functionName = functionDeclaration.getFunctionName().getName();
         ArrayList<String> dependencies = new ArrayList<>();
         functionDeclaration.getBody().forEach(stmt -> {
-            if (stmt instanceof ExpressionStatement expressionStatement) {
-                Expression exp = expressionStatement.getExpression();
-                if (exp instanceof AccessExpression accessExpression) {
-                    Expression accessedExpression = accessExpression.getAccessedExpression(); 
-                    if (accessedExpression instanceof Identifier id)
-                        dependencies.add(id.getName());
-                }
-            }
-        });
-        dependencies.forEach(dependency -> dependencyGraph.addEdge(functionName, dependency));
+            Expression exp;
+            if (stmt instanceof ExpressionStatement exprStm) 
+                exp = exprStm.getExpression();
+            else if (stmt instanceof ReturnStatement retStm)
+                exp = (retStm.hasRetExpression())? retStm.getReturnExp() : null;
+            else
+                return;
+            if (exp == null) return;
+            findFunctionCalls(exp, dependencies);
 
+        });
+        
+        dependencies.forEach(dependency -> dependencyGraph.addEdge(functionName, dependency));
         return null;
     }
 
-public Void findDependency(){
+
+
+    public Void findDependency(){
         ArrayList<List<String>> cycles = dependencyGraph.findCycles();
         if (cycles == null)
             return null;
