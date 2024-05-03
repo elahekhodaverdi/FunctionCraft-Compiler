@@ -4,6 +4,7 @@ import main.symbolTable.exceptions.ItemAlreadyExists;
 import main.symbolTable.exceptions.ItemNotFound;
 import main.symbolTable.item.FunctionItem;
 import main.symbolTable.item.SymbolTableItem;
+import main.symbolTable.item.VarItem;
 import main.symbolTable.utils.Stack;
 
 import java.util.HashMap;
@@ -40,5 +41,9 @@ public class SymbolTable {
 
     public FunctionItem getFunctionItem(String key) throws ItemNotFound {
         return (FunctionItem) getItem(FunctionItem.START_KEY + key);
+    }
+
+    public VarItem getVarItem(String key) throws ItemNotFound {
+        return (VarItem) getItem(VarItem.START_KEY + key);
     }
 }

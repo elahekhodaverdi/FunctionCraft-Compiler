@@ -15,7 +15,7 @@ public class ArgExpression extends Expression{
 
     @Override
     public String toString() {
-        return "";
+        return args.toString();
     }
 
     @Override

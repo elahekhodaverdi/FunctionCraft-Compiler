@@ -1,7 +1,9 @@
 package main.ast.nodes.expression;
 
+import lombok.Getter;
 import main.visitor.IVisitor;
 
+@Getter
 public class IndexExpression extends Expression{
     Expression index;
 

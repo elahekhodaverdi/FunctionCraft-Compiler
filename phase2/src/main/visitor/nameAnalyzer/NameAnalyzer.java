@@ -110,7 +110,7 @@ public class NameAnalyzer extends Visitor<Void> {
     @Override
     public Void visit(Identifier identifier) {
         try {
-            SymbolTable.top.getItem(identifier.getName());
+            SymbolTable.top.getVarItem(identifier.getName());
         } catch (ItemNotFound e) {
             nameErrors.add(new VariableNotDeclared(identifier.getLine(), identifier.getName()));
         }
@@ -223,7 +223,11 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(AssignStatement assignStatement) {
-        assignStatement.getAssignedId().accept(this);
+        var varItem = new VarItem(assignStatement.getAssignedId());
+        try {
+            SymbolTable.top.put(varItem);
+        } catch (ItemAlreadyExists ignored) {}
+
         assignStatement.getAssignExpression().accept(this);
         if (assignStatement.isAccessList())
             assignStatement.getAccessListExpression().accept(this);
@@ -268,7 +272,8 @@ public class NameAnalyzer extends Visitor<Void> {
                 nameErrors.add(new FunctionNotDeclared(identifier.getLine(), identifier.getName()));
             }
         }
-        accessExpression.getAccessedExpression().accept(this);
+        if (!accessExpression.startWithFunctionCall())
+            accessExpression.getAccessedExpression().accept(this);
         accessExpression.getAccesses().forEach(access -> access.accept(this));
         return null;
     }
@@ -289,6 +294,17 @@ public class NameAnalyzer extends Visitor<Void> {
     @Override
     public Void visit(FunctionPointer functionPointer) {
         functionPointer.getId().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(ArgExpression argExpression) {
+        argExpression.getArgs().forEach(arg -> arg.accept(this));
+        return null;
+    }
+    @Override
+    public Void visit(IndexExpression indexExpression) {
+        indexExpression.getIndex().accept(this);
         return null;
     }
 }
