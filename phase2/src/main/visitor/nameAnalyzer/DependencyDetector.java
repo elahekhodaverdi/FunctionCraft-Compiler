@@ -23,6 +23,7 @@ public class DependencyDetector extends Visitor<Void> {
     @Override
     public Void visit(Program program){
         for(FunctionDeclaration functionDeclaration : program.getFunctionDeclarations()){
+            dependencyGraph.addEdge("main", functionDeclaration.getFunctionName().getName());
             functionDeclaration.accept(this);
         }
 
