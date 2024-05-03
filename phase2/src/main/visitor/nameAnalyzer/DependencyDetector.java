@@ -37,6 +37,15 @@ public class DependencyDetector extends Visitor<Void> {
             for (Expression expression : accessExpr.getAccesses())
                 findFunctionCalls(expression, dependencies);
         }
+
+        if (expr instanceof ArgExpression argExpr) {
+            for (Expression expression : argExpr.getArgs())
+                findFunctionCalls(expression, dependencies);
+        }
+
+        if (expr instanceof IndexExpression indExpr) {
+            findFunctionCalls(indExpr.getIndex(), dependencies);
+        }
         
         if (expr instanceof AppendExpression appendExpr) {
             Expression appendeeExpr = appendExpr.getAppendee(); 
