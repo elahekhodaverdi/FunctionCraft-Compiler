@@ -29,7 +29,26 @@ public class DependencyDetector extends Visitor<Void> {
 
         return null;
     }
-    //TODO:visit function declarations and construct dependency graph
+
+    @Override
+    public Void visit(FunctionDeclaration functionDeclaration) {
+        String functionName = functionDeclaration.getFunctionName().getName();
+        ArrayList<String> dependencies = new ArrayList<>();
+        functionDeclaration.getBody().forEach(stmt -> {
+            if (stmt instanceof ExpressionStatement expressionStatement) {
+                Expression exp = expressionStatement.getExpression();
+                if (exp instanceof AccessExpression accessExpression) {
+                    Expression accessedExpression = accessExpression.getAccessedExpression(); 
+                    if (accessedExpression instanceof Identifier id)
+                        dependencies.add(id.getName());
+                }
+            }
+        });
+        dependencies.forEach(dependency -> dependencyGraph.addEdge(functionName, dependency));
+
+        return null;
+    }
+    
     public Void findDependency(){
         //TODO:find dependencies by analyzing dependency graph
         return null;
