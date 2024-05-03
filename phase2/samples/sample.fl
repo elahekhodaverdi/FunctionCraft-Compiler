@@ -16,7 +16,7 @@ def f()
 end
 
 def g()
-    return f();
+    return ggg.match(f());
 end
 
 def h()

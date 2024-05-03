@@ -2,12 +2,7 @@ package main.visitor.nameAnalyzer;
 
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
-import main.ast.nodes.expression.AccessExpression;
-import main.ast.nodes.expression.AppendExpression;
-import main.ast.nodes.expression.BinaryExpression;
-import main.ast.nodes.expression.Expression;
-import main.ast.nodes.expression.Identifier;
-import main.ast.nodes.expression.LambdaExpression;
+import main.ast.nodes.expression.*;
 import main.ast.nodes.statement.ExpressionStatement;
 import main.ast.nodes.statement.ReturnStatement;
 import main.ast.nodes.statement.Statement;
@@ -33,10 +28,12 @@ public class DependencyDetector extends Visitor<Void> {
 
     public void findFunctionCalls(Expression expr, ArrayList<String> dependencies) {
         if (expr instanceof AccessExpression accessExpr) {
-            Expression accessedExpression = accessExpr.getAccessedExpression(); 
-            if (accessExpr.getAccesses().size() != 0 && accessedExpression instanceof Identifier id) 
-                dependencies.add(id.getName());
-            else return;
+            Expression accessedExpression = accessExpr.getAccessedExpression();
+            if (accessExpr.getAccesses().size() == 0)
+                return;
+            if (accessedExpression instanceof Identifier id && accessExpr.getAccesses().get(0) instanceof ArgExpression) 
+                    dependencies.add(id.getName());
+
             for (Expression expression : accessExpr.getAccesses())
                 findFunctionCalls(expression, dependencies);
         }
