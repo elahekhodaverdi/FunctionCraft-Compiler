@@ -14,6 +14,12 @@ public class AccessExpression extends Expression{
         this.accessedExpression = accessedExpression;
     }
 
+    public boolean startWithFunctionCall() {
+        if (!accesses.isEmpty())
+            return accesses.get(0) instanceof ArgExpression;
+        return false;
+    }
+
     public void addAccess(Expression access) {
         accesses.add(access);
     }

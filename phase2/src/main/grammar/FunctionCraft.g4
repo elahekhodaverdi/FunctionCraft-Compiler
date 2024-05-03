@@ -457,7 +457,7 @@ preUnaryExpression returns [Expression expRet]:
 
 
 accessExpression returns [Expression expRet]
-    : o = otherExpression       {AccessExpression accessExp = new AccessExpression($o.expRet);}
+    : o = otherExpression       {AccessExpression accessExp = new AccessExpression($o.expRet); accessExp.setLine($o.expRet.getLine());}
     ( l = list_indexing         {accessExp.addAccess($l.expRet);}
     | f = function_call         {accessExp.addAccess($f.expRet);}
     )*                          {$expRet = accessExp;}

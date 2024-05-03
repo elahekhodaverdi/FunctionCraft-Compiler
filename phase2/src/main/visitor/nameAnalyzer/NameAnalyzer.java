@@ -226,6 +226,7 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(ExpressionStatement expressionStatement) {
+        expressionStatement.getExpression().accept(this);
         return null;
     }
 
@@ -250,6 +251,15 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(AccessExpression accessExpression) {
+        if (accessExpression.getAccessedExpression() instanceof Identifier identifier &&
+            accessExpression.startWithFunctionCall()) {
+            try {
+                SymbolTable.root.getItem(FunctionItem.START_KEY + identifier.getName());
+            } catch (ItemNotFound e) {
+                nameErrors.add(new FunctionNotDeclared(identifier.getLine(), identifier.getName()));
+            }
+            
+        }
         accessExpression.getAccessedExpression().accept(this);
         accessExpression.getAccesses().forEach(access -> access.accept(this));
         return null;
