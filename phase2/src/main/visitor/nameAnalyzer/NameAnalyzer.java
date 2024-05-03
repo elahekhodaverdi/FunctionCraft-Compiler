@@ -254,11 +254,13 @@ public class NameAnalyzer extends Visitor<Void> {
         if (accessExpression.getAccessedExpression() instanceof Identifier identifier &&
             accessExpression.startWithFunctionCall()) {
             try {
-                SymbolTable.root.getItem(FunctionItem.START_KEY + identifier.getName());
+                FunctionItem functionItem = SymbolTable.root.getFunctionItem(identifier.getName());
+                if(!functionItem.getFunctionDeclaration().matchArgs(accessExpression.numberOFArgs())) {
+                    nameErrors.add(new ArgMisMatch(identifier.getLine(), identifier.getName()));
+                }
             } catch (ItemNotFound e) {
                 nameErrors.add(new FunctionNotDeclared(identifier.getLine(), identifier.getName()));
             }
-            
         }
         accessExpression.getAccessedExpression().accept(this);
         accessExpression.getAccesses().forEach(access -> access.accept(this));

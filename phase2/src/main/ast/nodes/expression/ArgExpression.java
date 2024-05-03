@@ -1,14 +1,16 @@
 package main.ast.nodes.expression;
 
+import lombok.Getter;
 import main.visitor.IVisitor;
 
 import java.util.ArrayList;
 
+@Getter
 public class ArgExpression extends Expression{
-    private ArrayList<Expression> arg;
+    private ArrayList<Expression> args;
 
-    public ArgExpression(ArrayList<Expression> arg) {
-        this.arg = arg;
+    public ArgExpression(ArrayList<Expression> args) {
+        this.args = args;
     }
 
     @Override

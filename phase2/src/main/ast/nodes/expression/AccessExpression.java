@@ -20,6 +20,14 @@ public class AccessExpression extends Expression{
         return false;
     }
 
+    public int numberOFArgs() {
+        if (startWithFunctionCall()) {
+            ArgExpression argExpression = (ArgExpression) accesses.get(0);
+            return argExpression.getArgs().size();
+        }
+        return 0;
+    }
+
     public void addAccess(Expression access) {
         accesses.add(access);
     }

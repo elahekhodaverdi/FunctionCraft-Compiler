@@ -2,6 +2,7 @@ package main.symbolTable;
 
 import main.symbolTable.exceptions.ItemAlreadyExists;
 import main.symbolTable.exceptions.ItemNotFound;
+import main.symbolTable.item.FunctionItem;
 import main.symbolTable.item.SymbolTableItem;
 import main.symbolTable.utils.Stack;
 
@@ -35,5 +36,9 @@ public class SymbolTable {
             return symbolTableItem;
         }
         throw new ItemNotFound();
+    }
+
+    public FunctionItem getFunctionItem(String key) throws ItemNotFound {
+        return (FunctionItem) getItem(FunctionItem.START_KEY + key);
     }
 }
