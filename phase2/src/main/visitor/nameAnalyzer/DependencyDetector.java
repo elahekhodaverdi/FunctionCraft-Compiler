@@ -4,6 +4,8 @@ import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.expression.*;
 import main.ast.nodes.statement.ExpressionStatement;
+import main.ast.nodes.statement.PushStatement;
+import main.ast.nodes.statement.PutStatement;
 import main.ast.nodes.statement.ReturnStatement;
 import main.ast.nodes.statement.Statement;
 import main.compileError.CompileError;
@@ -30,6 +32,24 @@ public class DependencyDetector extends Visitor<Void> {
         if (expr != null) {
             findFunctionCalls(expr, dependencies);
         }
+    }
+
+    private void processStatement(Statement stmt, ArrayList<String> dependencies) {
+        Expression firstExpr;
+        if (stmt instanceof ExpressionStatement) {
+            firstExpr = ((ExpressionStatement) stmt).getExpression();
+        } else if (stmt instanceof ReturnStatement) {
+            firstExpr = ((ReturnStatement) stmt).getReturnExp();
+        } else if (stmt instanceof PutStatement) {
+            firstExpr = ((PutStatement) stmt).getExpression();
+        } else {
+            firstExpr = ((PushStatement) stmt).getInitial();
+        }
+
+        Expression secondExpr = stmt instanceof PushStatement ?  ((PushStatement) stmt).getToBeAdded() : null;        
+        processExpression(firstExpr, dependencies);
+        processExpression(secondExpr, dependencies);
+        
     }
 
     public void findFunctionCalls(Expression expr, ArrayList<String> dependencies) {
@@ -72,14 +92,11 @@ public class DependencyDetector extends Visitor<Void> {
         String functionName = functionDeclaration.getFunctionName().getName();
         ArrayList<String> dependencies = new ArrayList<>();
         functionDeclaration.getBody().stream()
-                .filter(stmt -> stmt instanceof ExpressionStatement ||
-                        (stmt instanceof ReturnStatement && ((ReturnStatement) stmt).hasRetExpression()))
-                .forEach(stmt -> {
-                    Expression exp = stmt instanceof ExpressionStatement ? ((ExpressionStatement) stmt).getExpression()
-                            : ((ReturnStatement) stmt).getReturnExp();
-                    processExpression(exp, dependencies);
-                });
-
+        .filter(stmt -> stmt instanceof ExpressionStatement ||
+                (stmt instanceof ReturnStatement && ((ReturnStatement) stmt).hasRetExpression()) || 
+                stmt instanceof PutStatement || stmt instanceof PushStatement)
+        .forEach(stmt -> { processStatement(stmt, dependencies); });
+    
         dependencies.forEach(dependency -> dependencyGraph.addEdge(functionName, dependency));
         return null;
     }
