@@ -1,0 +1,45 @@
+def h(k)
+end
+
+def g()
+    f();
+end
+
+def f()
+    puts(g());
+end
+
+def p()
+    a();
+end
+
+def a()
+    push(p(), "a");
+end
+
+def d()
+    v();
+end
+
+def v()
+    return len(d());
+end
+
+def xx()
+    vv();
+end
+
+def vv()
+    return chop(xx());
+end
+
+def pp()
+    nn();
+end
+
+def nn()
+    return chomp(pp());
+end
+
+def main()
+end

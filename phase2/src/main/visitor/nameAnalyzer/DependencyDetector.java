@@ -56,14 +56,15 @@ public class DependencyDetector extends Visitor<Void> {
         if (expr instanceof AccessExpression accessExpr) {
             Expression accessedExpression = accessExpr.getAccessedExpression();
 
-            if (accessExpr.getAccesses().isEmpty() && !(accessedExpression instanceof MatchPatternStatement))
-                return;
-            if (accessedExpression instanceof MatchPatternStatement matchPatStm)
-                processExpression(matchPatStm.getMatchArgument(), dependencies);
-            if (accessedExpression instanceof Identifier id && accessExpr.getAccesses().getFirst() instanceof ArgExpression)
+            if (!accessExpr.getAccesses().isEmpty() && accessedExpression instanceof Identifier id && accessExpr.getAccesses().getFirst() instanceof ArgExpression)
                 dependencies.add(id.getName());
+            else
+                processExpression(accessedExpression, dependencies);
             accessExpr.getAccesses().forEach(access -> processExpression(access, dependencies));
         }
+
+        if (expr instanceof MatchPatternStatement matchPatStm)
+            processExpression(matchPatStm.getMatchArgument(), dependencies);
 
         if (expr instanceof UnaryExpression unaryExpr)
             processExpression(unaryExpr.getExpression(), dependencies);

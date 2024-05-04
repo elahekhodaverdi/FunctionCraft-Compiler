@@ -1,0 +1,13 @@
+def h()
+end
+
+def g()
+    f();
+end
+
+def f()
+    return h() << g();
+end
+
+def main()
+end

@@ -138,4 +138,21 @@ public class FunctionCraftTest {
         expectedOutputPath = "samples/out17.txt";
     }
 
+    @Test
+    public void circular_dependeny_in_append_expression() {
+        args = new String[]{"samples/sample18.fl"};
+        expectedOutputPath = "samples/out18.txt";
+    }
+
+    @Test
+    public void circular_dependeny_in_function_call_argument() {
+        args = new String[]{"samples/sample19.fl"};
+        expectedOutputPath = "samples/out19.txt";
+    }
+
+    @Test
+    public void circular_dependeny_in_primitive_function_call_argument() {
+        args = new String[]{"samples/sample20.fl"};
+        expectedOutputPath = "samples/out20.txt";
+    }
 }
