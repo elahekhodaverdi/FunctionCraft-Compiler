@@ -14,6 +14,14 @@ public class LambdaExpression extends Expression{
         this.declarationArgs = declarationArgs;
         this.body = body;
     }
+
+    public LambdaExpression(ArrayList<VarDeclaration> declarationArgs, ArrayList<Statement> body,
+                            int line) {
+        this.declarationArgs = declarationArgs;
+        this.body = body;
+        setLine(line);
+    }
+
     public void setBody(ArrayList<Statement> body) {
         this.body = body;
     }
