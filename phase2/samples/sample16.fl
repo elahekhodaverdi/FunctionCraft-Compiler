@@ -1,0 +1,29 @@
+def h()
+end
+
+def g()
+    f();
+end
+
+def f()
+    return h() + g();
+end
+
+def p()
+    s();
+end
+
+def s()
+    return h() != p();
+end
+
+def u()
+    y();
+end
+
+def y()
+    return h() < u();
+end
+
+def main()
+end

@@ -1,0 +1,22 @@
+def h()
+end
+
+def g()
+    f();
+end
+
+def f()
+    return -g();
+end
+
+def p()
+    s();
+end
+
+def s()
+    return p()--;
+end
+
+
+def main()
+end

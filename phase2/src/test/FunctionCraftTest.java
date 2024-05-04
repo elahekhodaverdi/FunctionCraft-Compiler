@@ -114,4 +114,28 @@ public class FunctionCraftTest {
         expectedOutputPath = "samples/out13.txt";
     }
 
+    @Test
+    public void direct_circular_dependeny() {
+        args = new String[]{"samples/sample14.fl"};
+        expectedOutputPath = "samples/out14.txt";
+    }
+
+    @Test
+    public void circular_dependeny_in_return_value() {
+        args = new String[]{"samples/sample15.fl"};
+        expectedOutputPath = "samples/out15.txt";
+    }
+
+    @Test
+    public void circular_dependeny_in_binary_expression() {
+        args = new String[]{"samples/sample16.fl"};
+        expectedOutputPath = "samples/out16.txt";
+    }
+
+    @Test
+    public void circular_dependeny_in_unary_expression() {
+        args = new String[]{"samples/sample17.fl"};
+        expectedOutputPath = "samples/out17.txt";
+    }
+
 }
