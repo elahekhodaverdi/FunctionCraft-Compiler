@@ -1,0 +1,2 @@
+Line:4-> Redefinition of function f
+Line:10-> Redefinition of function g

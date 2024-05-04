@@ -1,0 +1,14 @@
+def f(a, b)
+end
+
+def f(a, b, c)
+end
+
+def g(a, b, c)
+end
+
+def g(a, b)
+end
+
+def main()
+end
