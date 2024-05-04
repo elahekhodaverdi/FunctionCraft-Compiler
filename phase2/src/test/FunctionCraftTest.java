@@ -83,5 +83,18 @@ public class FunctionCraftTest {
         args = new String[]{"samples/sample8.fl"};
         expectedOutputPath = "samples/out8.txt";
     }
-    
+
+    @Test
+    public void argument_has_same_name_with_function() {
+        args = new String[]{"samples/sample9.fl"};
+        expectedOutputPath = "samples/out9.txt";
+    }
+
+    @Test
+    public void argument_has_same_name_with_function_and_it_is_used() {
+        args = new String[]{"samples/sample10.fl"};
+        expectedOutputPath = "samples/out10.txt";
+    }
+
+
 }

@@ -1,0 +1,8 @@
+
+def compare(compare, b)
+    c = compare + b;
+end
+
+def main()
+
+end
