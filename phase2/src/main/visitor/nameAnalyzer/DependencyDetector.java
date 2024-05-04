@@ -26,6 +26,12 @@ public class DependencyDetector extends Visitor<Void> {
         return null;
     }
 
+    private void processExpression(Expression expr, ArrayList<String> dependencies) {
+        if (expr != null) {
+            findFunctionCalls(expr, dependencies);
+        }
+    }
+
     public void findFunctionCalls(Expression expr, ArrayList<String> dependencies) {
         if (expr instanceof AccessExpression accessExpr) {
             Expression accessedExpression = accessExpr.getAccessedExpression();
@@ -33,36 +39,31 @@ public class DependencyDetector extends Visitor<Void> {
             if (accessExpr.getAccesses().size() == 0 && !(accessedExpression instanceof MatchPatternStatement))
                 return;
             if (accessedExpression instanceof MatchPatternStatement matchPatStm)
-                    findFunctionCalls(matchPatStm.getMatchArgument(), dependencies);
+                processExpression(matchPatStm.getMatchArgument(), dependencies);
             if (accessedExpression instanceof Identifier id && accessExpr.getAccesses().get(0) instanceof ArgExpression) 
-                    dependencies.add(id.getName());
-            for (Expression expression : accessExpr.getAccesses())
-                findFunctionCalls(expression, dependencies);
+                dependencies.add(id.getName());
+            accessExpr.getAccesses().forEach(access -> processExpression(access, dependencies));
         }
-        if (expr instanceof UnaryExpression unaryExpr)
-            findFunctionCalls(unaryExpr.getExpression(), dependencies);
 
-        if (expr instanceof ArgExpression argExpr) {
-            for (Expression expression : argExpr.getArgs())
-                findFunctionCalls(expression, dependencies);
-        }
+        if (expr instanceof UnaryExpression unaryExpr)
+            processExpression(unaryExpr.getExpression(), dependencies);
+
+        if (expr instanceof ArgExpression argExpr)
+            argExpr.getArgs().forEach(expression -> processExpression(expression, dependencies));
 
         if (expr instanceof IndexExpression indExpr) {
-            findFunctionCalls(indExpr.getIndex(), dependencies);
+            processExpression(indExpr.getIndex(), dependencies);
         }
         
         if (expr instanceof AppendExpression appendExpr) {
-            Expression appendeeExpr = appendExpr.getAppendee(); 
-            findFunctionCalls(appendeeExpr, dependencies);
-            for (Expression expression : appendExpr.getAppendeds())
-                findFunctionCalls(expression, dependencies);
+            Expression appendeeExpr = appendExpr.getAppendee();
+            processExpression(appendeeExpr, dependencies);
+            appendExpr.getAppendeds().forEach(appended -> processExpression(appended, dependencies));
         }
 
         if (expr instanceof BinaryExpression binaryExpr) {
-            Expression firstExpr = binaryExpr.getFirstOperand(); 
-            Expression secondExpr = binaryExpr.getSecondOperand(); 
-            findFunctionCalls(firstExpr, dependencies);
-            findFunctionCalls(secondExpr, dependencies);
+            processExpression(binaryExpr.getFirstOperand(), dependencies);
+            processExpression(binaryExpr.getSecondOperand(), dependencies);
         }
     }
 
@@ -70,17 +71,14 @@ public class DependencyDetector extends Visitor<Void> {
     public Void visit(FunctionDeclaration functionDeclaration) {
         String functionName = functionDeclaration.getFunctionName().getName();
         ArrayList<String> dependencies = new ArrayList<>();
-        functionDeclaration.getBody().forEach(stmt -> {
-            Expression exp;
-            if (stmt instanceof ExpressionStatement exprStm) 
-                exp = exprStm.getExpression();
-            else if (stmt instanceof ReturnStatement retStm)
-                exp = (retStm.hasRetExpression())? retStm.getReturnExp() : null;
-            else
-                return;
-            if (exp == null) return;
-            findFunctionCalls(exp, dependencies);
-        });
+        functionDeclaration.getBody().stream()
+                .filter(stmt -> stmt instanceof ExpressionStatement ||
+                        (stmt instanceof ReturnStatement && ((ReturnStatement) stmt).hasRetExpression()))
+                .forEach(stmt -> {
+                    Expression exp = stmt instanceof ExpressionStatement ? ((ExpressionStatement) stmt).getExpression()
+                            : ((ReturnStatement) stmt).getReturnExp();
+                    processExpression(exp, dependencies);
+                });
 
         dependencies.forEach(dependency -> dependencyGraph.addEdge(functionName, dependency));
         return null;
