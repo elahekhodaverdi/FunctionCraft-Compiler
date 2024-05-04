@@ -1,0 +1,10 @@
+def f()
+    return g();
+end
+
+def g()
+    return f();
+end
+
+def main()
+end
