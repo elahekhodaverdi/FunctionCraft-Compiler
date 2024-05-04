@@ -1,0 +1,6 @@
+def f(a, b)
+    return g(h(p()));
+end
+
+def main()
+end

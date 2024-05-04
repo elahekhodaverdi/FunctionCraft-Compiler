@@ -1,0 +1,11 @@
+
+def main()
+    if (f())
+        a = 5;
+    end
+
+    for i in (1..5)
+        next if (g(a, a));
+        break if (h(a));
+    end
+end

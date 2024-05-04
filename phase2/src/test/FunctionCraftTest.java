@@ -71,4 +71,17 @@ public class FunctionCraftTest {
         args = new String[]{"samples/sample6.fl"};
         expectedOutputPath = "samples/out6.txt";
     }
+
+    @Test
+    public void function_not_declared_in_nested_call_functions() {
+        args = new String[]{"samples/sample7.fl"};
+        expectedOutputPath = "samples/out7.txt";
+    }
+
+    @Test
+    public void function_not_declared_when_if_condition_is_a_function_call() {
+        args = new String[]{"samples/sample8.fl"};
+        expectedOutputPath = "samples/out8.txt";
+    }
+    
 }

@@ -243,20 +243,20 @@ loopBody returns [ArrayList<Statement> loopStmts, ArrayList<Expression> loopExps
         $loopRetStmt = null;
     }
     (s = statement {$loopStmts.add($s.stmtRet);}
-    | BREAK (IF c1 = condition{$loopExps.addAll($c1.conditionRet);})? SEMICOLLON
-    | NEXT (IF c2 = condition{$loopExps.addAll($c2.conditionRet);})? SEMICOLLON
+    | BREAK (IF c1 = condition  {$loopExps.addAll($c1.conditionRet);}   )? SEMICOLLON
+    | NEXT (IF c2 = condition   {$loopExps.addAll($c2.conditionRet);}   )? SEMICOLLON
     )*
     (
-    r = returnStatement {$loopRetStmt = $r.returnStmtRet;$loopRetStmt.setLine($r.returnStmtRet.getLine());}
-    )?;
+        r = returnStatement     {$loopRetStmt = $r.returnStmtRet;$loopRetStmt.setLine($r.returnStmtRet.getLine());}
+    )?
+    ;
 
-forStatement returns [ForStatement forStRet]:
-    {
-        $forStRet = new ForStatement();
-    }
+forStatement returns [ForStatement forStRet]
+    : {$forStRet = new ForStatement();}
     f = FOR id = IDENTIFIER IN r = range
     l = loopBody
     {
+        $forStRet.setIteratorId(new Identifier($id.text));
         $forStRet.setRangeExpressions($r.rangeRet);
         $forStRet.setLoopBody($l.loopStmts);
         $forStRet.setLoopBodyExpressions($l.loopExps);
