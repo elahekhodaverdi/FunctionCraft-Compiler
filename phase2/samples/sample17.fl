@@ -14,7 +14,7 @@ def p()
 end
 
 def s()
-    return p()--;
+    return ++p();
 end
 
 
