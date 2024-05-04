@@ -1,0 +1,21 @@
+
+
+def g()
+    f();
+end
+
+def f()
+    a = g();
+end
+
+def p()
+    a();
+end
+
+def a()
+    k = [];
+    k[p()] = 4;
+end
+
+def main()
+end

@@ -168,4 +168,10 @@ public class FunctionCraftTest {
         expectedOutputPath = "samples/out22.txt";
     }
 
+    @Test
+    public void circular_dependeny_in_assignment() {
+        args = new String[]{"samples/sample23.fl"};
+        expectedOutputPath = "samples/out23.txt";
+    }
+
 }
