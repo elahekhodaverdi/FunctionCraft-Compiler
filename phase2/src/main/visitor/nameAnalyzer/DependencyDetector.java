@@ -3,6 +3,7 @@ package main.visitor.nameAnalyzer;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.expression.*;
+import main.ast.nodes.statement.AssignStatement;
 import main.ast.nodes.statement.ExpressionStatement;
 import main.ast.nodes.statement.PushStatement;
 import main.ast.nodes.statement.PutStatement;
@@ -42,11 +43,14 @@ public class DependencyDetector extends Visitor<Void> {
             firstExpr = ((ReturnStatement) stmt).getReturnExp();
         } else if (stmt instanceof PutStatement) {
             firstExpr = ((PutStatement) stmt).getExpression();
+        } else if (stmt instanceof AssignStatement) {
+            firstExpr = ((AssignStatement) stmt).getAssignExpression();
         } else {
             firstExpr = ((PushStatement) stmt).getInitial();
         }
 
-        Expression secondExpr = stmt instanceof PushStatement ?  ((PushStatement) stmt).getToBeAdded() : null;        
+        Expression secondExpr = stmt instanceof PushStatement ?  ((PushStatement) stmt).getToBeAdded() :
+                (stmt instanceof AssignStatement) ? ((AssignStatement) stmt).getAccessListExpression(): null;
         processExpression(firstExpr, dependencies);
         processExpression(secondExpr, dependencies);
         
