@@ -60,7 +60,7 @@ public class DependencyDetector extends Visitor<Void> {
         if (expr instanceof AccessExpression accessExpr) {
             Expression accessedExpression = accessExpr.getAccessedExpression();
 
-            if (!accessExpr.getAccesses().isEmpty() && accessedExpression instanceof Identifier id && accessExpr.getAccesses().getFirst() instanceof ArgExpression)
+            if (!accessExpr.getAccesses().isEmpty() && accessedExpression instanceof Identifier id && accessExpr.getAccesses().get(0) instanceof ArgExpression)
                 dependencies.add(id.getName());
             else
                 processExpression(accessedExpression, dependencies);

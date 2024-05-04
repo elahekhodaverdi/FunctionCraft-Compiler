@@ -136,8 +136,9 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(PatternDeclaration patternDeclaration) {
-        patternDeclaration.getPatternName().accept(this);
-        patternDeclaration.getTargetVariable().accept(this);
+        try {
+            SymbolTable.top.put(new VarItem(patternDeclaration.getTargetVariable()));
+        } catch (ItemAlreadyExists ignored) {}
         patternDeclaration.getConditions().forEach(condition -> condition.accept(this));
         patternDeclaration.getReturnExp().forEach(exp -> exp.accept(this));
         return null;
@@ -201,7 +202,6 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(MatchPatternStatement matchPatternStatement) {
-        matchPatternStatement.getPatternId().accept(this);
         matchPatternStatement.getMatchArgument().accept(this);
         return null;
     }
