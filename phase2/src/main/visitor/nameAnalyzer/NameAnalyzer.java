@@ -8,10 +8,6 @@ import main.ast.nodes.declaration.VarDeclaration;
 import main.ast.nodes.expression.*;
 import main.ast.nodes.expression.value.FunctionPointer;
 import main.ast.nodes.expression.value.ListValue;
-import main.ast.nodes.expression.value.primitive.BoolValue;
-import main.ast.nodes.expression.value.primitive.FloatValue;
-import main.ast.nodes.expression.value.primitive.IntValue;
-import main.ast.nodes.expression.value.primitive.StringValue;
 import main.ast.nodes.statement.*;
 import main.compileError.CompileError;
 import main.compileError.nameErrors.*;
@@ -20,7 +16,6 @@ import main.symbolTable.exceptions.ItemAlreadyExists;
 import main.symbolTable.exceptions.ItemNotFound;
 import main.symbolTable.item.FunctionItem;
 import main.symbolTable.item.PatternItem;
-import main.symbolTable.item.SymbolTableItem;
 import main.symbolTable.item.VarItem;
 import main.visitor.Visitor;
 
@@ -156,6 +151,8 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(ReturnStatement returnStatement) {
+        if (returnStatement.hasRetExpression())
+            returnStatement.getReturnExp().accept(this);
         return null;
     }
 
@@ -223,14 +220,18 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(AssignStatement assignStatement) {
-        var varItem = new VarItem(assignStatement.getAssignedId());
-        try {
-            SymbolTable.top.put(varItem);
-        } catch (ItemAlreadyExists ignored) {}
-
         assignStatement.getAssignExpression().accept(this);
-        if (assignStatement.isAccessList())
+        if (assignStatement.isAccessList()) {
             assignStatement.getAccessListExpression().accept(this);
+            assignStatement.getAssignedId().accept(this);
+        }
+        else {
+            var varItem = new VarItem(assignStatement.getAssignedId());
+            try {
+                SymbolTable.top.put(varItem);
+            } catch (ItemAlreadyExists ignored) {
+            }
+        }
         return null;
     }
 

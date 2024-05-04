@@ -47,4 +47,28 @@ public class FunctionCraftTest {
         args = new String[]{"samples/sample2.fl"};
         expectedOutputPath = "samples/out2.txt";
     }
+
+    @Test
+    public void variable_not_declared_in_assignment() {
+        args = new String[]{"samples/sample3.fl"};
+        expectedOutputPath = "samples/out3.txt";
+    }
+
+    @Test
+    public void variable_not_declared_in_assignment_to_itself() {
+        args = new String[]{"samples/sample4.fl"};
+        expectedOutputPath = "samples/out4.txt";
+    }
+
+    @Test
+    public void variable_not_declared_when_assign_to_an_element_of_not_declared_list() {
+        args = new String[]{"samples/sample5.fl"};
+        expectedOutputPath = "samples/out5.txt";
+    }
+
+    @Test
+    public void variable_not_declared_in_return_statement() {
+        args = new String[]{"samples/sample6.fl"};
+        expectedOutputPath = "samples/out6.txt";
+    }
 }

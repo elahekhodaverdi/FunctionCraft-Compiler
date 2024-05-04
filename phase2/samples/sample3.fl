@@ -1,0 +1,7 @@
+def f(a, b)
+    c = 5;
+    e = a + b + c + d;
+end
+
+def main()
+end

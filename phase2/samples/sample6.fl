@@ -1,0 +1,7 @@
+def f(a, b)
+    c = 5;
+    return a + b + c + d + e;
+end
+
+def main()
+end
