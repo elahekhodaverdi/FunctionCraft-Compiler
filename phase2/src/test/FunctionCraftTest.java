@@ -96,5 +96,16 @@ public class FunctionCraftTest {
         expectedOutputPath = "samples/out10.txt";
     }
 
+    @Test
+    public void incorrect_number_of_arguments_in_function_call_when_the_function_has_default_arguments() {
+        args = new String[]{"samples/sample11.fl"};
+        expectedOutputPath = "samples/out11.txt";
+    }
+
+    @Test
+    public void incorrect_number_of_arguments_in_function_call_when_the_function_does_not_have_default_arguments() {
+        args = new String[]{"samples/sample12.fl"};
+        expectedOutputPath = "samples/out12.txt";
+    }
 
 }

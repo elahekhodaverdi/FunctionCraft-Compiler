@@ -1,0 +1,6 @@
+Line:8-> number of arguments provided for function f does not match with its declaration
+Line:9-> number of arguments provided for function f does not match with its declaration
+Line:10-> number of arguments provided for function f does not match with its declaration
+Line:11-> number of arguments provided for function f does not match with its declaration
+Line:13-> number of arguments provided for function f does not match with its declaration
+Line:14-> number of arguments provided for function g does not match with its declaration
