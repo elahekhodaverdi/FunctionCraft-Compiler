@@ -155,4 +155,17 @@ public class FunctionCraftTest {
         args = new String[]{"samples/sample20.fl"};
         expectedOutputPath = "samples/out20.txt";
     }
+
+    @Test
+    public void circular_dependeny_in_list_indexing() {
+        args = new String[]{"samples/sample21.fl"};
+        expectedOutputPath = "samples/out21.txt";
+    }
+
+    @Test
+    public void circular_dependeny_in_pattern_matching() {
+        args = new String[]{"samples/sample22.fl"};
+        expectedOutputPath = "samples/out22.txt";
+    }
+
 }

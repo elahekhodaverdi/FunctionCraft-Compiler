@@ -1,0 +1,13 @@
+pattern h(n)
+;
+
+def g()
+    f();
+end
+
+def f()
+    return h.match(g());
+end
+
+def main()
+end

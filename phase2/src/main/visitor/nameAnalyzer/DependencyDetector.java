@@ -85,8 +85,7 @@ public class DependencyDetector extends Visitor<Void> {
             processExpression(chompExpr.getChompExpression(), dependencies);
 
         if (expr instanceof AppendExpression appendExpr) {
-            Expression appendeeExpr = appendExpr.getAppendee();
-            processExpression(appendeeExpr, dependencies);
+            processExpression(appendExpr.getAppendee(), dependencies);
             appendExpr.getAppendeds().forEach(appended -> processExpression(appended, dependencies));
         }
 

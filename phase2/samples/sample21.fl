@@ -1,0 +1,14 @@
+def h()
+end
+
+def g()
+    f();
+end
+
+def f()
+    tt = [];
+    return tt[g()];
+end
+
+def main()
+end
