@@ -71,10 +71,18 @@ public class DependencyDetector extends Visitor<Void> {
         if (expr instanceof ArgExpression argExpr)
             argExpr.getArgs().forEach(expression -> processExpression(expression, dependencies));
 
-        if (expr instanceof IndexExpression indExpr) {
+        if (expr instanceof IndexExpression indExpr)
             processExpression(indExpr.getIndex(), dependencies);
-        }
-        
+
+        if (expr instanceof LenStatement lenExpr)
+            processExpression(lenExpr.getExpression(), dependencies);  
+
+        if (expr instanceof ChopStatement chopExpr)
+            processExpression(chopExpr.getChopExpression(), dependencies);
+
+        if (expr instanceof ChompStatement chompExpr)
+            processExpression(chompExpr.getChompExpression(), dependencies);
+
         if (expr instanceof AppendExpression appendExpr) {
             Expression appendeeExpr = appendExpr.getAppendee();
             processExpression(appendeeExpr, dependencies);
