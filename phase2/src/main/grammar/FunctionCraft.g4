@@ -468,13 +468,13 @@ list_indexing returns [Expression expRet]
     ;
 
 function_call returns [Expression expRet]
-    : LPAR a = arguments RPAR   {$expRet = new ArgExpression($a.argsRet);}
+    : LPAR a = arguments RPAR       {$expRet = new ArgExpression($a.argsRet);}
     ;
 
 arguments returns [ArrayList<Expression> argsRet]
     :                           {$argsRet = new ArrayList<Expression>();}
     (e1 = expression            {$argsRet.add($e1.expRet);}
-    (COMMA e2 = expression      {$argsRet.add($e1.expRet);}
+    (COMMA e2 = expression      {$argsRet.add($e2.expRet);}
     )*
     )?
     ;
