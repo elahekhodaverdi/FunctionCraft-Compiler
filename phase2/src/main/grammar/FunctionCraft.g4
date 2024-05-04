@@ -188,17 +188,11 @@ ifStatement returns[IfStatement ifRet]:
      }
      END;
 
-condition returns [ArrayList<Expression> conditionRet]:
-    {
-        $conditionRet = new ArrayList<Expression>();
-    }
-    (LPAR e = expression
-     {$conditionRet.add($e.expRet);}
-     RPAR ((AND | OR) (LPAR)? c = condition
-     {
-        $conditionRet.addAll($c.conditionRet);
-     }
-     (RPAR)?)*)*;
+condition returns [ArrayList<Expression> conditionRet]
+    :                                        {$conditionRet = new ArrayList<Expression>();}
+    (LPAR e = expression                     {$conditionRet.add($e.expRet);}
+    RPAR ((AND | OR) (LPAR)? c = condition   {$conditionRet.addAll($c.conditionRet);}
+    (RPAR)?)*)*;
 
 putsStatement returns [PutStatement putRet]:
     p = PUTS 
@@ -252,7 +246,7 @@ loopBody returns [ArrayList<Statement> loopStmts, ArrayList<Expression> loopExps
     ;
 
 forStatement returns [ForStatement forStRet]
-    : {$forStRet = new ForStatement();}
+    :  {$forStRet = new ForStatement();}
     f = FOR id = IDENTIFIER IN r = range
     l = loopBody
     {
@@ -265,10 +259,8 @@ forStatement returns [ForStatement forStRet]
     END
     ;
 
-range returns [ArrayList<Expression> rangeRet]:
-    {
-        $rangeRet = new ArrayList<Expression>();
-    }
+range returns [ArrayList<Expression> rangeRet]
+    :                           {$rangeRet = new ArrayList<Expression>();}
     (LPAR e1 = expression
     DOUBLEDOT e2 = expression
     RPAR)
@@ -277,14 +269,8 @@ range returns [ArrayList<Expression> rangeRet]:
         $rangeRet.add($e2.expRet);
     }
     |
-     (LBRACK (e3 = expression
-     {
-        $rangeRet.add($e3.expRet);
-     }
-    (COMMA e4 = expression
-    {
-        $rangeRet.add($e4.expRet);
-    }
+     (LBRACK (e3 = expression   {$rangeRet.add($e3.expRet);}
+    (COMMA e4 = expression      {$rangeRet.add($e4.expRet);}
     )*) RBRACK)
     |
      id = IDENTIFIER
@@ -327,12 +313,12 @@ assignment returns [AssignStatement assignRet]:
         AssignOperator op;
     }
     id = IDENTIFIER (a = accessList {access = true;})?
-    (as = ASSIGN {op = AssignOperator.ASSIGN;line = $as.line;}
-    | pl = PLUS_ASSIGN {op = AssignOperator.PLUS_ASSIGN;line = $pl.line;}
-    | mi = MINUS_ASSIGN {op = AssignOperator.MINUS_ASSIGN;line = $mi.line;}
-    | di = DIVIDE_ASSIGN {op = AssignOperator.DIVIDE_ASSIGN;line = $di.line;}
-    | mu = MULT_ASSIGN {op = AssignOperator.MULT_ASSIGN;line = $mu.line;}
-    | mo = MOD_ASSIGN {op = AssignOperator.MOD_ASSIGN;line = $mo.line;})
+    (as = ASSIGN            {op = AssignOperator.ASSIGN;line = $as.line;}
+    | pl = PLUS_ASSIGN      {op = AssignOperator.PLUS_ASSIGN;line = $pl.line;}
+    | mi = MINUS_ASSIGN     {op = AssignOperator.MINUS_ASSIGN;line = $mi.line;}
+    | di = DIVIDE_ASSIGN    {op = AssignOperator.DIVIDE_ASSIGN;line = $di.line;}
+    | mu = MULT_ASSIGN      {op = AssignOperator.MULT_ASSIGN;line = $mu.line;}
+    | mo = MOD_ASSIGN       {op = AssignOperator.MOD_ASSIGN;line = $mo.line;})
      e = expression SEMICOLLON
      {
           Identifier id_ = new Identifier($id.text);
@@ -443,15 +429,12 @@ multiplicativeExpression returns [Expression expRet]:
     | p2 = preUnaryExpression {$expRet = $p2.expRet;};
 
 
-preUnaryExpression returns [Expression expRet]:
-    {
-        UnaryOperator op;
-        int line;
-    }
-    (n = NOT {op = UnaryOperator.NOT;line = $n.line;}
-    |m = MINUS {op = UnaryOperator.MINUS;line = $m.line;}
-    |i = INCREMENT {op = UnaryOperator.INC;line = $i.line;}
-    |d = DECREMENT {op = UnaryOperator.DEC;line = $d.line;}
+preUnaryExpression returns [Expression expRet]
+    :                       {UnaryOperator op; int line;}
+    (n = NOT                {op = UnaryOperator.NOT;line = $n.line;}
+    |m = MINUS              {op = UnaryOperator.MINUS;line = $m.line;}
+    |i = INCREMENT          {op = UnaryOperator.INC;line = $i.line;}
+    |d = DECREMENT          {op = UnaryOperator.DEC;line = $d.line;}
     ) a1 = accessExpression {$expRet = new UnaryExpression($a1.expRet, op);$expRet.setLine(line);}
     | a2 = accessExpression {$expRet = $a2.expRet;};
 
@@ -480,39 +463,35 @@ arguments returns [ArrayList<Expression> argsRet]
     ;
 
 
-otherExpression returns [Expression expRet]:
-    v = values {$expRet = $v.valRet;}
-    | id = IDENTIFIER
-    {
-        $expRet = new Identifier($id.text);
-        $expRet.setLine($id.line);
-    }
-    | lambda = lambdaFunction {$expRet = $lambda.lambdaRet;}
-    | chop = chopStatement {$expRet = $chop.chopRet;}
-    | chomp = chompStatement {$expRet = $chomp.chompRet;}
+otherExpression returns [Expression expRet]
+    : v = values                    {$expRet = $v.valRet;}
+    | id = IDENTIFIER               {$expRet = new Identifier($id.text, $id.line);}
+    | lambda = lambdaFunction       {$expRet = $lambda.lambdaRet;}
+    | chop = chopStatement          {$expRet = $chop.chopRet;}
+    | chomp = chompStatement        {$expRet = $chomp.chompRet;}
     | match = matchPatternStatement {$expRet = $match.matchPatRet;}
-    | len_ = lenStatement {$expRet = $len_.lenRet;}
-    | LPAR (e = expression {$expRet = $e.expRet;})? RPAR;
-
-
-
-
-lambdaFunction returns [Expression lambdaRet]:
-    a = ARROW  fd = functionArgumentsDeclaration
-     LBRACE b = body RBRACE
-     {
-        $lambdaRet = new LambdaExpression($fd.argRet, $b.bodyRet);
-        $lambdaRet.setLine($a.line);
-     }
+    | len_ = lenStatement           {$expRet = $len_.lenRet;}
+    | LPAR (e = expression          {$expRet = $e.expRet;}
+    )?
+    RPAR
     ;
 
-values returns [Value valRet]:
-    b = boolValue {$valRet = $b.boolValRet;}
-    | s = STRING_VALUE {$valRet = new StringValue($s.text); $valRet.setLine($s.line);}
-    | i = INT_VALUE {$valRet = new IntValue($i.int);$valRet.setLine($i.line);}
-    | float_ = FLOAT_VALUE {$valRet = new FloatValue(Float.parseFloat($float_.text));$valRet.setLine($float_.line);}
-    | l = listValue {$valRet = $l.listValRet;}
-    | f = functionPointer {$valRet = $f.fpRet;};
+
+
+
+lambdaFunction returns [Expression lambdaRet]
+    : a = ARROW  fd = functionArgumentsDeclaration
+    LBRACE b = body     {$lambdaRet = new LambdaExpression($fd.argRet, $b.bodyRet, $a.line);}
+    RBRACE
+    ;
+
+values returns [Value valRet]
+    : b = boolValue         {$valRet = $b.boolValRet;}
+    | s = STRING_VALUE      {$valRet = new StringValue($s.text); $valRet.setLine($s.line);}
+    | i = INT_VALUE         {$valRet = new IntValue($i.int);$valRet.setLine($i.line);}
+    | float_ = FLOAT_VALUE  {$valRet = new FloatValue(Float.parseFloat($float_.text));$valRet.setLine($float_.line);}
+    | l = listValue         {$valRet = $l.listValRet;}
+    | f = functionPointer   {$valRet = $f.fpRet;};
 
 listValue returns [ListValue listValRet]:
     l = LBRACK f = functionArguments
@@ -524,15 +503,14 @@ listValue returns [ListValue listValRet]:
     ;
 
 boolValue returns [BoolValue boolValRet]:
-    t = TRUE {$boolValRet = new BoolValue(true); $boolValRet.setLine($t.line);}
-    | f = FALSE {$boolValRet = new BoolValue(false); $boolValRet.setLine($f.line);}
+    t = TRUE        {$boolValRet = new BoolValue(true); $boolValRet.setLine($t.line);}
+    | f = FALSE     {$boolValRet = new BoolValue(false); $boolValRet.setLine($f.line);}
     ;
 
 functionPointer returns [FunctionPointer fpRet]:
     m = METHOD LPAR COLON id = IDENTIFIER RPAR
     {
-        Identifier id_ = new Identifier($id.text);
-        id_.setLine($id.line);
+        Identifier id_ = new Identifier($id.text, $id.line);
         $fpRet = new FunctionPointer(id_);
         $fpRet.setLine($m.line);
     }
