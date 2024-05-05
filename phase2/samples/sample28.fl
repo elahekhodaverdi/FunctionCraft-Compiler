@@ -1,0 +1,24 @@
+def g()
+    f(2);
+end
+
+def f(a)
+    loop do
+        break if (a != g());
+        puts("end");
+    end
+end
+
+def h()
+    p(2);
+end
+
+def p(a)
+    loop do
+        puts(h());
+    end
+end
+
+
+def main()
+end
