@@ -116,6 +116,12 @@ public class DependencyDetector extends Visitor<Void> {
 
 
     @Override
+    public Void visit(ArgExpression argExpression){
+        argExpression.getArgs().forEach(expression -> expression.accept(this));
+        return null;
+    }
+
+    @Override
     public Void visit(IndexExpression indexExpression){
         indexExpression.getIndex().accept(this);
         return null;
