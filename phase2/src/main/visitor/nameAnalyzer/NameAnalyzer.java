@@ -295,7 +295,12 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(FunctionPointer functionPointer) {
-        functionPointer.getId().accept(this);
+        Identifier identifier = functionPointer.getId();
+        try {
+            SymbolTable.root.getFunctionItem(identifier.getName());
+        } catch (ItemNotFound e) {
+            nameErrors.add(new FunctionNotDeclared(identifier.getLine(), identifier.getName()));
+        }
         return null;
     }
 

@@ -1,8 +1,12 @@
 package main.ast.nodes.expression;
 
+import lombok.Getter;
+import lombok.Setter;
 import main.ast.nodes.expression.operators.UnaryOperator;
 import main.visitor.IVisitor;
 
+@Getter
+@Setter
 public class UnaryExpression extends Expression{
     private Expression expression;
     private UnaryOperator op;
@@ -11,21 +15,6 @@ public class UnaryExpression extends Expression{
         this.op = op;
     }
 
-    public void setExpression(Expression expression) {
-        this.expression = expression;
-    }
-
-    public Expression getExpression() {
-        return expression;
-    }
-
-    public UnaryOperator getOp() {
-        return op;
-    }
-
-    public void setOp(UnaryOperator op) {
-        this.op = op;
-    }
     @Override
     public String toString(){return "UnaryExpression_" + op.name();}
     @Override
