@@ -193,6 +193,7 @@ public class NameAnalyzer extends Visitor<Void> {
     }
     @Override
     public Void visit(ForStatement forStatement) {
+        forStatement.getRangeExpressions().forEach(expression -> expression.accept(this));
         forStatement.getLoopBody().forEach(statement -> statement.accept(this));
         forStatement.getLoopBodyExpressions().forEach(expression -> expression.accept(this));
         if (forStatement.hasReturnStatement())
