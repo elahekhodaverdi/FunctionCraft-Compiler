@@ -109,14 +109,7 @@ public class DependencyDetector extends Visitor<Void> {
     @Override
     public Void visit(FunctionDeclaration functionDeclaration) {
         functionName = functionDeclaration.getFunctionName().getName();
-        ArrayList<String> dependencies = new ArrayList<>();
-        functionDeclaration.getBody().stream()
-        .filter(stmt -> stmt instanceof ExpressionStatement ||
-                (stmt instanceof ReturnStatement && ((ReturnStatement) stmt).hasRetExpression()) || 
-                stmt instanceof PutStatement || stmt instanceof PushStatement || stmt instanceof AssignStatement)
-        .forEach(stmt -> { processStatement(stmt, dependencies); });
-    
-        dependencies.forEach(dependency -> dependencyGraph.addEdge(functionName, dependency));
+        functionDeclaration.getBody().forEach(stmt -> stmt.accept(this));
         return null;
     }
 
