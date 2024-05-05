@@ -1,0 +1,16 @@
+def g()
+    f(2);
+end
+
+def h()
+end
+
+def f(a)
+    if (a)
+    elseif(g())
+    end
+end
+
+
+def main()
+end

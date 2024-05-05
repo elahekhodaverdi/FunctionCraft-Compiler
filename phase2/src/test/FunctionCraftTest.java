@@ -192,6 +192,11 @@ public class FunctionCraftTest {
         expectedOutputPath = "samples/out26.txt";
     }
 
-    
+    @Test
+    public void circular_dependeny_in_if_conditions() {
+        args = new String[]{"samples/sample27.fl"};
+        expectedOutputPath = "samples/out27.txt";
+    }
+
 
 }
