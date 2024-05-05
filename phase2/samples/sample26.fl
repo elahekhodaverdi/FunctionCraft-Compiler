@@ -1,0 +1,10 @@
+def g()
+    f(2, 3);
+end
+
+def f(a , [b = g()])
+    return;
+end
+
+def main()
+end

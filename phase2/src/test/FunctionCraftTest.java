@@ -186,4 +186,12 @@ public class FunctionCraftTest {
         expectedOutputPath = "samples/out25.txt";
     }
 
+    @Test
+    public void circular_dependeny_in_function_declaration_argument() {
+        args = new String[]{"samples/sample26.fl"};
+        expectedOutputPath = "samples/out26.txt";
+    }
+
+    
+
 }
