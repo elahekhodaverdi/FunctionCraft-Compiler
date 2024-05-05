@@ -36,76 +36,6 @@ public class DependencyDetector extends Visitor<Void> {
         return null;
     }
 
-    private void processExpression(Expression expr, ArrayList<String> dependencies) {
-        if (expr != null) {
-            findFunctionCalls(expr, dependencies);
-        }
-    }
-
-    private void processStatement(Statement stmt, ArrayList<String> dependencies) {
-        Expression firstExpr;
-        if (stmt instanceof ExpressionStatement) {
-            firstExpr = ((ExpressionStatement) stmt).getExpression();
-        } else if (stmt instanceof ReturnStatement) {
-            firstExpr = ((ReturnStatement) stmt).getReturnExp();
-        } else if (stmt instanceof PutStatement) {
-            firstExpr = ((PutStatement) stmt).getExpression();
-        } else if (stmt instanceof AssignStatement) {
-            firstExpr = ((AssignStatement) stmt).getAssignExpression();
-        } else {
-            firstExpr = ((PushStatement) stmt).getInitial();
-        }
-
-        Expression secondExpr = stmt instanceof PushStatement ?  ((PushStatement) stmt).getToBeAdded() :
-                (stmt instanceof AssignStatement) ? ((AssignStatement) stmt).getAccessListExpression(): null;
-        processExpression(firstExpr, dependencies);
-        processExpression(secondExpr, dependencies);
-        
-    }
-
-    public void findFunctionCalls(Expression expr, ArrayList<String> dependencies) {
-        if (expr instanceof AccessExpression accessExpr) {
-            Expression accessedExpression = accessExpr.getAccessedExpression();
-
-            if (!accessExpr.getAccesses().isEmpty() && accessedExpression instanceof Identifier id && accessExpr.getAccesses().get(0) instanceof ArgExpression)
-                dependencies.add(id.getName());
-            else
-                processExpression(accessedExpression, dependencies);
-            accessExpr.getAccesses().forEach(access -> processExpression(access, dependencies));
-        }
-
-        if (expr instanceof MatchPatternStatement matchPatStm)
-            processExpression(matchPatStm.getMatchArgument(), dependencies);
-
-        if (expr instanceof UnaryExpression unaryExpr)
-            processExpression(unaryExpr.getExpression(), dependencies);
-
-        if (expr instanceof ArgExpression argExpr)
-            argExpr.getArgs().forEach(expression -> processExpression(expression, dependencies));
-
-        if (expr instanceof IndexExpression indExpr)
-            processExpression(indExpr.getIndex(), dependencies);
-
-        if (expr instanceof LenStatement lenExpr)
-            processExpression(lenExpr.getExpression(), dependencies);  
-
-        if (expr instanceof ChopStatement chopExpr)
-            processExpression(chopExpr.getChopExpression(), dependencies);
-
-        if (expr instanceof ChompStatement chompExpr)
-            processExpression(chompExpr.getChompExpression(), dependencies);
-
-        if (expr instanceof AppendExpression appendExpr) {
-            processExpression(appendExpr.getAppendee(), dependencies);
-            appendExpr.getAppendeds().forEach(appended -> processExpression(appended, dependencies));
-        }
-
-        if (expr instanceof BinaryExpression binaryExpr) {
-            processExpression(binaryExpr.getFirstOperand(), dependencies);
-            processExpression(binaryExpr.getSecondOperand(), dependencies);
-        }
-    }
-
     @Override
     public Void visit(FunctionDeclaration functionDeclaration) {
         functionName = functionDeclaration.getFunctionName().getName();
@@ -243,7 +173,8 @@ public class DependencyDetector extends Visitor<Void> {
     @Override
     public Void visit(AssignStatement assignStatement){
         assignStatement.getAssignExpression().accept(this);
-        assignStatement.getAccessListExpression().accept(this);
+        if(assignStatement.getAccessListExpression() != null)
+            assignStatement.getAccessListExpression().accept(this);
         return null;
     }
 
