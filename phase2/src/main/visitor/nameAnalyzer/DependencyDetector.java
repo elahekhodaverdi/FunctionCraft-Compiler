@@ -3,6 +3,7 @@ package main.visitor.nameAnalyzer;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.expression.*;
+import main.ast.nodes.expression.value.ListValue;
 import main.ast.nodes.statement.AssignStatement;
 import main.ast.nodes.statement.ExpressionStatement;
 import main.ast.nodes.statement.PushStatement;
@@ -111,6 +112,22 @@ public class DependencyDetector extends Visitor<Void> {
         .forEach(stmt -> { processStatement(stmt, dependencies); });
     
         dependencies.forEach(dependency -> dependencyGraph.addEdge(functionName, dependency));
+        return null;
+    }
+
+    @Override
+    public Void visit(AccessExpression accessExpression){
+        if (!accessExpression.getAccesses().isEmpty() && accessExpression.getAccessedExpression() instanceof Identifier id && accessExpression.getAccesses().get(0) instanceof ArgExpression)
+            dependencyGraph.addEdge(functionName, id.getName());
+        
+        // accessExpression.getAccessedExpression().accpet(this);
+        accessExpression.getAccesses().forEach(access -> access.accept(this));
+        return null;
+    }
+
+    @Override
+    public Void visit(ListValue listValue){
+        listValue.getElements().forEach(element -> element.accept(this));
         return null;
     }
 
