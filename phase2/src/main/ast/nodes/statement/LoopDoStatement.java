@@ -1,10 +1,14 @@
 package main.ast.nodes.statement;
 
+import lombok.Getter;
+import lombok.Setter;
 import main.ast.nodes.expression.Expression;
 import main.visitor.IVisitor;
 
 import java.util.ArrayList;
 
+@Getter
+@Setter
 public class LoopDoStatement extends Statement{
     private ArrayList<Statement> loopBodyStmts = new ArrayList<>();
     private ArrayList<Expression> loopConditions = new ArrayList<>();
@@ -16,12 +20,6 @@ public class LoopDoStatement extends Statement{
         this.loopConditions = loopConditions;
         this.loopRetStmt = loopRetStmt;
     }
-    public void setLoopBodyStmts(ArrayList<Statement>loopBodyStmts){this.loopBodyStmts = loopBodyStmts;}
-    public void setLoopConditions(ArrayList<Expression>loopConditions){this.loopConditions = loopConditions;}
-    public void setLoopRetStmt(ReturnStatement loopRetStmt){this.loopRetStmt = loopRetStmt;}
-    public ArrayList<Statement> getLoopBodyStmts(){return this.loopBodyStmts;}
-    public ArrayList<Expression> getLoopConditions(){return this.loopConditions;}
-    public ReturnStatement getLoopRetStmt(){return this.loopRetStmt;}
 
     @Override
     public String toString(){return "LoopDoStatement";}
