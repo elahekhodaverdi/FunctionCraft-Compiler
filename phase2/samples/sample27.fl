@@ -7,7 +7,7 @@ end
 
 def f(a)
     if (a)
-    elseif(g())
+    elseif(4 < g())
     end
 end
 

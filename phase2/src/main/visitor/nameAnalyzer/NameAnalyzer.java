@@ -188,7 +188,8 @@ public class NameAnalyzer extends Visitor<Void> {
     public Void visit(LoopDoStatement loopDoStatement) {
         loopDoStatement.getLoopConditions().forEach(condition -> condition.accept(this));
         loopDoStatement.getLoopBodyStmts().forEach(statement -> statement.accept(this));
-        loopDoStatement.getLoopRetStmt().accept(this);
+        if (loopDoStatement.getLoopRetStmt() != null)
+            loopDoStatement.getLoopRetStmt().accept(this);
         return null;
     }
     @Override

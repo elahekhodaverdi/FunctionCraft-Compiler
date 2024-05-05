@@ -115,61 +115,61 @@ public class FunctionCraftTest {
     }
 
     @Test
-    public void direct_circular_dependeny() {
+    public void direct_circular_dependency() {
         args = new String[]{"samples/sample14.fl"};
         expectedOutputPath = "samples/out14.txt";
     }
 
     @Test
-    public void circular_dependeny_in_return_value() {
+    public void circular_dependency_in_return_value() {
         args = new String[]{"samples/sample15.fl"};
         expectedOutputPath = "samples/out15.txt";
     }
 
     @Test
-    public void circular_dependeny_in_binary_expression() {
+    public void circular_dependency_in_binary_expression() {
         args = new String[]{"samples/sample16.fl"};
         expectedOutputPath = "samples/out16.txt";
     }
 
     @Test
-    public void circular_dependeny_in_unary_expression() {
+    public void circular_dependency_in_unary_expression() {
         args = new String[]{"samples/sample17.fl"};
         expectedOutputPath = "samples/out17.txt";
     }
 
     @Test
-    public void circular_dependeny_in_append_expression() {
+    public void circular_dependency_in_append_expression() {
         args = new String[]{"samples/sample18.fl"};
         expectedOutputPath = "samples/out18.txt";
     }
 
     @Test
-    public void circular_dependeny_in_function_call_argument() {
+    public void circular_dependency_in_function_call_argument() {
         args = new String[]{"samples/sample19.fl"};
         expectedOutputPath = "samples/out19.txt";
     }
 
     @Test
-    public void circular_dependeny_in_primitive_function_call_argument() {
+    public void circular_dependency_in_primitive_function_call_argument() {
         args = new String[]{"samples/sample20.fl"};
         expectedOutputPath = "samples/out20.txt";
     }
 
     @Test
-    public void circular_dependeny_in_list_indexing() {
+    public void circular_dependency_in_list_indexing() {
         args = new String[]{"samples/sample21.fl"};
         expectedOutputPath = "samples/out21.txt";
     }
 
     @Test
-    public void circular_dependeny_in_pattern_matching() {
+    public void circular_dependency_in_pattern_matching() {
         args = new String[]{"samples/sample22.fl"};
         expectedOutputPath = "samples/out22.txt";
     }
 
     @Test
-    public void circular_dependeny_in_assignment() {
+    public void circular_dependency_in_assignment() {
         args = new String[]{"samples/sample23.fl"};
         expectedOutputPath = "samples/out23.txt";
     }
@@ -181,22 +181,27 @@ public class FunctionCraftTest {
     }
 
     @Test
-    public void circular_dependeny_in_list_value() {
+    public void circular_dependency_in_list_value() {
         args = new String[]{"samples/sample25.fl"};
         expectedOutputPath = "samples/out25.txt";
     }
 
     @Test
-    public void circular_dependeny_in_function_declaration_argument() {
+    public void circular_dependency_in_function_declaration_argument() {
         args = new String[]{"samples/sample26.fl"};
         expectedOutputPath = "samples/out26.txt";
     }
 
     @Test
-    public void circular_dependeny_in_if_conditions() {
+    public void circular_dependency_in_if_conditions() {
         args = new String[]{"samples/sample27.fl"};
         expectedOutputPath = "samples/out27.txt";
     }
 
+    @Test
+    public void circular_dependency_in_loop() {
+        args = new String[]{"samples/sample28.fl"};
+        expectedOutputPath = "samples/out28.txt";
+    }
 
 }
