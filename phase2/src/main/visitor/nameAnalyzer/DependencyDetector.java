@@ -40,6 +40,7 @@ public class DependencyDetector extends Visitor<Void> {
     public Void visit(FunctionDeclaration functionDeclaration) {
         functionName = functionDeclaration.getFunctionName().getName();
         functionDeclaration.getBody().forEach(stmt -> stmt.accept(this));
+        functionDeclaration.getArgs().forEach(arg -> arg.accept(this));
         return null;
     }
 
@@ -131,14 +132,16 @@ public class DependencyDetector extends Visitor<Void> {
 
     @Override
     public Void visit(VarDeclaration varDeclaration){
-        varDeclaration.getDefaultVal().accept(this);
+        if (varDeclaration.hasDefaultVal())
+            varDeclaration.getDefaultVal().accept(this);
         return null;
     }
 
 
     @Override
     public Void visit(ReturnStatement returnStatement){
-        returnStatement.getReturnExp().accept(this);
+        if (returnStatement.hasRetExpression())
+            returnStatement.getReturnExp().accept(this);
         return null;
     }
 
