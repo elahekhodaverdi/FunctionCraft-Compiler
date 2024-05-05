@@ -7,8 +7,9 @@ import main.visitor.IVisitor;
 public class IndexExpression extends Expression{
     Expression index;
 
-    public IndexExpression(Expression index) {
+    public IndexExpression(Expression index, int line) {
         this.index = index;
+        setLine(line);
     }
 
     @Override

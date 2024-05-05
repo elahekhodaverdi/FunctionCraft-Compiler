@@ -268,13 +268,14 @@ range returns [ArrayList<Expression> rangeRet]
         $rangeRet.add($e1.expRet);
         $rangeRet.add($e2.expRet);
     }
-    |
+    |   {$rangeRet = new ArrayList<Expression>();}
      (LBRACK (e3 = expression   {$rangeRet.add($e3.expRet);}
     (COMMA e4 = expression      {$rangeRet.add($e4.expRet);}
     )*) RBRACK)
     |
      id = IDENTIFIER
      {
+        $rangeRet = new ArrayList<Expression>();
         Identifier id_ = new Identifier($id.text);
         id_.setLine($id.line);
         $rangeRet.add(id_);
@@ -447,11 +448,11 @@ accessExpression returns [Expression expRet]
     ;
 
 list_indexing returns [Expression expRet]
-    : LBRACK e = expression RBRACK {$expRet = new IndexExpression($e.expRet);}
+    : l = LBRACK e = expression RBRACK {$expRet = new IndexExpression($e.expRet, $l.line);}
     ;
 
 function_call returns [Expression expRet]
-    : LPAR a = arguments RPAR       {$expRet = new ArgExpression($a.argsRet);}
+    : l = LPAR a = arguments RPAR       {$expRet = new ArgExpression($a.argsRet, $l.line);}
     ;
 
 arguments returns [ArrayList<Expression> argsRet]

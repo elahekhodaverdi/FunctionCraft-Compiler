@@ -174,4 +174,10 @@ public class FunctionCraftTest {
         expectedOutputPath = "samples/out23.txt";
     }
 
+    @Test
+    public void variable_not_declared_in_range_statement() {
+        args = new String[]{"samples/sample24.fl"};
+        expectedOutputPath = "samples/out24.txt";
+    }
+
 }

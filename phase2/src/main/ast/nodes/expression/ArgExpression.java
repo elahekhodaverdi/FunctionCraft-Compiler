@@ -9,8 +9,9 @@ import java.util.ArrayList;
 public class ArgExpression extends Expression{
     private ArrayList<Expression> args;
 
-    public ArgExpression(ArrayList<Expression> args) {
+    public ArgExpression(ArrayList<Expression> args, int line) {
         this.args = args;
+        setLine(line);
     }
 
     @Override
