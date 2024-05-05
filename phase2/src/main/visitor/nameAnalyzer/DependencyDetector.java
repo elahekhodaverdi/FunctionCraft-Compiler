@@ -86,7 +86,7 @@ public class DependencyDetector extends Visitor<Void> {
         if (!accessExpression.getAccesses().isEmpty() && accessExpression.getAccessedExpression() instanceof Identifier id && accessExpression.getAccesses().get(0) instanceof ArgExpression)
             dependencyGraph.addEdge(functionName, id.getName());
         
-        // accessExpression.getAccessedExpression().accpet(this); TODO
+         accessExpression.getAccessedExpression().accept(this);
         accessExpression.getAccesses().forEach(access -> access.accept(this));
         return null;
     }
