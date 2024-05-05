@@ -3,10 +3,14 @@ package main.visitor.nameAnalyzer;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.declaration.MainDeclaration;
+import main.ast.nodes.declaration.VarDeclaration;
 import main.ast.nodes.expression.*;
 import main.ast.nodes.expression.value.ListValue;
 import main.ast.nodes.statement.AssignStatement;
 import main.ast.nodes.statement.ExpressionStatement;
+import main.ast.nodes.statement.ForStatement;
+import main.ast.nodes.statement.IfStatement;
+import main.ast.nodes.statement.LoopDoStatement;
 import main.ast.nodes.statement.PushStatement;
 import main.ast.nodes.statement.PutStatement;
 import main.ast.nodes.statement.ReturnStatement;
@@ -199,6 +203,60 @@ public class DependencyDetector extends Visitor<Void> {
     @Override
     public Void visit(IndexExpression indexExpression){
         indexExpression.getIndex().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(VarDeclaration varDeclaration){
+        varDeclaration.getDefaultVal().accept(this);
+        return null;
+    }
+
+
+    @Override
+    public Void visit(ReturnStatement returnStatement){
+        returnStatement.getReturnExp().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(IfStatement ifStatement){
+        ifStatement.getConditions().forEach( condition -> condition.accept(this));
+        return null;
+    }
+   
+    @Override
+    public Void visit(LoopDoStatement loopDoStatement){
+        loopDoStatement.getLoopConditions().forEach(condition -> condition.accept(this));
+        if (loopDoStatement.getLoopRetStmt() != null)
+            loopDoStatement.getLoopRetStmt().accept(this);
+        if (loopDoStatement.getLoopConditions().isEmpty())
+            loopDoStatement.getLoopBodyStmts().forEach(stmt -> stmt.accept(this));
+        return null;
+    }
+
+    @Override
+    public Void visit(ForStatement forStatement){
+        forStatement.getRangeExpressions().forEach( expr -> expr.accept(this));
+        return null;
+    }
+
+    @Override
+    public Void visit(MatchPatternStatement matchPatternStatement){
+        matchPatternStatement.getMatchArgument().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(AssignStatement assignStatement){
+        assignStatement.getAssignExpression().accept(this);
+        assignStatement.getAccessListExpression().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(ExpressionStatement expressionStatement){
+        expressionStatement.getExpression().accept(this);
         return null;
     }
 
