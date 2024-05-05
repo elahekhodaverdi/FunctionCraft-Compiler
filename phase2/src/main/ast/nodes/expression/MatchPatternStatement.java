@@ -13,7 +13,7 @@ public class MatchPatternStatement extends Expression{
         this.matchArgument = matchArgument;
         this.patternId = patternId;
     }
-    
+
     @Override
     public String toString(){return "MatchPattern:"+patternId.getName();}
     @Override

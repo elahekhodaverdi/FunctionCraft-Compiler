@@ -1,12 +1,13 @@
 package main.ast.nodes.expression;
 
+import lombok.Getter;
 import main.visitor.IVisitor;
 
+@Getter
 public class ChopStatement extends Expression{
     private Expression chopExpression;
     public ChopStatement(Expression chopExpression){this.chopExpression = chopExpression;}
-    public void setChopExpression(Expression chopExpression){this.chopExpression = chopExpression;}
-    public Expression getChopExpression(){return this.chopExpression;}
+
     @Override
     public String toString(){return "ChopStatement";}
     @Override
