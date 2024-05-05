@@ -20,6 +20,7 @@ import java.util.List;
 public class DependencyDetector extends Visitor<Void> {
     public ArrayList<CompileError> dependencyError = new ArrayList<>();
     private Graph dependencyGraph = new Graph();
+    private String functionName;
     @Override
     public Void visit(Program program){
         for(FunctionDeclaration functionDeclaration : program.getFunctionDeclarations()){
@@ -101,7 +102,7 @@ public class DependencyDetector extends Visitor<Void> {
 
     @Override
     public Void visit(FunctionDeclaration functionDeclaration) {
-        String functionName = functionDeclaration.getFunctionName().getName();
+        functionName = functionDeclaration.getFunctionName().getName();
         ArrayList<String> dependencies = new ArrayList<>();
         functionDeclaration.getBody().stream()
         .filter(stmt -> stmt instanceof ExpressionStatement ||
@@ -114,6 +115,11 @@ public class DependencyDetector extends Visitor<Void> {
     }
 
 
+    @Override
+    public Void visit(IndexExpression indexExpression){
+        indexExpression.getIndex().accept(this);
+        return null;
+    }
 
     public Void findDependency(){
         ArrayList<List<String>> cycles = dependencyGraph.findCycles();
@@ -124,6 +130,5 @@ public class DependencyDetector extends Visitor<Void> {
             }
         return null;
     }
-
 
 }
