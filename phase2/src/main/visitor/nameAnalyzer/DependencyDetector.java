@@ -2,6 +2,7 @@ package main.visitor.nameAnalyzer;
 
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
+import main.ast.nodes.declaration.MainDeclaration;
 import main.ast.nodes.expression.*;
 import main.ast.nodes.expression.value.ListValue;
 import main.ast.nodes.statement.AssignStatement;
@@ -115,12 +116,50 @@ public class DependencyDetector extends Visitor<Void> {
         return null;
     }
 
+    
+    @Override
+    public Void visit(PutStatement putStatement){
+        putStatement.getExpression().accept(this);
+        return null;
+    }
+    @Override
+    public Void visit(LenStatement lenStatement){
+        lenStatement.getExpression().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(PushStatement pushStatement){
+        pushStatement.getInitial().accept(this);
+        pushStatement.getToBeAdded().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(ChopStatement chopStatement){
+        chopStatement.getChopExpression().accept(this);
+        return null;   
+    }
+
+    @Override
+    public Void visit(ChompStatement chompStatement){
+        chompStatement.getChompExpression().accept(this);
+        return null;
+    }
+
+    @Override
+    public Void visit(MainDeclaration mainDeclaration){
+        functionName = "main";
+        mainDeclaration.getBody().forEach( stmt -> stmt.accept(this));
+        return null;
+    }
+
     @Override
     public Void visit(AccessExpression accessExpression){
         if (!accessExpression.getAccesses().isEmpty() && accessExpression.getAccessedExpression() instanceof Identifier id && accessExpression.getAccesses().get(0) instanceof ArgExpression)
             dependencyGraph.addEdge(functionName, id.getName());
         
-        // accessExpression.getAccessedExpression().accpet(this);
+        // accessExpression.getAccessedExpression().accpet(this); TODO
         accessExpression.getAccesses().forEach(access -> access.accept(this));
         return null;
     }
