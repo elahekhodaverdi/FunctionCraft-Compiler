@@ -76,13 +76,6 @@ public class DependencyDetector extends Visitor<Void> {
     }
 
     @Override
-    public Void visit(MainDeclaration mainDeclaration){
-        functionName = "main";
-        mainDeclaration.getBody().forEach( stmt -> stmt.accept(this));
-        return null;
-    }
-
-    @Override
     public Void visit(AccessExpression accessExpression){
         if (!accessExpression.getAccesses().isEmpty() && accessExpression.getAccessedExpression() instanceof Identifier id && accessExpression.getAccesses().get(0) instanceof ArgExpression)
             dependencyGraph.addEdge(functionName, id.getName());
