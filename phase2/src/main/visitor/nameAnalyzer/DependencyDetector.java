@@ -115,6 +115,13 @@ public class DependencyDetector extends Visitor<Void> {
     }
 
     @Override
+    public Void visit(AppendExpression appendExpression){
+        appendExpression.getAppendee().accept(this);
+        appendExpression.getAppendeds().forEach(appended -> appended.accept(this));
+        return null;
+    }
+
+    @Override
     public Void visit(BinaryExpression binaryExpression){
         binaryExpression.getFirstOperand().accept(this);
         binaryExpression.getSecondOperand().accept(this);
