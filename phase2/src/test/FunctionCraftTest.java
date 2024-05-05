@@ -180,4 +180,10 @@ public class FunctionCraftTest {
         expectedOutputPath = "samples/out24.txt";
     }
 
+    @Test
+    public void circular_dependeny_in_list_value() {
+        args = new String[]{"samples/sample25.fl"};
+        expectedOutputPath = "samples/out25.txt";
+    }
+
 }

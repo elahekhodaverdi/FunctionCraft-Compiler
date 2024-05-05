@@ -1,0 +1,17 @@
+
+
+def g()
+    f();
+end
+
+def h()
+end
+
+def f()
+    a = [3 , h(), g()];
+    return;
+end
+
+
+def main()
+end
