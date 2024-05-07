@@ -15,9 +15,8 @@ import java.nio.file.Paths;
 import static org.junit.Assert.assertEquals;
 
 public class FunctionCraftTest {
-    private String[] args;
+    private int testCaseNumber;
     private ByteArrayOutputStream outputStream;
-    private String expectedOutputPath;
 
     @Before
     public void setUp() {
@@ -27,6 +26,10 @@ public class FunctionCraftTest {
 
     @After
     public void assertEqualErrors() throws IOException {
+
+        String[] args = new String[]{"samples/input/sample" + testCaseNumber + ".fl"};
+        String expectedOutputPath = "samples/output/out" + testCaseNumber + ".txt";
+
         FunctionCraft.main(args);
 
         Path path = Paths.get(expectedOutputPath);
@@ -38,212 +41,177 @@ public class FunctionCraftTest {
 
     @Test
     public void several_errors() {
-        args = new String[]{"samples/sample0.fl"};
-        expectedOutputPath = "samples/out0.txt";
+        testCaseNumber = 0;
     }
 
 
     @Test
     public void redefinition_of_function_with_same_arguments() {
-        args = new String[]{"samples/sample1.fl"};
-        expectedOutputPath = "samples/out1.txt";
+        testCaseNumber = 1;
     }
 
     @Test
     public void redefinition_of_function_with_different_arguments() {
-        args = new String[]{"samples/sample2.fl"};
-        expectedOutputPath = "samples/out2.txt";
+        testCaseNumber = 2;
     }
 
     @Test
     public void variable_not_declared_in_assignment() {
-        args = new String[]{"samples/sample3.fl"};
-        expectedOutputPath = "samples/out3.txt";
+        testCaseNumber = 3;
     }
 
     @Test
     public void variable_not_declared_in_assignment_to_itself() {
-        args = new String[]{"samples/sample4.fl"};
-        expectedOutputPath = "samples/out4.txt";
+        testCaseNumber = 4;
     }
 
     @Test
     public void variable_not_declared_when_assign_to_an_element_of_not_declared_list() {
-        args = new String[]{"samples/sample5.fl"};
-        expectedOutputPath = "samples/out5.txt";
+        testCaseNumber = 5;
     }
 
     @Test
     public void variable_not_declared_in_return_statement() {
-        args = new String[]{"samples/sample6.fl"};
-        expectedOutputPath = "samples/out6.txt";
+        testCaseNumber = 6;
     }
 
     @Test
     public void function_not_declared_in_nested_call_functions() {
-        args = new String[]{"samples/sample7.fl"};
-        expectedOutputPath = "samples/out7.txt";
+        testCaseNumber = 7;
     }
 
     @Test
     public void function_not_declared_when_if_condition_is_a_function_call() {
-        args = new String[]{"samples/sample8.fl"};
-        expectedOutputPath = "samples/out8.txt";
+        testCaseNumber = 8;
     }
 
     @Test
     public void argument_has_same_name_with_function() {
-        args = new String[]{"samples/sample9.fl"};
-        expectedOutputPath = "samples/out9.txt";
+        testCaseNumber = 9;
     }
 
     @Test
     public void argument_has_same_name_with_function_and_it_is_used() {
-        args = new String[]{"samples/sample10.fl"};
-        expectedOutputPath = "samples/out10.txt";
+        testCaseNumber = 10;
     }
 
     @Test
     public void incorrect_number_of_arguments_in_function_call_when_the_function_has_default_arguments() {
-        args = new String[]{"samples/sample11.fl"};
-        expectedOutputPath = "samples/out11.txt";
+        testCaseNumber = 11;
     }
 
     @Test
     public void incorrect_number_of_arguments_in_function_call_when_the_function_does_not_have_default_arguments() {
-        args = new String[]{"samples/sample12.fl"};
-        expectedOutputPath = "samples/out12.txt";
+        testCaseNumber = 12;
     }
 
     @Test
     public void circular_dependency() {
-        args = new String[]{"samples/sample13.fl"};
-        expectedOutputPath = "samples/out13.txt";
+        testCaseNumber = 13;
     }
 
     @Test
     public void direct_circular_dependency() {
-        args = new String[]{"samples/sample14.fl"};
-        expectedOutputPath = "samples/out14.txt";
+        testCaseNumber = 14;
     }
 
     @Test
     public void circular_dependency_in_return_value() {
-        args = new String[]{"samples/sample15.fl"};
-        expectedOutputPath = "samples/out15.txt";
+        testCaseNumber = 15;
     }
 
     @Test
     public void circular_dependency_in_binary_expression() {
-        args = new String[]{"samples/sample16.fl"};
-        expectedOutputPath = "samples/out16.txt";
+        testCaseNumber = 16;
     }
 
     @Test
     public void circular_dependency_in_unary_expression() {
-        args = new String[]{"samples/sample17.fl"};
-        expectedOutputPath = "samples/out17.txt";
+        testCaseNumber = 17;
     }
 
     @Test
     public void circular_dependency_in_append_expression() {
-        args = new String[]{"samples/sample18.fl"};
-        expectedOutputPath = "samples/out18.txt";
+        testCaseNumber = 18;
     }
 
     @Test
     public void circular_dependency_in_function_call_argument() {
-        args = new String[]{"samples/sample19.fl"};
-        expectedOutputPath = "samples/out19.txt";
+        testCaseNumber = 19;
     }
 
     @Test
     public void circular_dependency_in_primitive_function_call_argument() {
-        args = new String[]{"samples/sample20.fl"};
-        expectedOutputPath = "samples/out20.txt";
+        testCaseNumber = 20;
     }
 
     @Test
     public void circular_dependency_in_list_indexing() {
-        args = new String[]{"samples/sample21.fl"};
-        expectedOutputPath = "samples/out21.txt";
+        testCaseNumber = 21;
     }
 
     @Test
     public void circular_dependency_in_pattern_matching() {
-        args = new String[]{"samples/sample22.fl"};
-        expectedOutputPath = "samples/out22.txt";
+        testCaseNumber = 22;
     }
 
     @Test
     public void circular_dependency_in_assignment() {
-        args = new String[]{"samples/sample23.fl"};
-        expectedOutputPath = "samples/out23.txt";
+        testCaseNumber = 23;
     }
 
     @Test
     public void variable_not_declared_in_range_statement() {
-        args = new String[]{"samples/sample24.fl"};
-        expectedOutputPath = "samples/out24.txt";
+        testCaseNumber = 24;
     }
 
     @Test
     public void circular_dependency_in_list_value() {
-        args = new String[]{"samples/sample25.fl"};
-        expectedOutputPath = "samples/out25.txt";
+        testCaseNumber = 25;
     }
 
     @Test
     public void circular_dependency_in_function_declaration_argument() {
-        args = new String[]{"samples/sample26.fl"};
-        expectedOutputPath = "samples/out26.txt";
+        testCaseNumber = 26;
     }
 
     @Test
     public void circular_dependency_in_if_conditions() {
-        args = new String[]{"samples/sample27.fl"};
-        expectedOutputPath = "samples/out27.txt";
+        testCaseNumber = 27;
     }
 
     @Test
     public void circular_dependency_in_loop() {
-        args = new String[]{"samples/sample28.fl"};
-        expectedOutputPath = "samples/out28.txt";
+        testCaseNumber = 28;
     }
 
     @Test
     public void circular_dependency_in_for_loop() {
-        args = new String[]{"samples/sample29.fl"};
-        expectedOutputPath = "samples/out29.txt";
+        testCaseNumber = 29;
     }
 
     @Test
     public void variable_not_declared_after_for_loop_scope() {
-        args = new String[]{"samples/sample30.fl"};
-        expectedOutputPath = "samples/out30.txt";
+        testCaseNumber = 30;
     }
 
     @Test
     public void variable_not_declared_after_loop_scope() {
-        args = new String[]{"samples/sample31.fl"};
-        expectedOutputPath = "samples/out31.txt";
+        testCaseNumber = 31;
     }
 
     @Test
     public void variable_not_declared_after_if_scope() {
-        args = new String[]{"samples/sample32.fl"};
-        expectedOutputPath = "samples/out32.txt";
+        testCaseNumber = 32;
     }
 
     @Test
     public void circular_dependency_in_lambda_function_call() {
-        args = new String[]{"samples/sample33.fl"};
-        expectedOutputPath = "samples/out33.txt";
+        testCaseNumber = 33;
     }
 
     @Test
     public void variable_not_declared_in_lambda_function_call() {
-        args = new String[]{"samples/sample34.fl"};
-        expectedOutputPath = "samples/out34.txt";
+        testCaseNumber = 34;
     }
 }
