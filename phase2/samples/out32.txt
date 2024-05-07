@@ -1,0 +1,10 @@
+Line:3-> variable a is not declared
+Line:5-> variable b is not declared
+Line:6-> variable c is not declared
+Line:8-> variable a is not declared
+Line:9-> variable c is not declared
+Line:11-> variable b is not declared
+Line:12-> variable a is not declared
+Line:15-> variable a is not declared
+Line:15-> variable b is not declared
+Line:15-> variable c is not declared

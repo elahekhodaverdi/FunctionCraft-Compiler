@@ -1,0 +1,16 @@
+def main()
+
+    if (a)
+        a = 10;
+        a = b;
+        a = c;
+    elseif (5)
+        b = a;
+        b = c;
+    else
+        c = b;
+        c = a;
+    end
+
+    d = a + b + c;
+end

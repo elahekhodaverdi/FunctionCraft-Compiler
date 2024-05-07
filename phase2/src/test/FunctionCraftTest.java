@@ -206,8 +206,26 @@ public class FunctionCraftTest {
 
     @Test
     public void circular_dependency_in_for_loop() {
-        args = new String[]{"samples/sample28.fl"};
-        expectedOutputPath = "samples/out28.txt";
+        args = new String[]{"samples/sample29.fl"};
+        expectedOutputPath = "samples/out29.txt";
+    }
+
+    @Test
+    public void variable_not_declared_after_for_loop_scope() {
+        args = new String[]{"samples/sample30.fl"};
+        expectedOutputPath = "samples/out30.txt";
+    }
+
+    @Test
+    public void variable_not_declared_after_loop_scope() {
+        args = new String[]{"samples/sample31.fl"};
+        expectedOutputPath = "samples/out31.txt";
+    }
+
+    @Test
+    public void variable_not_declared_after_if_scope() {
+        args = new String[]{"samples/sample32.fl"};
+        expectedOutputPath = "samples/out32.txt";
     }
 
 }

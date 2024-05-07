@@ -1,0 +1,10 @@
+def g(a)
+    f = a;
+end
+
+def main()
+        loop do
+            a = 6;
+        end
+      g(a);
+end

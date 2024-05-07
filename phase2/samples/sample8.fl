@@ -3,9 +3,9 @@ def main()
     if (f())
         a = 5;
     end
-
+    a = 5;
     for i in (1..5)
-        next if (g(a, a));
-        break if (h(a));
+        next if (g(a, 7));
+        break if (h(6));
     end
 end
