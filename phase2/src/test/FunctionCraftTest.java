@@ -233,4 +233,10 @@ public class FunctionCraftTest {
         args = new String[]{"samples/sample33.fl"};
         expectedOutputPath = "samples/out33.txt";
     }
+
+    @Test
+    public void variable_not_declared_in_lambda_function_call() {
+        args = new String[]{"samples/sample34.fl"};
+        expectedOutputPath = "samples/out34.txt";
+    }
 }
