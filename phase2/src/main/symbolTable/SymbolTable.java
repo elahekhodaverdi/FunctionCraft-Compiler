@@ -22,6 +22,11 @@ public class SymbolTable {
             stack.push(top);
         top = symbolTable;
     }
+
+    public static void push() {
+        push(new SymbolTable());
+    }
+
     public static void pop() {
         top = stack.pop();
     }

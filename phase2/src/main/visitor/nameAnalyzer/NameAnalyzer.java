@@ -160,8 +160,18 @@ public class NameAnalyzer extends Visitor<Void> {
     @Override
     public Void visit(IfStatement ifStatement) {
         ifStatement.getConditions().forEach(condition -> condition.accept(this));
-        ifStatement.getThenBody().forEach(thenBody -> thenBody.accept(this));
-        ifStatement.getElseBody().forEach(elseBody -> elseBody.accept(this));
+
+        ifStatement.getThenBody().forEach(thenBody -> {
+            SymbolTable.push();
+            thenBody.accept(this);
+            SymbolTable.pop();
+        });
+
+        ifStatement.getElseBody().forEach(elseBody -> {
+            SymbolTable.push();
+            elseBody.accept(this);
+            SymbolTable.pop();
+        });
         return null;
     }
 
@@ -186,19 +196,23 @@ public class NameAnalyzer extends Visitor<Void> {
 
     @Override
     public Void visit(LoopDoStatement loopDoStatement) {
+        SymbolTable.push();
         loopDoStatement.getLoopConditions().forEach(condition -> condition.accept(this));
         loopDoStatement.getLoopBodyStmts().forEach(statement -> statement.accept(this));
         if (loopDoStatement.getLoopRetStmt() != null)
             loopDoStatement.getLoopRetStmt().accept(this);
+        SymbolTable.pop();
         return null;
     }
     @Override
     public Void visit(ForStatement forStatement) {
+        SymbolTable.push();
         forStatement.getRangeExpressions().forEach(expression -> expression.accept(this));
         forStatement.getLoopBody().forEach(statement -> statement.accept(this));
         forStatement.getLoopBodyExpressions().forEach(expression -> expression.accept(this));
         if (forStatement.hasReturnStatement())
             forStatement.getReturnStatement().accept(this);
+        SymbolTable.pop();
         return null;
     }
 
