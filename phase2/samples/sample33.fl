@@ -1,0 +1,15 @@
+def f()
+    return g();
+end
+def g()
+    -> (a, b) { return; } (f());
+end
+
+def h()
+    -> (a, b) {return;} (h());
+    b = a;
+end
+
+def main()
+
+end

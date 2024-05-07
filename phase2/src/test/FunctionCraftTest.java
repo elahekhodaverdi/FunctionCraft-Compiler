@@ -228,4 +228,9 @@ public class FunctionCraftTest {
         expectedOutputPath = "samples/out32.txt";
     }
 
+    @Test
+    public void circular_dependency_in_lambda_function_call() {
+        args = new String[]{"samples/sample33.fl"};
+        expectedOutputPath = "samples/out33.txt";
+    }
 }
