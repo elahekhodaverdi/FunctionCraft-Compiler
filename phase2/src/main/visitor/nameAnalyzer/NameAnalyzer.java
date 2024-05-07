@@ -19,6 +19,7 @@ import main.symbolTable.item.PatternItem;
 import main.symbolTable.item.VarItem;
 import main.visitor.Visitor;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 
 public class NameAnalyzer extends Visitor<Void> {
@@ -130,7 +131,9 @@ public class NameAnalyzer extends Visitor<Void> {
             }
         }
         functionDeclaration.getArgs().forEach(varDec -> varDec.accept(this));
-        functionDeclaration.getBody().forEach(statement -> statement.accept(this));
+        functionDeclaration.getBody().forEach(statement -> {
+            statement.accept(this);
+        });
         return null;
     }
 
@@ -240,7 +243,7 @@ public class NameAnalyzer extends Visitor<Void> {
         if (assignStatement.isAccessList()) {
             assignStatement.getAccessListExpression().accept(this);
             assignStatement.getAssignedId().accept(this);
-        }
+        } 
         else {
             var varItem = new VarItem(assignStatement.getAssignedId());
             try {
@@ -282,15 +285,16 @@ public class NameAnalyzer extends Visitor<Void> {
             accessExpression.startWithFunctionCall()) {
             try {
                 FunctionItem functionItem = SymbolTable.root.getFunctionItem(identifier.getName());
-                if(!functionItem.getFunctionDeclaration().matchArgs(accessExpression.numberOFArgs())) {
+                if(!functionItem.getFunctionDeclaration().matchArgs(accessExpression.numberOFArgs()))
                     nameErrors.add(new ArgMisMatch(identifier.getLine(), identifier.getName()));
-                }
+                
             } catch (ItemNotFound e) {
                 nameErrors.add(new FunctionNotDeclared(identifier.getLine(), identifier.getName()));
             }
         }
-        if (!accessExpression.startWithFunctionCall())
+        else
             accessExpression.getAccessedExpression().accept(this);
+        
         accessExpression.getAccesses().forEach(access -> access.accept(this));
         return null;
     }
@@ -298,7 +302,12 @@ public class NameAnalyzer extends Visitor<Void> {
     @Override
     public Void visit(LambdaExpression lambdaExpression) {
         lambdaExpression.getDeclarationArgs().forEach(varDeclaration -> varDeclaration.accept(this));
-        lambdaExpression.getBody().forEach(statement -> statement.accept(this));
+        lambdaExpression.getBody().forEach( statement -> {
+            SymbolTable.push();
+            statement.accept(this);
+            SymbolTable.pop();
+        });
+
         return null;
     }
 
