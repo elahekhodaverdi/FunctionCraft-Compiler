@@ -37,6 +37,13 @@ public class FunctionCraftTest {
     }
 
     @Test
+    public void several_errors() {
+        args = new String[]{"samples/sample0.fl"};
+        expectedOutputPath = "samples/out0.txt";
+    }
+
+
+    @Test
     public void redefinition_of_function_with_same_arguments() {
         args = new String[]{"samples/sample1.fl"};
         expectedOutputPath = "samples/out1.txt";
