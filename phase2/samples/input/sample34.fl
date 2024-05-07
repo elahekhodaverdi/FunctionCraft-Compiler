@@ -1,5 +1,6 @@
 def h()
-    -> (a, b) { a  = b + d + g; return d;} ();
+    -> (a, b) { a  = b + d + g; return d;}(1, 2);
+    -> (a, b) { a  = b + d + g; return d;};
     b = a;
 end
 
