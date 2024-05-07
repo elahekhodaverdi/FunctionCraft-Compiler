@@ -202,18 +202,15 @@ public class AstPrinter extends Visitor<Void> {
         unaryExpression.getExpression().accept(this);
         return null;
     }
-//    @Override
-//    public Void visit(AccessExpression accessExpression){
-//        printMessage(accessExpression.getLine(), accessExpression.toString());
-//        accessExpression.getAccessedExpression().accept(this);
-//        for(Expression expression : accessExpression.getArguments()){
-//            expression.accept(this);
-//        }
-//        for(Expression expression: accessExpression.getDimentionalAccess()){
-//            expression.accept(this);
-//        }
-//        return null;
-//    }
+    @Override
+    public Void visit(AccessExpression accessExpression){
+        printMessage(accessExpression.getLine(), accessExpression.toString());
+        accessExpression.getAccessedExpression().accept(this);
+        for(Expression expression : accessExpression.getAccesses()){
+            expression.accept(this);
+        }
+        return null;
+    }
     @Override
     public Void visit(LambdaExpression lambdaExpression){
         printMessage(lambdaExpression.getLine(), lambdaExpression.toString());
@@ -259,6 +256,16 @@ public class AstPrinter extends Visitor<Void> {
     @Override
     public Void visit(FloatValue floatValue){
         printMessage(floatValue.getLine(), floatValue.toString());
+        return null;
+    }
+    @Override
+    public Void visit(ArgExpression argExpression){
+        argExpression.getArgs().forEach(arg -> arg.accept(this));
+        return null;
+    }
+    @Override
+    public Void visit(IndexExpression indexExpression){
+        indexExpression.getIndex().accept(this);
         return null;
     }
 }
