@@ -193,7 +193,26 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(PushStatement pushStatement){
         //TODO:visit push statement
+        Type initialType = pushStatement.getInitial().accept(this);
+        Type toBeAddedType = pushStatement.getToBeAdded().accept(this);
+        if (!(initialType instanceof StringType) && !(initialType instanceof ListType)){
+            typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
+            return new NoType();
+        }
+        if ((initialType instanceof StringType) && !toBeAddedType.sameType(initialType)){
+            typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
+            return new NoType();
+        }
 
+        if (initialType instanceof ListType listType){
+            if (!listType.getType().sameType(new NoType())) {
+                if (listType.getType().sameType(toBeAddedType))
+                typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
+                return new NoType();
+            }
+            if (listType.getType().sameType(new NoType()))
+                listType.setType(toBeAddedType);
+        }
         return new NoType();
     }
     @Override
