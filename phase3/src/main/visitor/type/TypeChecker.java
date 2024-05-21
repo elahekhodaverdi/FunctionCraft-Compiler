@@ -237,6 +237,16 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(UnaryExpression unaryExpression){
         //TODO:visit unaryExpression
+        UnaryOperator op = unaryExpression.getOperator();
+        Type exprType = unaryExpression.getExpression().accept(this);
+        if (op == UnaryOperator.NOT && !(exprType instanceof BoolType)) {
+            typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
+            return new NoType();
+        }
+        else if (!(exprType instanceof IntType)){
+            typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
+            return new NoType();
+        }
         return null;
     }
     @Override
