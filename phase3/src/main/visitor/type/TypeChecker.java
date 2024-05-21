@@ -231,8 +231,20 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(BinaryExpression binaryExpression){
-        //TODO:visit binary expression
-        return null;
+        Type firstOperandType = binaryExpression.getFirstOperand().accept(this);
+        Type secondOpenrandType = binaryExpression.getSecondOperand().accept(this);
+        if (firstOperandType != secondOpenrandType) {
+            typeErrors.add(new NonSameOperands(binaryExpression.getLine(), binaryExpression.getOperator()));
+            return new NoType();
+        }
+        if (!BinaryOperator.isEqualityOperator(binaryExpression.getOperator()) &&
+            (!firstOperandType.isNumericType() || !secondOpenrandType.isNumericType())) {
+                typeErrors.add(new UnsupportedOperandType(binaryExpression.getLine(), binaryExpression.getOperator()));
+                return new NoType();
+            }
+        if (BinaryOperator.isArithmeticOperator(binaryExpression.getOperator()))
+            return firstOperandType;
+        return new BoolType();
     }
     @Override
     public Type visit(UnaryExpression unaryExpression){
