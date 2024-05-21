@@ -18,6 +18,7 @@ import main.symbolTable.utils.Stack;
 import main.visitor.Visitor;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TypeChecker extends Visitor<Type> {
     public ArrayList<CompileError> typeErrors = new ArrayList<>();
@@ -253,17 +254,17 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(ListValue listValue){
         // TODO:visit listValue
-        Type type = new NoType();
-        for(Expression expression: listValue.getElements()) {
-            Type currElementType  = expression.accept(this);
-            if (type instanceof NoType)
-                type = currElementType;
-            else if(!type.sameType(currElementType)){
-                typeErrors.add(new ListElementsTypesMisMatch(listValue.getLine()));
-                return new NoType();
-            }
+        var types = new ArrayList<>(listValue.getElements().stream()
+                .map(e -> e.accept(this))
+                .collect(Collectors.toSet()));
+
+        if (types.size() > 1) {
+            typeErrors.add(new ListElementsTypesMisMatch(listValue.getLine()));
+            return new NoType();
         }
-        return new ListType(type);
+
+        types.add(new NoType());
+        return new ListType(types.getFirst());
     }
     @Override
     public Type visit(FunctionPointer functionPointer){
