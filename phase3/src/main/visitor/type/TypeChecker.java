@@ -14,12 +14,14 @@ import main.compileError.typeErrors.*;
 import main.symbolTable.SymbolTable;
 import main.symbolTable.exceptions.*;
 import main.symbolTable.item.*;
+import main.symbolTable.utils.Stack;
 import main.visitor.Visitor;
 
 import java.util.*;
 
 public class TypeChecker extends Visitor<Type> {
     public ArrayList<CompileError> typeErrors = new ArrayList<>();
+    private static LinkedList<ArrayList<Type>> lastFunctionCallReturns = new LinkedList<>();
     @Override
     public Type visit(Program program){
         SymbolTable.root = new SymbolTable();
@@ -43,6 +45,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(FunctionDeclaration functionDeclaration){
         SymbolTable.push(new SymbolTable());
+        lastFunctionCallReturns.push(new ArrayList<>());
         try {
             FunctionItem functionItem = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY +
                     functionDeclaration.getFunctionName().getName());
@@ -59,6 +62,11 @@ public class TypeChecker extends Visitor<Type> {
             statement.accept(this);
 
         //TODO:Figure out whether return types of functions are not the same.
+        if ((new HashSet<>(lastFunctionCallReturns.getLast())).size() > 1) {
+            typeErrors.add(new FunctionIncompatibleReturnTypes(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName()));
+            return new NoType();
+        }
+        lastFunctionCallReturns.pop();
         SymbolTable.pop();
         return null;
         //TODO:Return the infered type of the function
@@ -118,7 +126,12 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(ReturnStatement returnStatement){
         // TODO:Visit return statement.Note that return type of functions are specified here
-        return null;
+        Type returnType = new NoType();
+        if (returnStatement.hasRetExpression())
+            returnType = returnStatement.getReturnExp().accept(this);
+
+        lastFunctionCallReturns.getLast().add(returnType);
+        return returnType;
     }
     @Override
     public Type visit(ExpressionStatement expressionStatement){
