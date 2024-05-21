@@ -104,6 +104,12 @@ public class TypeChecker extends Visitor<Type> {
                 typeErrors.add(new IsNotIndexable(accessExpression.getLine()));
                 return new NoType();
             }
+            for (Expression expr: accessExpression.getDimentionalAccess()){
+                if (!(expr.accept(this) instanceof IntType)){
+                    typeErrors.add(new AccessIndexIsNotInt(accessExpression.getLine()));
+                    return new NoType();
+                }
+            }
             //TODO:index of access list must be int
         }
         return null;
