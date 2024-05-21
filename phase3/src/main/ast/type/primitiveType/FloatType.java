@@ -20,4 +20,6 @@ public class FloatType extends Type {
     public String toString() {
         return "FloatType";
     }
+    @Override
+    public boolean isNumericType() {return true;}
 }

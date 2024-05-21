@@ -20,4 +20,6 @@ public class IntType extends Type {
     public String toString() {
         return "IntType";
     }
+    @Override
+    public boolean isNumericType() {return true;}
 }
