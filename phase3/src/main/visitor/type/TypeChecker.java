@@ -206,7 +206,7 @@ public class TypeChecker extends Visitor<Type> {
 
         if (initialType instanceof ListType listType){
             if (!listType.getType().sameType(new NoType())) {
-                if (listType.getType().sameType(toBeAddedType)) {
+                if (!listType.getType().sameType(toBeAddedType)) {
                     typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
                     return new NoType();
                 }
