@@ -220,17 +220,17 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(ListValue listValue){
         // TODO:visit listValue
-        Type listType = new NoType();
+        Type type = new NoType();
         for(Expression expression: listValue.getElements()) {
             Type currElementType  = expression.accept(this);
-            if (listType instanceof NoType)
-                listType = currElementType;
-            else if(!listType.sameType(currElementType)){
+            if (type instanceof NoType)
+                type = currElementType;
+            else if(!type.sameType(currElementType)){
                 typeErrors.add(new ListElementsTypesMisMatch(listValue.getLine()));
                 return new NoType();
             }
         }
-        return listType;
+        return new ListType(type);
     }
     @Override
     public Type visit(FunctionPointer functionPointer){
