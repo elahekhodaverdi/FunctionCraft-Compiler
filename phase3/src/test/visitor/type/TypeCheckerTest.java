@@ -68,4 +68,9 @@ public class TypeCheckerTest {
     public void call_a_function_pointer_after_a_list_indexing() {
         testCaseNumber = 6;
     }
+
+    @Test
+    public void list_with_different_element_types_gives_error() {
+        testCaseNumber = 7;
+    }
 }

@@ -241,20 +241,21 @@ public class TypeChecker extends Visitor<Type> {
         }
 
         if (initialType instanceof ListType listType){
-            if (listType.getType() != null) {
+            if (!listType.getType().sameType(new NoType())) {
                 if (!listType.getType().sameType(toBeAddedType)) {
                     typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
                     return new NoType();
                 }
             }
-            else
+            if (listType.getType().sameType(new NoType()))
                 listType.setType(toBeAddedType);
         }
         return new NoType();
     }
     @Override
     public Type visit(PutStatement putStatement){
-        putStatement.getExpression().accept(this);
+        //TODO:visit putStatement
+
         return new NoType();
 
     }
@@ -284,7 +285,7 @@ public class TypeChecker extends Visitor<Type> {
             return new NoType();
         }
 
-        types.add(null);
+        types.add(new NoType());
         return new ListType(types.getFirst());
     }
     @Override
@@ -360,6 +361,7 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(LenStatement lenStatement){
+        //TODO:visit LenStatement.Be carefull about the return type of LenStatement.
         Type argumentType = lenStatement.getExpression().accept(this);
         if (!(argumentType instanceof StringType || argumentType instanceof ListType))  {
             typeErrors.add(new LenArgumentTypeMisMatch(lenStatement.getLine()));
