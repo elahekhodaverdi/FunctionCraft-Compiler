@@ -64,6 +64,7 @@ public class TypeChecker extends Visitor<Type> {
         if (uniqueReturnTypes.size() > 1) {
             typeErrors.add(new FunctionIncompatibleReturnTypes(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName()));
             returnStack.pop();
+            SymbolTable.pop();
             return new NoType();
         }
         Type returnType = returnStack.getLast().isEmpty() ? null : returnStack.getLast().get(0);
@@ -99,6 +100,7 @@ public class TypeChecker extends Visitor<Type> {
             if (uniqueReturnTypes.size() > 1) {
                 typeErrors.add(new FunctionIncompatibleReturnTypes(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName()));
                 returnStack.pop();
+                SymbolTable.pop();
                 return new NoType();
             }
             returnType = returnStack.getLast().isEmpty() ? null : returnStack.getLast().get(0);
