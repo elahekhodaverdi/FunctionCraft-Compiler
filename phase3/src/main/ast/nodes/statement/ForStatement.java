@@ -1,45 +1,37 @@
 package main.ast.nodes.statement;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import main.ast.nodes.expression.Expression;
 import main.ast.nodes.expression.Identifier;
-import main.ast.nodes.expression.RangeExpression;
 import main.visitor.IVisitor;
 
 import java.util.ArrayList;
 
+@Getter
+@Setter
 public class ForStatement extends Statement{
     private Identifier iteratorId;
-    private RangeExpression rangeExpression;
-    private ArrayList<Statement> loopBodyStmts;
-
-    public ForStatement(Identifier identifierId, RangeExpression rangeExpression, ArrayList<Statement> loopBodyStmts){
+    private ArrayList<Expression> rangeExpressions = new ArrayList<>();
+    private ArrayList<Expression> loopBodyExpressions = new ArrayList<>();
+    //expressions that satisfy break or continue conditions
+    private ArrayList<Statement> loopBody = new ArrayList<>();
+    private ReturnStatement returnStatement = null;
+    public ForStatement() {}
+    public ForStatement(Identifier identifierId, ArrayList<Expression> rangeExpressions
+                        , ArrayList<Expression> loopBodyExpressions, ArrayList<Statement> loopBody
+                        , ReturnStatement returnStatement){
         this.iteratorId = identifierId;
-        this.rangeExpression = rangeExpression;
-        this.loopBodyStmts = loopBodyStmts;
+        this.rangeExpressions = rangeExpressions;
+        this.loopBodyExpressions = loopBodyExpressions;
+        this.loopBody = loopBody;
+        this.returnStatement = returnStatement;
+
     }
 
-    public RangeExpression getRangeExpression() {
-        return rangeExpression;
-    }
-
-    public ArrayList<Statement> getLoopBodyStmts() {
-        return loopBodyStmts;
-    }
-
-    public Identifier getIteratorId() {
-        return iteratorId;
-    }
-
-    public void setIteratorId(Identifier iteratorId) {
-        this.iteratorId = iteratorId;
-    }
-
-    public void setLoopBodyStmts(ArrayList<Statement> loopBodyStmts) {
-        this.loopBodyStmts = loopBodyStmts;
-    }
-
-    public void setRangeExpressions(RangeExpression rangeExpression) {
-        this.rangeExpression = rangeExpression;
+    public boolean hasReturnStatement() {
+        return returnStatement != null;
     }
 
     @Override

@@ -7,13 +7,16 @@ import main.ast.nodes.expression.Identifier;
 import main.visitor.IVisitor;
 
 
-@Setter
 @Getter
+@Setter
 public class AssignStatement extends Statement{
+    @Getter
     private boolean accessList;
     private Identifier assignedId;
     private Expression assignExpression;
     private Expression accessListExpression;
+    //assignment can be done on an element of a list.the expression inside [] is the above attribute
+    //this case is determined by the attribute accessList
     private AssignOperator assignOperator;
     public AssignStatement(boolean accessList, Identifier assignedId, Expression assignExpression,
                            AssignOperator assignOperator){

@@ -5,6 +5,10 @@ import main.visitor.IVisitor;
 public class Identifier extends Expression{
     private String name;
     public Identifier(String name){this.name = name;}
+    public Identifier(String name, int line) {
+        this.name = name;
+        setLine(line);
+    }
     public void setName(String name) {this.name = name;}
     public String getName(){return this.name;}
     @Override
