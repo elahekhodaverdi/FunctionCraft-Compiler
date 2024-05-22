@@ -105,30 +105,26 @@ public class TypeChecker extends Visitor<Type> {
         mainDeclaration.getBody().forEach(statement -> statement.accept(this));
         return null;
     }
-//    @Override
-//    public Type visit(AccessExpression accessExpression){
-//        for (Expression expression : accessExpression.getAccesses()) {
-//
-//        }
-//        if(accessExpression.startWithFunctionCall()){
-//            //TODO:function is called here.set the arguments type and visit its declaration
-//        }
-//        else{
-//            Type accessedType = accessExpression.getAccessedExpression().accept(this);
-//            if(!(accessedType instanceof StringType) && !(accessedType instanceof ListType)){
-//                typeErrors.add(new IsNotIndexable(accessExpression.getLine()));
-//                return new NoType();
-//            }
-//            for (Expression expr: accessExpression.getDimentionalAccess()){
-//                if (!(expr.accept(this) instanceof IntType)){
-//                    typeErrors.add(new AccessIndexIsNotInt(accessExpression.getLine()));
-//                    return new NoType();
-//                }
-//            }
-//            //TODO:index of access list must be int
-//        }
-//        return null;
-//    }
+    @Override
+    public Type visit(AccessExpression accessExpression){
+        Type accessedType = accessExpression.getAccessedExpression().accept(this);
+
+        for (Expression expression : accessExpression.getAccesses()) {
+            Type expressionType = expression.accept(this);
+
+            if (accessedType instanceof FptrType fptrType &&
+                expressionType instanceof  ArgsType argsType) {
+                try {
+                    FunctionItem functionItem = SymbolTable.root.getFunctionItem(fptrType.getFunctionName());
+                    functionItem.setArgumentTypes(argsType.getArgsType());
+                    accessedType = functionItem.getFunctionDeclaration().accept(this);
+                } catch (ItemNotFound ignored) {}
+            } else if (accessedType instanceof ListType listType) {
+                accessedType = listType.getType();
+            }
+        }
+        return accessedType;
+    }
 
     @Override
     public Type visit(ReturnStatement returnStatement){
