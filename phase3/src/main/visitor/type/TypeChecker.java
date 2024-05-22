@@ -176,15 +176,26 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(AssignStatement assignStatement){
+        Type assignType = assignStatement.getAssignExpression().accept(this);
+
         if(assignStatement.isAccessList()){
             // TODO:assignment to list
+            Type indexType = assignStatement.getAccessListExpression().accept(this);
+
+            if (!(indexType instanceof IntType))
+                typeErrors.add(new AccessIndexIsNotInt(assignStatement.getLine()));
         }
         else{
-            VarItem newVarItem = new VarItem(assignStatement.getAssignedId());
             // TODO:maybe new type for a variable
+            VarItem varItem = new VarItem(assignStatement.getAssignedId());
             try {
-                SymbolTable.top.put(newVarItem);
-            }catch (ItemAlreadyExists ignored){}
+                varItem = SymbolTable.top.getVarItem(assignStatement.getAssignedId().getName());
+            }catch (ItemNotFound ex) {
+                try {
+                    SymbolTable.top.put(varItem);
+                }catch (ItemAlreadyExists ignored) {}
+            }
+            varItem.setType(assignType);
         }
         return new NoType();
     }
@@ -283,7 +294,7 @@ public class TypeChecker extends Visitor<Type> {
     public Type visit(BinaryExpression binaryExpression){
         Type firstOperandType = binaryExpression.getFirstOperand().accept(this);
         Type secondOpenrandType = binaryExpression.getSecondOperand().accept(this);
-        if (firstOperandType != secondOpenrandType) {
+        if (!firstOperandType.sameType(secondOpenrandType)) {
             typeErrors.add(new NonSameOperands(binaryExpression.getLine(), binaryExpression.getOperator()));
             return new NoType();
         }
