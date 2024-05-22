@@ -58,4 +58,9 @@ public class TypeCheckerTest {
     public void type_of_an_identifier_change_after_assignment() {
         testCaseNumber = 4;
     }
+
+    @Test
+    public void call_function_with_function_pointer() {
+        testCaseNumber = 5;
+    }
 }
