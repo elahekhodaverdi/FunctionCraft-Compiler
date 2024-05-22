@@ -1,12 +1,8 @@
 package main.ast.nodes.statement;
 
-import lombok.Getter;
-import lombok.Setter;
 import main.ast.nodes.expression.Expression;
 import main.visitor.IVisitor;
 
-@Getter
-@Setter
 public class PushStatement extends Statement{
     private Expression initial;
     private Expression toBeAdded;
@@ -14,7 +10,10 @@ public class PushStatement extends Statement{
         this.initial = initial;
         this.toBeAdded = toBeAdded;
     }
-
+    public Expression getInitial(){return this.initial;}
+    public Expression getToBeAdded(){return this.toBeAdded;}
+    public void setInitial(Expression initial){this.initial = initial;}
+    public void setToBeAdded(Expression toBeAdded){this.toBeAdded = toBeAdded;}
     @Override
     public String toString(){return "PushStatement";}
     @Override

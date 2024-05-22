@@ -10,9 +10,20 @@ public class FunctionDeclaration extends Declaration{
     private Identifier functionName;
     private ArrayList<VarDeclaration> args = new ArrayList<>();
     private ArrayList<Statement> body = new ArrayList<>();
+    boolean visited = false;
+
+
 
     public Identifier getFunctionName(){return this.functionName;}
     public void setFunctionName(Identifier functionName){this.functionName = functionName;}
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
+    }
 
     public ArrayList<VarDeclaration> getArgs(){return this.args;}
     public void setArgs(ArrayList<VarDeclaration> args){this.args = args;}
@@ -21,12 +32,6 @@ public class FunctionDeclaration extends Declaration{
     public ArrayList<Statement> getBody(){return this.body;}
     public void setBody(ArrayList<Statement> body){this.body = body;}
     public void addStmt(Statement stmt){this.body.add(stmt);}
-
-    public boolean matchArgs(int numberOfArgs) {
-        long defaultArgs = args.stream().filter(VarDeclaration::hasDefaultVal).count();
-        return args.size() - defaultArgs <= numberOfArgs && numberOfArgs <= args.size();
-    }
-
     @Override
     public String toString(){return "FunctionDeclaration:" + this.functionName.getName();}
     @Override

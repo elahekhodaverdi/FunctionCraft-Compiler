@@ -1,10 +1,8 @@
 package main.ast.nodes.expression;
 
-import lombok.Getter;
 import main.ast.nodes.expression.operators.BinaryOperator;
 import main.visitor.IVisitor;
 
-@Getter
 public class BinaryExpression extends Expression{
     private Expression firstOperand;
     private Expression secondOperand;
@@ -16,6 +14,29 @@ public class BinaryExpression extends Expression{
         this.binaryOperator = binaryOperator;
     }
 
+    public BinaryOperator getOperator() {
+        return binaryOperator;
+    }
+
+    public Expression getFirstOperand() {
+        return firstOperand;
+    }
+
+    public Expression getSecondOperand() {
+        return secondOperand;
+    }
+
+    public void setBinaryOperator(BinaryOperator binaryOperator) {
+        this.binaryOperator = binaryOperator;
+    }
+
+    public void setFirstOperand(Expression firstOperand) {
+        this.firstOperand = firstOperand;
+    }
+
+    public void setSecondOperand(Expression secondOperand) {
+        this.secondOperand = secondOperand;
+    }
     @Override
     public String toString(){return "BinaryOperation:" + this.binaryOperator.name();}
     @Override
