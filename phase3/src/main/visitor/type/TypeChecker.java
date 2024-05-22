@@ -353,10 +353,20 @@ public class TypeChecker extends Visitor<Type> {
     public Type visit(RangeExpression rangeExpression){
         RangeType rangeType = rangeExpression.getRangeType();
 
-        if(rangeType.equals(RangeType.LIST)){
-            // TODO --> mind that the lists are declared explicitly in the grammar in this node, so handle the errors
+        switch (rangeType) {
+            case RangeType.IDENTIFIER:
+                Identifier identifier = (Identifier)rangeExpression.getRangeExpressions().getFirst();
+                try {
+                    return SymbolTable.top.getVarItem(identifier.getName()).getType();
+                } catch (ItemNotFound ignored) {}
+            case RangeType.LIST:
+                var listValue = new ListValue(rangeExpression.getRangeExpressions());
+                return listValue.accept(this);
+            case RangeType.DOUBLE_DOT:
+                return new ListType(
+                        rangeExpression.getRangeExpressions().getFirst().accept(this)
+                );
         }
-
         return new NoType();
     }
 }
