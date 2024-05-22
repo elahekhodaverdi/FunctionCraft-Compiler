@@ -309,6 +309,10 @@ public class TypeChecker extends Visitor<Type> {
             typeErrors.add(new NonSameOperands(binaryExpression.getLine(), binaryExpression.getOperator()));
             return new NoType();
         }
+        if (firstOperandType instanceof NoType)
+            return secondOpenrandType;
+        if (secondOpenrandType instanceof NoType)
+            return firstOperandType;
         if (!BinaryOperator.isEqualityOperator(binaryExpression.getOperator()) &&
             (!firstOperandType.isNumericType() || !secondOpenrandType.isNumericType())) {
                 typeErrors.add(new UnsupportedOperandType(binaryExpression.getLine(), binaryExpression.getOperator().toString()));
@@ -323,6 +327,9 @@ public class TypeChecker extends Visitor<Type> {
         //TODO:visit unaryExpression
         UnaryOperator op = unaryExpression.getOperator();
         Type exprType = unaryExpression.getExpression().accept(this);
+        if (exprType instanceof NoType)
+            return exprType;
+
         if (op == UnaryOperator.NOT && !(exprType instanceof BoolType)) {
             typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
             return new NoType();
