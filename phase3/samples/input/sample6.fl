@@ -1,0 +1,8 @@
+def func(a, b)
+    c = a + b;
+end
+
+def main()
+    a = [method(:func)];
+    b = a[1](1, "Mehdi");
+end

@@ -39,6 +39,7 @@ public class TypeChecker extends Visitor<Type> {
             }catch (ItemAlreadyExists ignored){}
         }
         program.getMain().accept(this);
+
         return null;
     }
     @Override
@@ -116,13 +117,34 @@ public class TypeChecker extends Visitor<Type> {
         return null;
     }
     @Override
+    public Type visit(AccessExpression accessExpression){
+        Type accessedType = accessExpression.getAccessedExpression().accept(this);
+
+        for (Expression expression : accessExpression.getAccesses()) {
+            Type expressionType = expression.accept(this);
+
+            if (accessedType instanceof FptrType fptrType &&
+                expressionType instanceof  ArgsType argsType) {
+                try {
+                    FunctionItem functionItem = SymbolTable.root.getFunctionItem(fptrType.getFunctionName());
+                    functionItem.setArgumentTypes(argsType.getArgsType());
+                    accessedType = functionItem.getFunctionDeclaration().accept(this);
+                } catch (ItemNotFound ignored) {}
+            } else if (accessedType instanceof ListType listType) {
+                accessedType = listType.getType();
+            }
+        }
+        return accessedType;
+    }
+
+    @Override
     public Type visit(ReturnStatement returnStatement){
         Type returnType = null;
         if (returnStatement.hasRetExpression())
             returnType = returnStatement.getReturnExp().accept(this);
 
         returnStack.getLast().add(returnType);
-        return new NoType();
+        return returnType;
     }
     @Override
     public Type visit(ExpressionStatement expressionStatement){
@@ -329,7 +351,13 @@ public class TypeChecker extends Visitor<Type> {
         try {
             return SymbolTable.top.getVarItem(identifier.getName()).getType();
         } catch (ItemNotFound ignored) {}
-        return null;
+        try {
+            var functionItem = SymbolTable.root.getFunctionItem(identifier.getName());
+            return new FptrType(
+                    functionItem.getFunctionDeclaration().getFunctionName().getName()
+            );
+        } catch (ItemNotFound ignored) {}
+        return new NoType();
     }
     @Override
     public Type visit(LenStatement lenStatement){
