@@ -219,13 +219,13 @@ public class TypeChecker extends Visitor<Type> {
         }
 
         if (initialType instanceof ListType listType){
-            if (!listType.getType().sameType(new NoType())) {
+            if (listType.getType() != null) {
                 if (!listType.getType().sameType(toBeAddedType)) {
                     typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
                     return new NoType();
                 }
             }
-            if (listType.getType().sameType(new NoType()))
+            else
                 listType.setType(toBeAddedType);
         }
         return new NoType();
@@ -263,7 +263,7 @@ public class TypeChecker extends Visitor<Type> {
             return new NoType();
         }
 
-        types.add(new NoType());
+        types.add(null);
         return new ListType(types.getFirst());
     }
     @Override
