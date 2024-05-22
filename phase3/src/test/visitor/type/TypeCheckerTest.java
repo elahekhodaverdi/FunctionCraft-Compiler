@@ -63,4 +63,9 @@ public class TypeCheckerTest {
     public void call_function_with_function_pointer() {
         testCaseNumber = 5;
     }
+
+    @Test
+    public void call_a_function_pointer_after_a_list_indexing() {
+        testCaseNumber = 6;
+    }
 }
