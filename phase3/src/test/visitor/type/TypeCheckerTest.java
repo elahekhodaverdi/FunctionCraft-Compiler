@@ -53,4 +53,9 @@ public class TypeCheckerTest {
     public void access_index_is_not_int_in_right_value() {
         testCaseNumber = 3;
     }
+
+    @Test
+    public void type_of_an_identifier_change_after_assignment() {
+        testCaseNumber = 4;
+    }
 }
