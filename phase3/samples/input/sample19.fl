@@ -1,0 +1,8 @@
+def main()
+    if (true) return "aa";
+    else return true;
+    loop do
+        return;
+    end
+    return a;
+end

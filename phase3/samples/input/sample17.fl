@@ -1,0 +1,6 @@
+def main()
+    if (true)
+        return;
+
+    return 5;
+end

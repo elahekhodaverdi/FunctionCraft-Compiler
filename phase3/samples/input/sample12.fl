@@ -1,0 +1,7 @@
+def f(a)
+    return a;
+end 
+
+def main()
+    a= f(2 + "aa") + 3;
+end

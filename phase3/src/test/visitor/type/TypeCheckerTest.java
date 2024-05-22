@@ -73,4 +73,64 @@ public class TypeCheckerTest {
     public void list_with_different_element_types_gives_error() {
         testCaseNumber = 7;
     }
+
+    @Test
+    public void operands_of_operator_must_be_the_same_in_binary_expression_non_void_type() {
+        testCaseNumber = 8;
+    }
+
+    @Test
+    public void operands_of_operator_must_be_the_same_in_binary_expression_non_void_function_call() {
+        testCaseNumber = 9;
+    }
+
+    @Test
+    public void operands_of_operator_must_be_the_same_in_binary_expression_void_type_function_call() {
+        testCaseNumber = 10;
+    }
+
+    @Test
+    public void operands_of_operator_must_be_the_same_in_binary_expression_function_call_arguments() {
+        testCaseNumber = 11;
+    }
+
+    @Test
+    public void operands_of_operator_must_be_the_same_in_binary_expression_function_call_arguments_and_return_of_function() {
+        testCaseNumber = 12;
+    }
+
+    @Test
+    public void operands_of_operator_must_be_the_same_in_binary_expression_in_return_statement() {
+        testCaseNumber = 13;
+    }
+
+    @Test
+    public void different_return_type_in_function_call_if_body() {
+        testCaseNumber = 14;
+    }
+
+    @Test
+    public void different_return_type_in_function_call_loop_body() {
+        testCaseNumber = 15;
+    }
+
+    @Test
+    public void different_return_type_in_function_loop_body_in_main() {
+        testCaseNumber = 16;
+    }
+
+    @Test
+    public void different_return_type_in_function_if_body_in_main() {
+        testCaseNumber = 17;
+    }
+
+    @Test
+    public void more_that_two_return_types_in_function_call() {
+        testCaseNumber = 18;
+    }
+
+    @Test
+    public void more_that_two_return_types_in_main() {
+        testCaseNumber = 19;
+    }
 }

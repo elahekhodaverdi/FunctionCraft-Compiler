@@ -1,0 +1,12 @@
+def f(a)
+    if (true) return "aa";
+    else return true;
+    loop do
+        return;
+    end
+    return a;
+end 
+
+def main()
+    a = f(2) + 3;
+end
