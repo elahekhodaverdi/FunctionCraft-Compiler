@@ -309,7 +309,7 @@ public class TypeChecker extends Visitor<Type> {
             typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
             return new NoType();
         }
-        return null;
+        return exprType;
     }
     @Override
     public Type visit(ChompStatement chompStatement){
@@ -333,7 +333,6 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(LenStatement lenStatement){
-        //TODO:visit LenStatement.Be carefull about the return type of LenStatement.
         Type argumentType = lenStatement.getExpression().accept(this);
         if (!(argumentType instanceof StringType || argumentType instanceof ListType))  {
             typeErrors.add(new LenArgumentTypeMisMatch(lenStatement.getLine()));
