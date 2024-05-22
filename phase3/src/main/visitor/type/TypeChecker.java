@@ -16,7 +16,6 @@ import main.symbolTable.exceptions.*;
 import main.symbolTable.item.*;
 import main.visitor.Visitor;
 
-import javax.lang.model.type.NoType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,6 +108,16 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(AccessExpression accessExpression){
         if(accessExpression.isFunctionCall()){
+            List<Type> argTypes = new ArrayList<>();
+            for (Expression arg : accessExpression.getArguments()) {
+                Type result = arg.accept(this);
+                argTypes.add(result);
+            }
+            if (accessExpression.getAccessedExpression() instanceof Identifier identifier) {
+                FunctionItem functionItem = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY + identifier);
+                functionItem.setArgumentTypes(argTypes);
+                functionItem.getFunctionDeclaration().accept(this)
+            }
             //TODO:function is called here.set the arguments type and visit its declaration
         }
         else{
