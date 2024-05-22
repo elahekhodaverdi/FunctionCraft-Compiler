@@ -105,27 +105,30 @@ public class TypeChecker extends Visitor<Type> {
         mainDeclaration.getBody().forEach(statement -> statement.accept(this));
         return null;
     }
-    @Override
-    public Type visit(AccessExpression accessExpression){
-        if(accessExpression.isFunctionCall()){
-            //TODO:function is called here.set the arguments type and visit its declaration
-        }
-        else{
-            Type accessedType = accessExpression.getAccessedExpression().accept(this);
-            if(!(accessedType instanceof StringType) && !(accessedType instanceof ListType)){
-                typeErrors.add(new IsNotIndexable(accessExpression.getLine()));
-                return new NoType();
-            }
-            for (Expression expr: accessExpression.getDimentionalAccess()){
-                if (!(expr.accept(this) instanceof IntType)){
-                    typeErrors.add(new AccessIndexIsNotInt(accessExpression.getLine()));
-                    return new NoType();
-                }
-            }
-            //TODO:index of access list must be int
-        }
-        return null;
-    }
+//    @Override
+//    public Type visit(AccessExpression accessExpression){
+//        for (Expression expression : accessExpression.getAccesses()) {
+//
+//        }
+//        if(accessExpression.startWithFunctionCall()){
+//            //TODO:function is called here.set the arguments type and visit its declaration
+//        }
+//        else{
+//            Type accessedType = accessExpression.getAccessedExpression().accept(this);
+//            if(!(accessedType instanceof StringType) && !(accessedType instanceof ListType)){
+//                typeErrors.add(new IsNotIndexable(accessExpression.getLine()));
+//                return new NoType();
+//            }
+//            for (Expression expr: accessExpression.getDimentionalAccess()){
+//                if (!(expr.accept(this) instanceof IntType)){
+//                    typeErrors.add(new AccessIndexIsNotInt(accessExpression.getLine()));
+//                    return new NoType();
+//                }
+//            }
+//            //TODO:index of access list must be int
+//        }
+//        return null;
+//    }
 
     @Override
     public Type visit(ReturnStatement returnStatement){
@@ -382,5 +385,13 @@ public class TypeChecker extends Visitor<Type> {
                     rangeExpression.getRangeExpressions().getFirst().accept(this)
             );
         };
+    }
+
+    @Override
+    public Type visit(IndexExpression indexExpression) {
+        Type indexType = indexExpression.getIndex().accept(this);
+        if(!(indexType instanceof IntType))
+            typeErrors.add(new AccessIndexIsNotInt(indexExpression.getLine()));
+        return indexType;
     }
 }

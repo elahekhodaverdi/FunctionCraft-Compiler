@@ -16,13 +16,13 @@ public class AccessExpression extends Expression{
 
     public boolean startWithFunctionCall() {
         if (!accesses.isEmpty())
-            return accesses.get(0) instanceof ArgExpression;
+            return accesses.getFirst() instanceof ArgExpression;
         return false;
     }
 
     public int numberOFArgs() {
         if (startWithFunctionCall()) {
-            ArgExpression argExpression = (ArgExpression) accesses.get(0);
+            ArgExpression argExpression = (ArgExpression) accesses.getFirst();
             return argExpression.getArgs().size();
         }
         return 0;
