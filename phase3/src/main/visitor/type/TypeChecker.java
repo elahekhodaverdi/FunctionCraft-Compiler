@@ -112,45 +112,11 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(MainDeclaration mainDeclaration){
-        //TODO:visit main
         mainDeclaration.getBody().forEach(statement -> statement.accept(this));
         return null;
     }
     @Override
-    public Type visit(AccessExpression accessExpression){
-        if(accessExpression.isFunctionCall()){
-            List<Type> argTypes = new ArrayList<>();
-            for (Expression arg : accessExpression.getArguments()) {
-                Type result = arg.accept(this);
-                argTypes.add(result);
-            }
-            if (accessExpression.getAccessedExpression() instanceof Identifier identifier) {
-                FunctionItem functionItem = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY + identifier);
-                functionItem.setArgumentTypes(argTypes);
-                functionItem.getFunctionDeclaration().accept(this)
-            }
-            //TODO:function is called here.set the arguments type and visit its declaration
-        }
-        else{
-            Type accessedType = accessExpression.getAccessedExpression().accept(this);
-            if(!(accessedType instanceof StringType) && !(accessedType instanceof ListType)){
-                typeErrors.add(new IsNotIndexable(accessExpression.getLine()));
-                return new NoType();
-            }
-            for (Expression expr: accessExpression.getDimentionalAccess()){
-                if (!(expr.accept(this) instanceof IntType)){
-                    typeErrors.add(new AccessIndexIsNotInt(accessExpression.getLine()));
-                    return new NoType();
-                }
-            }
-            //TODO:index of access list must be int
-        }
-        return null;
-    }
-
-    @Override
     public Type visit(ReturnStatement returnStatement){
-        // TODO:Visit return statement.Note that return type of functions are specified here
         Type returnType = new NoType();
         if (returnStatement.hasRetExpression())
             returnType = returnStatement.getReturnExp().accept(this);
