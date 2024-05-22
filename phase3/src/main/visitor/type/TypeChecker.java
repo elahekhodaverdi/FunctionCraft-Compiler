@@ -16,6 +16,7 @@ import main.symbolTable.exceptions.*;
 import main.symbolTable.item.*;
 import main.visitor.Visitor;
 
+import javax.lang.model.type.NoType;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -66,9 +67,12 @@ public class TypeChecker extends Visitor<Type> {
             typeErrors.add(new FunctionIncompatibleReturnTypes(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName()));
             return new NoType();
         }
+        Type returnType = new NoType();
+        if (lastFunctionCallReturns.getLast().size() > 0)
+            returnType = lastFunctionCallReturns.getLast().get(0);
         lastFunctionCallReturns.pop();
         SymbolTable.pop();
-        return null;
+        return returnType;
         //TODO:Return the infered type of the function
     }
     @Override
