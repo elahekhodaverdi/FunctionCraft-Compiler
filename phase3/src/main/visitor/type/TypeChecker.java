@@ -254,8 +254,7 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(PutStatement putStatement){
-        //TODO:visit putStatement
-
+        putStatement.getExpression().accept(this);
         return new NoType();
 
     }
