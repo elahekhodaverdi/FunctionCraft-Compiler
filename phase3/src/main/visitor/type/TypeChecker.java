@@ -326,7 +326,9 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(Identifier identifier){
-        // TODO:visit Identifier
+        try {
+            return SymbolTable.top.getVarItem(identifier.getName()).getType();
+        } catch (ItemNotFound ignored) {}
         return null;
     }
     @Override
@@ -356,9 +358,7 @@ public class TypeChecker extends Visitor<Type> {
         switch (rangeType) {
             case RangeType.IDENTIFIER:
                 Identifier identifier = (Identifier)rangeExpression.getRangeExpressions().getFirst();
-                try {
-                    return SymbolTable.top.getVarItem(identifier.getName()).getType();
-                } catch (ItemNotFound ignored) {}
+                return identifier.accept(this);
             case RangeType.LIST:
                 var listValue = new ListValue(rangeExpression.getRangeExpressions());
                 return listValue.accept(this);
