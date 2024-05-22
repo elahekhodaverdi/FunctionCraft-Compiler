@@ -394,4 +394,13 @@ public class TypeChecker extends Visitor<Type> {
             typeErrors.add(new AccessIndexIsNotInt(indexExpression.getLine()));
         return indexType;
     }
+
+    @Override
+    public Type visit(ArgExpression argExpression) {
+        return new ArgsType(
+                argExpression.getArgs().stream()
+                .map(arg -> arg.accept(this))
+                .collect(Collectors.toCollection(ArrayList::new))
+        );
+    }
 }
