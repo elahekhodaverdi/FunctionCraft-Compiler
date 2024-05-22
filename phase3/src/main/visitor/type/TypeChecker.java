@@ -117,7 +117,7 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(ReturnStatement returnStatement){
-        Type returnType = new NoType();
+        Type returnType = null;
         if (returnStatement.hasRetExpression())
             returnType = returnStatement.getReturnExp().accept(this);
 
