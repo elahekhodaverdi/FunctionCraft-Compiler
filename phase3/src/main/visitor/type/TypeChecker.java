@@ -16,7 +16,6 @@ import main.symbolTable.exceptions.*;
 import main.symbolTable.item.*;
 import main.visitor.Visitor;
 
-import javax.lang.model.type.NoType;
 import java.util.*;
 import java.util.stream.Collectors;
 
