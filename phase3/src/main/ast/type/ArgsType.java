@@ -11,4 +11,9 @@ public class ArgsType extends Type {
     public ArgsType(ArrayList<Type> argsType) {
         this.argsType = argsType;
     }
+
+    @Override
+    public String toString() {
+        return "ArgsType";
+    }
 }
