@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 
 public class TypeChecker extends Visitor<Type> {
     public ArrayList<CompileError> typeErrors = new ArrayList<>();
-    private static LinkedList<ArrayList<Type>> lastFunctionCallReturns = new LinkedList<>();
+    private static LinkedList<ArrayList<Type>> returnStack = new LinkedList<>();
     @Override
     public Type visit(Program program){
         SymbolTable.root = new SymbolTable();
@@ -39,13 +39,12 @@ public class TypeChecker extends Visitor<Type> {
             }catch (ItemAlreadyExists ignored){}
         }
         program.getMain().accept(this);
-
         return null;
     }
     @Override
     public Type visit(FunctionDeclaration functionDeclaration){
         SymbolTable.push(new SymbolTable());
-        lastFunctionCallReturns.push(new ArrayList<>());
+        returnStack.push(new ArrayList<>());
         try {
             FunctionItem functionItem = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY +
                     functionDeclaration.getFunctionName().getName());
@@ -61,23 +60,24 @@ public class TypeChecker extends Visitor<Type> {
         for(Statement statement : functionDeclaration.getBody())
             statement.accept(this);
 
-        //TODO:Figure out whether return types of functions are not the same.
-        if ((new HashSet<>(lastFunctionCallReturns.getLast())).size() > 1) {
+        HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getLast());
+        if (uniqueReturnTypes.size() > 1) {
             typeErrors.add(new FunctionIncompatibleReturnTypes(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName()));
+            returnStack.pop();
             return new NoType();
         }
-        Type returnType = new NoType();
-        if (lastFunctionCallReturns.getLast().size() > 0)
-            returnType = lastFunctionCallReturns.getLast().get(0);
-        lastFunctionCallReturns.pop();
+        Type returnType = returnStack.getLast().isEmpty() ? null : returnStack.getLast().get(0);
+
+        returnStack.pop();
         SymbolTable.pop();
         return returnType;
-        //TODO:Return the infered type of the function
     }
     @Override
     public Type visit(PatternDeclaration patternDeclaration){
         SymbolTable.push(new SymbolTable());
+        Type returnType = null;
         try {
+            returnStack.push(new ArrayList<>());
             PatternItem patternItem = (PatternItem) SymbolTable.root.getItem(PatternItem.START_KEY +
                     patternDeclaration.getPatternName().getName());
             VarItem varItem = new VarItem(patternDeclaration.getTargetVariable());
@@ -92,12 +92,21 @@ public class TypeChecker extends Visitor<Type> {
                     return new NoType();
                 }
             }
-        //TODO:1-figure out whether return expression of different cases in pattern are of the same type/2-return the infered type
+            for (Expression expression: patternDeclaration.getReturnExp())
+                returnStack.getLast().add(expression.accept(this));
+
+            HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getLast());
+            if (uniqueReturnTypes.size() > 1) {
+                typeErrors.add(new FunctionIncompatibleReturnTypes(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName()));
+                returnStack.pop();
+                return new NoType();
+            }
+            returnType = returnStack.getLast().isEmpty() ? null : returnStack.getLast().get(0);
+            returnStack.pop();
         }catch (ItemNotFound ignored){}
 
-
         SymbolTable.pop();
-        return null;
+        return returnType;
     }
     @Override
     public Type visit(MainDeclaration mainDeclaration){
@@ -144,7 +153,7 @@ public class TypeChecker extends Visitor<Type> {
         if (returnStatement.hasRetExpression())
             returnType = returnStatement.getReturnExp().accept(this);
 
-        lastFunctionCallReturns.getLast().add(returnType);
+        returnStack.getLast().add(returnType);
         return returnType;
     }
     @Override
