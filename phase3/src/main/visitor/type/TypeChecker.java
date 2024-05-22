@@ -342,7 +342,13 @@ public class TypeChecker extends Visitor<Type> {
         try {
             return SymbolTable.top.getVarItem(identifier.getName()).getType();
         } catch (ItemNotFound ignored) {}
-        return null;
+        try {
+            var functionItem = SymbolTable.root.getFunctionItem(identifier.getName());
+            return new FptrType(
+                    functionItem.getFunctionDeclaration().getFunctionName().getName()
+            );
+        } catch (ItemNotFound ignored) {}
+        return new NoType();
     }
     @Override
     public Type visit(LenStatement lenStatement){
