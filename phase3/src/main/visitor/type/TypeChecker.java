@@ -14,12 +14,15 @@ import main.compileError.typeErrors.*;
 import main.symbolTable.SymbolTable;
 import main.symbolTable.exceptions.*;
 import main.symbolTable.item.*;
+import main.symbolTable.utils.Stack;
 import main.visitor.Visitor;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class TypeChecker extends Visitor<Type> {
     public ArrayList<CompileError> typeErrors = new ArrayList<>();
+    private static LinkedList<ArrayList<Type>> lastFunctionCallReturns = new LinkedList<>();
     @Override
     public Type visit(Program program){
         SymbolTable.root = new SymbolTable();
@@ -43,6 +46,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(FunctionDeclaration functionDeclaration){
         SymbolTable.push(new SymbolTable());
+        lastFunctionCallReturns.push(new ArrayList<>());
         try {
             FunctionItem functionItem = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY +
                     functionDeclaration.getFunctionName().getName());
@@ -59,6 +63,11 @@ public class TypeChecker extends Visitor<Type> {
             statement.accept(this);
 
         //TODO:Figure out whether return types of functions are not the same.
+        if ((new HashSet<>(lastFunctionCallReturns.getLast())).size() > 1) {
+            typeErrors.add(new FunctionIncompatibleReturnTypes(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName()));
+            return new NoType();
+        }
+        lastFunctionCallReturns.pop();
         SymbolTable.pop();
         return null;
         //TODO:Return the infered type of the function
@@ -104,6 +113,12 @@ public class TypeChecker extends Visitor<Type> {
                 typeErrors.add(new IsNotIndexable(accessExpression.getLine()));
                 return new NoType();
             }
+            for (Expression expr: accessExpression.getDimentionalAccess()){
+                if (!(expr.accept(this) instanceof IntType)){
+                    typeErrors.add(new AccessIndexIsNotInt(accessExpression.getLine()));
+                    return new NoType();
+                }
+            }
             //TODO:index of access list must be int
         }
         return null;
@@ -112,7 +127,12 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(ReturnStatement returnStatement){
         // TODO:Visit return statement.Note that return type of functions are specified here
-        return null;
+        Type returnType = new NoType();
+        if (returnStatement.hasRetExpression())
+            returnType = returnStatement.getReturnExp().accept(this);
+
+        lastFunctionCallReturns.getLast().add(returnType);
+        return returnType;
     }
     @Override
     public Type visit(ExpressionStatement expressionStatement){
@@ -187,7 +207,27 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(PushStatement pushStatement){
         //TODO:visit push statement
+        Type initialType = pushStatement.getInitial().accept(this);
+        Type toBeAddedType = pushStatement.getToBeAdded().accept(this);
+        if (!(initialType instanceof StringType) && !(initialType instanceof ListType)){
+            typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
+            return new NoType();
+        }
+        if ((initialType instanceof StringType) && !toBeAddedType.sameType(initialType)){
+            typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
+            return new NoType();
+        }
 
+        if (initialType instanceof ListType listType){
+            if (!listType.getType().sameType(new NoType())) {
+                if (!listType.getType().sameType(toBeAddedType)) {
+                    typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
+                    return new NoType();
+                }
+            }
+            if (listType.getType().sameType(new NoType()))
+                listType.setType(toBeAddedType);
+        }
         return new NoType();
     }
     @Override
@@ -214,7 +254,17 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(ListValue listValue){
         // TODO:visit listValue
-        return null;
+        var types = new ArrayList<>(listValue.getElements().stream()
+                .map(e -> e.accept(this))
+                .collect(Collectors.toSet()));
+
+        if (types.size() > 1) {
+            typeErrors.add(new ListElementsTypesMisMatch(listValue.getLine()));
+            return new NoType();
+        }
+
+        types.add(new NoType());
+        return new ListType(types.getFirst());
     }
     @Override
     public Type visit(FunctionPointer functionPointer){
@@ -249,6 +299,16 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(UnaryExpression unaryExpression){
         //TODO:visit unaryExpression
+        UnaryOperator op = unaryExpression.getOperator();
+        Type exprType = unaryExpression.getExpression().accept(this);
+        if (op == UnaryOperator.NOT && !(exprType instanceof BoolType)) {
+            typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
+            return new NoType();
+        }
+        else if (!(exprType instanceof IntType)){
+            typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
+            return new NoType();
+        }
         return null;
     }
     @Override
