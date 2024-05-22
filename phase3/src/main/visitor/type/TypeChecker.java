@@ -355,18 +355,18 @@ public class TypeChecker extends Visitor<Type> {
     public Type visit(RangeExpression rangeExpression){
         RangeType rangeType = rangeExpression.getRangeType();
 
-        switch (rangeType) {
-            case RangeType.IDENTIFIER:
-                Identifier identifier = (Identifier)rangeExpression.getRangeExpressions().getFirst();
-                return identifier.accept(this);
-            case RangeType.LIST:
+        return switch (rangeType) {
+            case RangeType.IDENTIFIER -> {
+                Identifier identifier = (Identifier) rangeExpression.getRangeExpressions().getFirst();
+                yield identifier.accept(this);
+            }
+            case RangeType.LIST -> {
                 var listValue = new ListValue(rangeExpression.getRangeExpressions());
-                return listValue.accept(this);
-            case RangeType.DOUBLE_DOT:
-                return new ListType(
-                        rangeExpression.getRangeExpressions().getFirst().accept(this)
-                );
-        }
-        return new NoType();
+                yield listValue.accept(this);
+            }
+            case RangeType.DOUBLE_DOT -> new ListType(
+                    rangeExpression.getRangeExpressions().getFirst().accept(this)
+            );
+        };
     }
 }
