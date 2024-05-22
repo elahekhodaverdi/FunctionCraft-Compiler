@@ -289,7 +289,7 @@ public class TypeChecker extends Visitor<Type> {
         }
         if (!BinaryOperator.isEqualityOperator(binaryExpression.getOperator()) &&
             (!firstOperandType.isNumericType() || !secondOpenrandType.isNumericType())) {
-                typeErrors.add(new UnsupportedOperandType(binaryExpression.getLine(), binaryExpression.getOperator()));
+                typeErrors.add(new UnsupportedOperandType(binaryExpression.getLine(), binaryExpression.getOperator().toString()));
                 return new NoType();
             }
         if (BinaryOperator.isArithmeticOperator(binaryExpression.getOperator()))
