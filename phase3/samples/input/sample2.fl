@@ -1,0 +1,8 @@
+def func(a, b)
+    c = a + b;
+end
+
+
+def main()
+    func(1, "Mehdi");
+end
