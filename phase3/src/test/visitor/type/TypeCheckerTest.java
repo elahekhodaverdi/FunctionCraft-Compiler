@@ -48,4 +48,9 @@ public class TypeCheckerTest {
     public void operands_of_operator_must_be_the_same_in_a_function() {
         testCaseNumber = 2;
     }
+
+    @Test
+    public void access_index_is_not_int_in_right_value() {
+        testCaseNumber = 3;
+    }
 }
