@@ -14,7 +14,6 @@ import main.compileError.typeErrors.*;
 import main.symbolTable.SymbolTable;
 import main.symbolTable.exceptions.*;
 import main.symbolTable.item.*;
-import main.symbolTable.utils.Stack;
 import main.visitor.Visitor;
 
 import java.util.*;
@@ -100,6 +99,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(MainDeclaration mainDeclaration){
         //TODO:visit main
+        mainDeclaration.getBody().forEach(statement -> statement.accept(this));
         return null;
     }
     @Override
