@@ -1,10 +1,14 @@
 package main.ast.nodes.statement;
 
+import lombok.Getter;
+import lombok.Setter;
 import main.ast.nodes.expression.Expression;
 import main.ast.nodes.expression.Identifier;
 import main.visitor.IVisitor;
 
 
+@Setter
+@Getter
 public class AssignStatement extends Statement{
     private boolean accessList;
     private Identifier assignedId;
@@ -19,45 +23,6 @@ public class AssignStatement extends Statement{
         this.assignOperator = assignOperator;
     }
 
-    public void setAccessList(boolean accessList) {
-        this.accessList = accessList;
-    }
-
-    public void setAssignedId(Identifier assignedId) {
-        this.assignedId = assignedId;
-    }
-
-    public void setAccessListExpression(Expression accessListExpression) {
-        this.accessListExpression = accessListExpression;
-    }
-
-    public void setAssignExpression(Expression assignExpression) {
-        this.assignExpression = assignExpression;
-    }
-
-    public void setAssignOperator(AssignOperator assignOperator) {
-        this.assignOperator = assignOperator;
-    }
-
-    public AssignOperator getAssignOperator() {
-        return assignOperator;
-    }
-
-    public boolean isAccessList() {
-        return accessList;
-    }
-
-    public Expression getAccessListExpression() {
-        return accessListExpression;
-    }
-
-    public Identifier getAssignedId() {
-        return assignedId;
-    }
-
-    public Expression getAssignExpression() {
-        return assignExpression;
-    }
     @Override
     public String toString(){return "AssignTo:"+ this.assignedId.toString();}
     @Override
