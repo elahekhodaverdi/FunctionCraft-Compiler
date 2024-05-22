@@ -68,7 +68,7 @@ public class TypeChecker extends Visitor<Type> {
             SymbolTable.pop();
             return new NoType();
         }
-        Type returnType = returnStack.getLast().isEmpty() ? null : returnStack.getLast().get(0);
+        Type returnType = returnStack.getLast().isEmpty() ? new VoidType() : returnStack.getLast().get(0);
 
         returnStack.pop();
         SymbolTable.pop();
@@ -77,7 +77,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(PatternDeclaration patternDeclaration){
         SymbolTable.push(new SymbolTable());
-        Type returnType = null;
+        Type returnType = new VoidType();
         try {
             returnStack.push(new ArrayList<>());
             PatternItem patternItem = (PatternItem) SymbolTable.root.getItem(PatternItem.START_KEY +
@@ -104,7 +104,7 @@ public class TypeChecker extends Visitor<Type> {
                 SymbolTable.pop();
                 return new NoType();
             }
-            returnType = returnStack.getLast().isEmpty() ? null : returnStack.getLast().get(0);
+            returnType = returnStack.getLast().isEmpty() ? new VoidType() : returnStack.getLast().get(0);
             returnStack.pop();
         }catch (ItemNotFound ignored){}
 
@@ -139,7 +139,7 @@ public class TypeChecker extends Visitor<Type> {
 
     @Override
     public Type visit(ReturnStatement returnStatement){
-        Type returnType = null;
+        Type returnType = new VoidType();
         if (returnStatement.hasRetExpression())
             returnType = returnStatement.getReturnExp().accept(this);
 
