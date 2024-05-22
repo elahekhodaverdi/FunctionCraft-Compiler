@@ -113,7 +113,17 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(MainDeclaration mainDeclaration){
+        returnStack.push(new ArrayList<>());
+
         mainDeclaration.getBody().forEach(statement -> statement.accept(this));
+
+        HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getLast());
+        if (uniqueReturnTypes.size() > 1) {
+            typeErrors.add(new FunctionIncompatibleReturnTypes(mainDeclaration.getLine(), "main"));
+            returnStack.pop();
+            return new NoType();
+        }
+        returnStack.pop();
         return null;
     }
     @Override
