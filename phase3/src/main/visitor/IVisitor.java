@@ -47,4 +47,6 @@ public interface IVisitor<T> {
     T visit(NextStatement nextStatement);
     T visit(BreakStatement breakStatement);
     T visit(RangeExpression rangeExpression);
+    T visit(IndexExpression indexExpression);
+    T visit(ArgExpression argExpression);
 }

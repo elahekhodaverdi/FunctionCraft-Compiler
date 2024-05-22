@@ -79,4 +79,8 @@ public class Visitor<T> implements IVisitor<T> {
     public T visit(BreakStatement breakStatement){return null;}
     @Override
     public T visit(RangeExpression rangeExpression){return null;}
+    @Override
+    public T visit(IndexExpression indexExpression) {return null;}
+    @Override
+    public T visit(ArgExpression argExpression) {return null;}
 }
