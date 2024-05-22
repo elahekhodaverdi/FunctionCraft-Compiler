@@ -1,49 +1,37 @@
 package main.ast.nodes.expression;
 
+import lombok.Getter;
 import main.visitor.IVisitor;
 
 import java.util.ArrayList;
 
+@Getter
 public class AccessExpression extends Expression{
     private Expression accessedExpression;
-    private boolean isFunctionCall;
-    private ArrayList<Expression> arguments = new ArrayList<>();
-    private ArrayList<Expression> dimentionalAccess = new ArrayList<>();
-    public void setIsFunctionCall(boolean isFunctionCall){this.isFunctionCall = isFunctionCall;}
+    private ArrayList<Expression> accesses = new ArrayList<>();
 
-    public boolean isFunctionCall() {
-        return isFunctionCall;
-    }
-
-    public AccessExpression(Expression accessedExpression, ArrayList<Expression> arguments){
-        this.accessedExpression = accessedExpression;
-        this.arguments = arguments;
-        this.isFunctionCall = false;
-    }
-
-    public Expression getAccessedExpression() {
-        return accessedExpression;
-    }
-
-    public ArrayList<Expression> getDimentionalAccess() {
-        return dimentionalAccess;
-    }
-
-    public ArrayList<Expression> getArguments() {
-        return arguments;
-    }
-
-    public void setAccessedExpression(Expression accessedExpression) {
+    public AccessExpression(Expression accessedExpression){
         this.accessedExpression = accessedExpression;
     }
 
-    public void setArguments(ArrayList<Expression> arguments) {
-        this.arguments = arguments;
+    public boolean startWithFunctionCall() {
+        if (!accesses.isEmpty())
+            return accesses.getFirst() instanceof ArgExpression;
+        return false;
     }
 
-    public void setDimentionalAccess(ArrayList<Expression> dimentionalAccess) {
-        this.dimentionalAccess = dimentionalAccess;
+    public int numberOFArgs() {
+        if (startWithFunctionCall()) {
+            ArgExpression argExpression = (ArgExpression) accesses.getFirst();
+            return argExpression.getArgs().size();
+        }
+        return 0;
     }
+
+    public void addAccess(Expression access) {
+        accesses.add(access);
+    }
+
     @Override
     public String toString(){return "AccessExpression";}
     @Override
