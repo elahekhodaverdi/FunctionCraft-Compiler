@@ -73,7 +73,6 @@ public class TypeChecker extends Visitor<Type> {
         returnStack.pop();
         SymbolTable.pop();
         return returnType;
-        //TODO:Return the infered type of the function
     }
     @Override
     public Type visit(PatternDeclaration patternDeclaration){
@@ -114,7 +113,6 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(MainDeclaration mainDeclaration){
-        //TODO:visit main
         mainDeclaration.getBody().forEach(statement -> statement.accept(this));
         return null;
     }
@@ -141,8 +139,7 @@ public class TypeChecker extends Visitor<Type> {
 
     @Override
     public Type visit(ReturnStatement returnStatement){
-        // TODO:Visit return statement.Note that return type of functions are specified here
-        Type returnType = new NoType();
+        Type returnType = null;
         if (returnStatement.hasRetExpression())
             returnType = returnStatement.getReturnExp().accept(this);
 
@@ -152,7 +149,6 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(ExpressionStatement expressionStatement){
         return expressionStatement.getExpression().accept(this);
-
     }
     @Override
     public Type visit(ForStatement forStatement){
