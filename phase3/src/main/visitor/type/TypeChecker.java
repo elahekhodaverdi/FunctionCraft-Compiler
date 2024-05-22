@@ -144,7 +144,7 @@ public class TypeChecker extends Visitor<Type> {
             returnType = returnStatement.getReturnExp().accept(this);
 
         returnStack.getLast().add(returnType);
-        return returnType;
+        return new NoType();
     }
     @Override
     public Type visit(ExpressionStatement expressionStatement){
