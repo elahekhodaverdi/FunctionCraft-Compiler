@@ -144,7 +144,7 @@ public class TypeChecker extends Visitor<Type> {
             returnType = returnStatement.getReturnExp().accept(this);
 
         returnStack.getLast().add(returnType);
-        return returnType;
+        return new NoType();
     }
     @Override
     public Type visit(ExpressionStatement expressionStatement){
@@ -275,17 +275,17 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(ListValue listValue){
-        var types = listValue.getElements().stream()
+        // TODO:visit listValue
+        var types = new ArrayList<>(listValue.getElements().stream()
                 .map(e -> e.accept(this))
-                .distinct()
-                .collect(Collectors.toList());
+                .collect(Collectors.toSet()));
 
         if (types.size() > 1) {
             typeErrors.add(new ListElementsTypesMisMatch(listValue.getLine()));
             return new NoType();
         }
 
-        types.addLast(new NoType());
+        types.add(new NoType());
         return new ListType(types.getFirst());
     }
     @Override
@@ -331,7 +331,7 @@ public class TypeChecker extends Visitor<Type> {
             typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
             return new NoType();
         }
-        return null;
+        return exprType;
     }
     @Override
     public Type visit(ChompStatement chompStatement){
