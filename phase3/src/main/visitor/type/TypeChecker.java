@@ -275,19 +275,17 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(ListValue listValue){
-        // TODO:visit listValue
-        var types = new ArrayList<>(
-                listValue.getElements().stream()
+        var types = listValue.getElements().stream()
                 .map(e -> e.accept(this))
-                .collect(Collectors.toSet())
-        );
+                .distinct()
+                .collect(Collectors.toList());
 
         if (types.size() > 1) {
             typeErrors.add(new ListElementsTypesMisMatch(listValue.getLine()));
             return new NoType();
         }
 
-        types.add(new NoType());
+        types.addLast(new NoType());
         return new ListType(types.getFirst());
     }
     @Override
