@@ -75,7 +75,7 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void operands_of_operator_must_be_the_same_in_binary_expression_non_void_type() {
+    public void the_chain_of_three_operands_does_not_have_the_same_type() {
         testCaseNumber = 8;
     }
 
