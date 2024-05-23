@@ -313,23 +313,22 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(BinaryExpression binaryExpression){
+        BinaryOperator operator = binaryExpression.getOperator();
         Type firstOperandType = binaryExpression.getFirstOperand().accept(this);
         Type secondOpenrandType = binaryExpression.getSecondOperand().accept(this);
+
         if (!firstOperandType.sameType(secondOpenrandType)) {
-            typeErrors.add(new NonSameOperands(binaryExpression.getLine(), binaryExpression.getOperator()));
+            typeErrors.add(new NonSameOperands(binaryExpression.getLine(), operator));
             return new NoType();
         }
-        if (firstOperandType instanceof NoType)
-            return secondOpenrandType;
-        if (secondOpenrandType instanceof NoType)
-            return firstOperandType;
-        if (!BinaryOperator.isEqualityOperator(binaryExpression.getOperator()) &&
-            (!firstOperandType.isNumericType() || !secondOpenrandType.isNumericType())) {
-                typeErrors.add(new UnsupportedOperandType(binaryExpression.getLine(), binaryExpression.getOperator().toString()));
+
+        if (!operator.support(firstOperandType)) {
+                typeErrors.add(new UnsupportedOperandType(binaryExpression.getLine(), operator.toString()));
                 return new NoType();
-            }
-        if (BinaryOperator.isArithmeticOperator(binaryExpression.getOperator()))
-            return firstOperandType;
+        }
+
+        if (operator.isArithmetic())
+            return firstOperandType instanceof NoType ? firstOperandType : secondOpenrandType;
         return new BoolType();
     }
     @Override
