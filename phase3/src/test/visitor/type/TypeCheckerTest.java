@@ -124,8 +124,13 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void return_types_are_just_no_type_and_one_another() {
+    public void two_different_return_types_and_one_of_them_is_no_type() {
         testCaseNumber = 13;
+    }
+
+    @Test
+    public void three_different_return_types_and_one_of_them_is_no_type() {
+        testCaseNumber = 21;
     }
 
     @Test

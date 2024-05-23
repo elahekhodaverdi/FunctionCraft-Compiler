@@ -1,0 +1,9 @@
+def f(a)
+    if (true) return 5; end
+    if (true) return "Mehdi"; end
+    return "aa" + 5;
+end
+
+def main()
+    a = f(2) + 3;
+end
