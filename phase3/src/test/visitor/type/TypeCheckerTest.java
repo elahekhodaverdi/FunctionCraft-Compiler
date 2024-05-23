@@ -133,10 +133,10 @@ public class TypeCheckerTest {
         testCaseNumber = 21;
     }
 
-//    @Test
-//    public void different_return_type_in_function_if_body_in_main() {
-//        testCaseNumber = 17;
-//    }
+   @Test
+   public void different_return_type_in_function_if_body_in_main() {
+       testCaseNumber = 17;
+   }
 
     @Test
     public void more_than_two_return_types_in_function_call() {
@@ -147,4 +147,15 @@ public class TypeCheckerTest {
     public void more_than_two_return_types_in_main() {
         testCaseNumber = 19;
     }
+
+    @Test
+    public void same_operand_error_in_inner_expressions_and_not_in_outer_expressions() {
+        testCaseNumber = 22;
+    }
+
+    @Test
+    public void same_operand_error_in_inner_expressions_and_not_in_outer_expression() {
+        testCaseNumber = 23;
+    }
+
 }
