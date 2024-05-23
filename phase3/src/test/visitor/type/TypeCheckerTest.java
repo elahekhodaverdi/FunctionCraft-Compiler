@@ -94,7 +94,7 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void operands_of_operator_must_be_the_same_in_binary_expression_void_type_function_call() {
+    public void adding_a_function_call_with_a_void_return_type_to_an_integer() {
         testCaseNumber = 10;
     }
 
