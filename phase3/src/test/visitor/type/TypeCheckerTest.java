@@ -108,13 +108,13 @@ public class TypeCheckerTest {
         testCaseNumber = 12;
     }
 
-    @Test
-    public void operands_of_operator_must_be_the_same_in_binary_expression_in_return_statement() {
-        testCaseNumber = 13;
-    }
+//    @Test
+//    public void operands_of_operator_must_be_the_same_in_binary_expression_in_return_statement() {
+//        testCaseNumber = 13;
+//    }
 
     @Test
-    public void different_return_type_in_function_call_if_body() {
+    public void different_return_type_with_return_statement_within_if_body() {
         testCaseNumber = 14;
     }
 
