@@ -46,6 +46,7 @@ public class TypeChecker extends Visitor<Type> {
     public Type visit(FunctionDeclaration functionDeclaration){
         SymbolTable.push(new SymbolTable());
         returnStack.push(new ArrayList<>());
+
         try {
             FunctionItem functionItem = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY +
                     functionDeclaration.getFunctionName().getName());
@@ -58,22 +59,11 @@ public class TypeChecker extends Visitor<Type> {
                 }catch (ItemAlreadyExists ignored){}
             }
         }catch (ItemNotFound ignored){}
+
         for(Statement statement : functionDeclaration.getBody())
             statement.accept(this);
 
-        HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getFirst());
-        if (uniqueReturnTypes.contains(new NoType()) && uniqueReturnTypes.size() <= 2) {
-            returnStack.pop();
-            SymbolTable.pop();
-            return new NoType();
-        }
-        if (uniqueReturnTypes.size() > 1) {
-            typeErrors.add(new FunctionIncompatibleReturnTypes(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName()));
-            returnStack.pop();
-            SymbolTable.pop();
-            return new NoType();
-        }
-        Type returnType = returnStack.getFirst().isEmpty() ? new VoidType() : returnStack.getFirst().getFirst();
+        Type returnType = getReturnType(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName());
 
         returnStack.pop();
         SymbolTable.pop();
@@ -82,7 +72,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(PatternDeclaration patternDeclaration){
         SymbolTable.push(new SymbolTable());
-        Type returnType = new VoidType();
+
         try {
             returnStack.push(new ArrayList<>());
             PatternItem patternItem = (PatternItem) SymbolTable.root.getItem(PatternItem.START_KEY +
@@ -102,34 +92,25 @@ public class TypeChecker extends Visitor<Type> {
             for (Expression expression: patternDeclaration.getReturnExp())
                 returnStack.getFirst().add(expression.accept(this));
 
-            HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getFirst());
-            if (uniqueReturnTypes.size() > 1) {
-                typeErrors.add(new FunctionIncompatibleReturnTypes(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName()));
-                returnStack.pop();
-                SymbolTable.pop();
-                return new NoType();
-            }
-            returnType = returnStack.getFirst().isEmpty() ? new VoidType() : returnStack.getFirst().getFirst();
-            returnStack.pop();
         }catch (ItemNotFound ignored){}
 
+        Type returnType = getReturnType(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName());
+        
         SymbolTable.pop();
         return returnType;
     }
     @Override
     public Type visit(MainDeclaration mainDeclaration){
+        SymbolTable.push(new SymbolTable());
         returnStack.push(new ArrayList<>());
 
         mainDeclaration.getBody().forEach(statement -> statement.accept(this));
 
-        HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getFirst());
-        if (uniqueReturnTypes.size() > 1) {
-            typeErrors.add(new FunctionIncompatibleReturnTypes(mainDeclaration.getLine(), "main"));
-            returnStack.pop();
-            return new NoType();
-        }
+        Type returnType = getReturnType(mainDeclaration.getLine(), "main");
+
         returnStack.pop();
-        return null;
+        SymbolTable.pop();
+        return returnType;
     }
     @Override
     public Type visit(AccessExpression accessExpression){
@@ -434,5 +415,18 @@ public class TypeChecker extends Visitor<Type> {
                 .map(arg -> arg.accept(this))
                 .collect(Collectors.toCollection(ArrayList::new))
         );
+    }
+
+    private Type getReturnType(int line, String functionName) {
+        HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getFirst());
+
+        if (uniqueReturnTypes.contains(new NoType()) && uniqueReturnTypes.size() <= 2)
+            return new NoType();
+
+        if (uniqueReturnTypes.size() > 1) {
+            typeErrors.add(new FunctionIncompatibleReturnTypes(line, functionName));
+            return new NoType();
+        }
+        return returnStack.getFirst().isEmpty() ? new VoidType() : returnStack.getFirst().getFirst();
     }
 }
