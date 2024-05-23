@@ -99,7 +99,7 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void operands_of_operator_must_be_the_same_in_binary_expression_function_call_arguments() {
+    public void type_check_error_in_a_expression_as_a_function_call_argument() {
         testCaseNumber = 11;
     }
 
