@@ -104,7 +104,7 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void operands_of_operator_must_be_the_same_in_binary_expression_function_call_arguments_and_return_of_function() {
+    public void function_return_type_is_no_type_as_same_as_its_argument() {
         testCaseNumber = 12;
     }
 
