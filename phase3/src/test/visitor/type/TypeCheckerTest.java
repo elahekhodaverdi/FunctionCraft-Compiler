@@ -139,12 +139,12 @@ public class TypeCheckerTest {
 //    }
 
     @Test
-    public void more_than_two_return_types() {
+    public void more_than_two_return_types_in_function_call() {
         testCaseNumber = 18;
     }
 
     @Test
-    public void more_that_two_return_types_in_main() {
+    public void more_than_two_return_types_in_main() {
         testCaseNumber = 19;
     }
 }

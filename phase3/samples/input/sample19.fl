@@ -1,6 +1,7 @@
 def main()
     if (true) return "aa";
     else return true;
+    end
     loop do
         return;
     end
