@@ -1,10 +1,11 @@
+
 def f()
     loop do
         return;
     end
-
     return 5;
 end
+
 def main()
     f();
 end

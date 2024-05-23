@@ -119,7 +119,7 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void different_return_type_in_function_call_loop_body() {
+    public void different_return_type_with_return_statement_within_loop_body() {
         testCaseNumber = 15;
     }
 
