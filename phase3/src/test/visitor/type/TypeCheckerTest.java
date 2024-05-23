@@ -158,4 +158,10 @@ public class TypeCheckerTest {
         testCaseNumber = 23;
     }
 
+    @Test
+    public void list_with_different_element_types_gives_error_in_for_range() {
+        testCaseNumber = 24; 
+    }
+
+
 }
