@@ -1,6 +1,10 @@
 package test.visitor.type;
 
 import main.FunctionCraft;
+import main.ast.nodes.expression.operators.BinaryOperator;
+import main.ast.type.FptrType;
+import main.ast.type.primitiveType.BoolType;
+import main.ast.type.primitiveType.IntType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,6 +81,11 @@ public class TypeCheckerTest {
     @Test
     public void the_chain_of_three_operands_does_not_have_the_same_type() {
         testCaseNumber = 8;
+    }
+
+    @Test
+    public void the_chain_of_five_operands_with_two_branches_in_ast_does_not_have_the_same_type() {
+        testCaseNumber = 20;
     }
 
     @Test

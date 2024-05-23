@@ -1,0 +1,3 @@
+def main()
+    a = 1 + "Mehdi" + 2 + "aa" / 2;
+end
