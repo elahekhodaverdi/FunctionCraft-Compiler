@@ -89,7 +89,7 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void operands_of_operator_must_be_the_same_in_binary_expression_non_void_function_call() {
+    public void return_type_of_function_is_correct() {
         testCaseNumber = 9;
     }
 
