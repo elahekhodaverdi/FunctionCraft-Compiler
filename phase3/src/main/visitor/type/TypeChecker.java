@@ -61,14 +61,14 @@ public class TypeChecker extends Visitor<Type> {
         for(Statement statement : functionDeclaration.getBody())
             statement.accept(this);
 
-        HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getLast());
+        HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getFirst());
         if (uniqueReturnTypes.size() > 1) {
             typeErrors.add(new FunctionIncompatibleReturnTypes(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName()));
             returnStack.pop();
             SymbolTable.pop();
             return new NoType();
         }
-        Type returnType = returnStack.getLast().isEmpty() ? new VoidType() : returnStack.getLast().get(0);
+        Type returnType = returnStack.getFirst().isEmpty() ? new VoidType() : returnStack.getFirst().getFirst();
 
         returnStack.pop();
         SymbolTable.pop();
@@ -95,16 +95,16 @@ public class TypeChecker extends Visitor<Type> {
                 }
             }
             for (Expression expression: patternDeclaration.getReturnExp())
-                returnStack.getLast().add(expression.accept(this));
+                returnStack.getFirst().add(expression.accept(this));
 
-            HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getLast());
+            HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getFirst());
             if (uniqueReturnTypes.size() > 1) {
                 typeErrors.add(new FunctionIncompatibleReturnTypes(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName()));
                 returnStack.pop();
                 SymbolTable.pop();
                 return new NoType();
             }
-            returnType = returnStack.getLast().isEmpty() ? new VoidType() : returnStack.getLast().get(0);
+            returnType = returnStack.getFirst().isEmpty() ? new VoidType() : returnStack.getFirst().getFirst();
             returnStack.pop();
         }catch (ItemNotFound ignored){}
 
@@ -117,7 +117,7 @@ public class TypeChecker extends Visitor<Type> {
 
         mainDeclaration.getBody().forEach(statement -> statement.accept(this));
 
-        HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getLast());
+        HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getFirst());
         if (uniqueReturnTypes.size() > 1) {
             typeErrors.add(new FunctionIncompatibleReturnTypes(mainDeclaration.getLine(), "main"));
             returnStack.pop();
@@ -153,7 +153,7 @@ public class TypeChecker extends Visitor<Type> {
         if (returnStatement.hasRetExpression())
             returnType = returnStatement.getReturnExp().accept(this);
 
-        returnStack.getLast().add(returnType);
+        returnStack.getFirst().add(returnType);
         return new NoType();
     }
     @Override
