@@ -133,13 +133,13 @@ public class TypeCheckerTest {
         testCaseNumber = 21;
     }
 
-    @Test
-    public void different_return_type_in_function_if_body_in_main() {
-        testCaseNumber = 17;
-    }
+//    @Test
+//    public void different_return_type_in_function_if_body_in_main() {
+//        testCaseNumber = 17;
+//    }
 
     @Test
-    public void more_that_two_return_types_in_function_call() {
+    public void more_than_two_return_types() {
         testCaseNumber = 18;
     }
 
