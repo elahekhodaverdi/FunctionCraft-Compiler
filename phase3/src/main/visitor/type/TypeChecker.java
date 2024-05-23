@@ -157,7 +157,12 @@ public class TypeChecker extends Visitor<Type> {
             varItem.setType(forType);
         try{
             SymbolTable.top.put(varItem);
-        }catch (ItemAlreadyExists ignored){}
+        }catch (ItemAlreadyExists itenAlreadyExists){
+            try {
+                SymbolTable.top.getVarItem(varItem.getName()).setType(varItem.getType());
+            }
+            catch (ItemNotFound ignored) {}
+        }
 
         for(Statement statement : forStatement.getLoopBodyStmts())
             statement.accept(this);
