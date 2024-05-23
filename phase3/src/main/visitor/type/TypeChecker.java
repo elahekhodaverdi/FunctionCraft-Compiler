@@ -62,6 +62,11 @@ public class TypeChecker extends Visitor<Type> {
             statement.accept(this);
 
         HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getFirst());
+        if (uniqueReturnTypes.contains(new NoType()) && uniqueReturnTypes.size() <= 2) {
+            returnStack.pop();
+            SymbolTable.pop();
+            return new NoType();
+        }
         if (uniqueReturnTypes.size() > 1) {
             typeErrors.add(new FunctionIncompatibleReturnTypes(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName()));
             returnStack.pop();

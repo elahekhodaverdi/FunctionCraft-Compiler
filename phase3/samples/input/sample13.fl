@@ -1,5 +1,6 @@
 def f(a)
-    return a + 5;
+    if (true) return 5; end
+    return "aa" + 5;
 end 
 
 def main()
