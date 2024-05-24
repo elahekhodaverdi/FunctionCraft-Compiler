@@ -279,10 +279,10 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(ListValue listValue){
-        // TODO:visit listValue
-        var types = new ArrayList<>(listValue.getElements().stream()
+        var types = listValue.getElements().stream()
                 .map(e -> e.accept(this))
-                .collect(Collectors.toSet()));
+                .distinct()
+                .collect(Collectors.toCollection(ArrayList::new));
 
         if (types.size() > 1) {
             typeErrors.add(new ListElementsTypesMisMatch(listValue.getLine()));
