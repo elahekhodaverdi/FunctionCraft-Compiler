@@ -192,4 +192,9 @@ public class TypeCheckerTest {
     public void call_function_with_error_twice() {
         testCaseNumber = 30;
     }
+
+    @Test
+    public void unsupported_type_cannot_be_pushed() {
+        testCaseNumber = 31;
+    }
 }

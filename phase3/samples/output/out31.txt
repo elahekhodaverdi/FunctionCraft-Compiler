@@ -1,0 +1,4 @@
+Line:6-> types of `push` function arguments must be string or the type of the second argument must be the same as the type of the elements in the list
+Line:7-> types of `push` function arguments must be string or the type of the second argument must be the same as the type of the elements in the list
+Line:8-> types of `push` function arguments must be string or the type of the second argument must be the same as the type of the elements in the list
+Line:9-> types of `push` function arguments must be string or the type of the second argument must be the same as the type of the elements in the list

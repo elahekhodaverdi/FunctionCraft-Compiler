@@ -1,0 +1,10 @@
+def f()
+
+end
+def main()
+    a = method(:f);
+    push(2, 1);
+    push(22.2, "string");
+    push(true, "boolean");
+    push(a, 1);
+end
