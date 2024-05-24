@@ -175,6 +175,11 @@ public class TypeCheckerTest {
     }
 
     @Test
+    public void no_error_when_the_for_variable_has_no_type() {
+        testCaseNumber = 40;
+    }
+
+    @Test
     public void same_operand_error_after_change_tyoe_infor_range() {
         testCaseNumber = 28;
     } // TODO: change scope after for statement
