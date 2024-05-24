@@ -202,4 +202,9 @@ public class TypeCheckerTest {
     public void no_error_in_push_element() {
         testCaseNumber = 32;
     }
+
+    @Test
+    public void mis_match_push_arguments() {
+        testCaseNumber = 33;
+    }
 }
