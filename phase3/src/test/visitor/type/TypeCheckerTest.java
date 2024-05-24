@@ -197,4 +197,9 @@ public class TypeCheckerTest {
     public void unsupported_type_cannot_be_pushed() {
         testCaseNumber = 31;
     }
+
+    @Test
+    public void no_error_in_push_element() {
+        testCaseNumber = 32;
+    }
 }

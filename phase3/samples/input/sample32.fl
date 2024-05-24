@@ -1,0 +1,13 @@
+def f()
+
+end
+def main()
+    a = [method(:f)];
+    b = [1];
+    c = ["string"];
+    d = [true];
+    push(a, method(:f));
+    push(b, 2);
+    push(c, "boolean");
+    push(d, false);
+end
