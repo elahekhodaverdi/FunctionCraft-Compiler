@@ -224,7 +224,12 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void same_operand_error_in_accessing_list_elements_in_expressions() {
+    public void same_operand_error_in_accessing_list_elements_in_expression() {
         testCaseNumber = 37;
+    }
+
+    @Test
+    public void same_operand_error_in_accessing_empty_initialized_list_elements_in_expression() {
+        testCaseNumber = 38;
     }
 }
