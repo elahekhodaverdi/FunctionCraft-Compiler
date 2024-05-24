@@ -1,0 +1,5 @@
+def main()
+    list = [1, 2, 3];
+
+    a = list[2 + "aa"];
+end

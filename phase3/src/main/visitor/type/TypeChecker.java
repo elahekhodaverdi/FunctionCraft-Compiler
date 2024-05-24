@@ -194,10 +194,9 @@ public class TypeChecker extends Visitor<Type> {
         Type assignType = assignStatement.getAssignExpression().accept(this);
 
         if(assignStatement.isAccessList()){
-            // TODO:assignment to list
             Type indexType = assignStatement.getAccessListExpression().accept(this);
 
-            if (!(indexType instanceof IntType))
+            if (!(indexType.sameType(IntType.class)))
                 typeErrors.add(new AccessIndexIsNotInt(assignStatement.getLine()));
         }
         else{
@@ -411,7 +410,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(IndexExpression indexExpression) {
         Type indexType = indexExpression.getIndex().accept(this);
-        if(!(indexType instanceof IntType))
+        if(!(indexType.sameType(IntType.class)))
             typeErrors.add(new AccessIndexIsNotInt(indexExpression.getLine()));
         return indexType;
     }

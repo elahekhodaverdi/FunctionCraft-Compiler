@@ -253,4 +253,9 @@ public class TypeCheckerTest {
     public void change_scope_within_if_statement_works() {
         testCaseNumber = 43;
     }
+
+    @Test
+    public void change_scoe_within_if_statement_works() {
+        testCaseNumber = 44;
+    }
 }
