@@ -1,0 +1,23 @@
+def f()
+
+end
+
+def g()
+
+end
+def main()
+    a = [];
+    b = [];
+    c = [];
+    d = [];
+
+    push(a, method(:f));
+    push(b, 2);
+    push(c, "boolean");
+    push(d, false);
+
+    push(a, method(:g));
+    push(b, 3);
+    push(c, "tttt");
+    push(d, true);
+end
