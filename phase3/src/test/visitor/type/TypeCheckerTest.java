@@ -255,7 +255,12 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void change_scoe_within_if_statement_works() {
+    public void pass_no_type_as_index() {
         testCaseNumber = 44;
+    }
+
+    @Test
+    public void pass_no_type_as_input_of_len() {
+        testCaseNumber = 45;
     }
 }

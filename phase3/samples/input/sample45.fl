@@ -1,0 +1,3 @@
+def main()
+    len(2 - "aa");
+end

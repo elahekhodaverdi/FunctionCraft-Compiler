@@ -370,9 +370,8 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(LenStatement lenStatement){
-        //TODO:visit LenStatement.Be carefull about the return type of LenStatement.
         Type argumentType = lenStatement.getExpression().accept(this);
-        if (!(argumentType instanceof StringType || argumentType instanceof ListType))  {
+        if (!(argumentType.sameType(StringType.class) || argumentType.sameType(ListType.class)))  {
             typeErrors.add(new LenArgumentTypeMisMatch(lenStatement.getLine()));
             return new NoType();
         }
