@@ -1,0 +1,4 @@
+def main()
+    list = [1, "Mehdi"];
+    push(list, false);
+end
