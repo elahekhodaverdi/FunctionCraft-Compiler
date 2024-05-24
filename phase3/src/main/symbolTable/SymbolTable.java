@@ -40,7 +40,11 @@ public class SymbolTable {
     }
     public SymbolTable copy() {
         SymbolTable newSymbolTable = new SymbolTable();
-        newSymbolTable.items.putAll(this.items);
+        for (String key : items.keySet()) {
+            try {
+                newSymbolTable.items.put(key, (SymbolTableItem) items.get(key).clone());
+            }catch (CloneNotSupportedException ignored) {}
+        }
         return newSymbolTable;
     }
 

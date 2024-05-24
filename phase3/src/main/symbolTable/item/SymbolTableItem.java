@@ -1,6 +1,8 @@
 package main.symbolTable.item;
 
-public abstract class SymbolTableItem {
+import main.symbolTable.SymbolTable;
+
+public abstract class SymbolTableItem implements Cloneable{
     protected String name;
     public abstract String getKey();
 
@@ -10,5 +12,10 @@ public abstract class SymbolTableItem {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

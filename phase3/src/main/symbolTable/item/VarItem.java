@@ -22,4 +22,16 @@ public class VarItem extends SymbolTableItem{
 
     @Override
     public String getKey(){return START_KEY + this.name;}
+
+    @Override
+    public Object clone() {
+        try {
+            VarItem clone = (VarItem) super.clone();
+            clone.name = this.name;
+            clone.type = type;
+            return clone;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
+    }
 }
