@@ -188,4 +188,8 @@ public class TypeCheckerTest {
         testCaseNumber = 29;
     }
 
+    @Test
+    public void call_function_with_error_twice() {
+        testCaseNumber = 30;
+    }
 }
