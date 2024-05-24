@@ -217,4 +217,9 @@ public class TypeCheckerTest {
     public void mis_match_push_arguments_error_in_adding_empty_initialized_list() {
         testCaseNumber = 35;
     }
+
+    @Test
+    public void no_error_in_accessing_list_elements_in_expressions() {
+        testCaseNumber = 36;
+    }
 }
