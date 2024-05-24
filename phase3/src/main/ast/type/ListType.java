@@ -12,6 +12,7 @@ public class ListType extends Type {
         this.type = type;
     }
 
+//    public Type getType() {}
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
@@ -19,8 +20,7 @@ public class ListType extends Type {
         if (obj == null || getClass() != obj.getClass())
             return false;
         ListType castedObj = (ListType) obj;
-        if (castedObj.getType() == null)
-            return this.type == null;
+
         return type.sameType(castedObj.getType());
     }
 

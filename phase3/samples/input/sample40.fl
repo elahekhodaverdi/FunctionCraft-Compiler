@@ -1,0 +1,14 @@
+def func(str)
+    push(str, "a");
+end
+
+def main ()
+    for i in [false, "Mehdi"]
+        i = i + 2;
+    end
+
+    emptyList = [];
+    for i in emptyList
+        func(i);
+    end
+end
