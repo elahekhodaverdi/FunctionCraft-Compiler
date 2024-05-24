@@ -32,6 +32,8 @@ public class ListType extends Type {
         if (obj == null || getClass() != obj.getClass())
             return false;
         ListType castedObj = (ListType) obj;
+        if (castedObj.getType() == null)
+            return this.type == null;
         return type.sameType(castedObj.getType());
     }
     @Override

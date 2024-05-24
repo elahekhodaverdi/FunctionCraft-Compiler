@@ -127,7 +127,7 @@ public class TypeChecker extends Visitor<Type> {
                     accessedType = functionItem.getFunctionDeclaration().accept(this);
                 } catch (ItemNotFound ignored) {}
             } else if (accessedType instanceof ListType listType) {
-                accessedType = listType.getType();
+                accessedType = (listType.getType() == null) ? new NoType() : listType.getType();
             }
         }
         return accessedType;
@@ -152,7 +152,7 @@ public class TypeChecker extends Visitor<Type> {
         Type forType = forStatement.getRangeExpression().accept(this);
         VarItem varItem = new VarItem(forStatement.getIteratorId());
         if (forType instanceof ListType type)
-            varItem.setType(type.getType());
+            varItem.setType((type.getType() == null)? new NoType(): type.getType());
         else
             varItem.setType(forType);
         try{
@@ -246,13 +246,13 @@ public class TypeChecker extends Visitor<Type> {
         }
 
         if (initialType instanceof ListType listType){
-            if (!listType.getType().sameType(new NoType())) {
+            if (!(listType.getType() == null)) {
                 if (!listType.getType().sameType(toBeAddedType)) {
                     typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
                     return new NoType();
                 }
             }
-            if (listType.getType().sameType(new NoType()))
+            else
                 listType.setType(toBeAddedType);
         }
         return new NoType();
@@ -289,7 +289,7 @@ public class TypeChecker extends Visitor<Type> {
             return new NoType();
         }
 
-        types.add(new NoType());
+        types.add(null);
         return new ListType(types.getFirst());
     }
     @Override
