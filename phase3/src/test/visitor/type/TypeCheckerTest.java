@@ -232,4 +232,9 @@ public class TypeCheckerTest {
     public void same_operand_error_in_accessing_empty_initialized_list_elements_in_expression() {
         testCaseNumber = 38;
     }
+
+    @Test
+    public void len_argument_error() {
+        testCaseNumber = 39;
+    }
 }
