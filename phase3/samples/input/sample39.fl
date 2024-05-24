@@ -1,0 +1,13 @@
+def main()
+   e = 22.2;
+   j = 4;
+   k = true;
+   a = [];
+   b = "faaaa";
+
+   g = len(a);
+   h = len(b);
+   f = len(e); 
+   j = len(e); 
+   k = len(e); 
+end
