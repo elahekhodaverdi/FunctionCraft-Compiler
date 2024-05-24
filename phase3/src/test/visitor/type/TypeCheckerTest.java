@@ -163,5 +163,19 @@ public class TypeCheckerTest {
         testCaseNumber = 24; 
     }
 
+    @Test
+    public void same_operand_error_when_for_range_is_list() {
+        testCaseNumber = 25;
+    }
+
+    @Test
+    public void same_operand_error_when_for_range_is_variable() {
+        testCaseNumber = 26;
+    }
+
+    @Test
+    public void no_same_operand_error_when_for_range_is_double_dot() {
+        testCaseNumber = 27;
+    }
 
 }

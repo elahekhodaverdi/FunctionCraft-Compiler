@@ -1,0 +1,11 @@
+def f(i)
+    puts(i + 3);
+
+end
+def main()
+    f("a");
+    a = ["1", "2", "string" , "true"];
+    for i in a
+        puts(i + 3);
+    end
+end
