@@ -263,4 +263,9 @@ public class TypeCheckerTest {
     public void pass_no_type_as_input_of_len() {
         testCaseNumber = 45;
     }
+
+    @Test
+    public void pass_no_type_as_input_of_push() {
+        testCaseNumber = 46;
+    }
 }
