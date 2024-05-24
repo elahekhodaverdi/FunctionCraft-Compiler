@@ -1,0 +1,7 @@
+def main()
+    noType = "aa" + 4;
+
+    list = [1, 2, 3, noType];
+    list = [noType, noType];
+    list = [1, 2, "aa", noType];
+end

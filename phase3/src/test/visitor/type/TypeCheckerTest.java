@@ -268,4 +268,9 @@ public class TypeCheckerTest {
     public void pass_no_type_as_input_of_push() {
         testCaseNumber = 46;
     }
+
+    @Test
+    public void no_type_as_element_of_list_wont_count_as_different_type() {
+        testCaseNumber = 47;
+    }
 }
