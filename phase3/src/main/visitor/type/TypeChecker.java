@@ -127,7 +127,7 @@ public class TypeChecker extends Visitor<Type> {
                     accessedType = functionItem.getFunctionDeclaration().accept(this);
                 } catch (ItemNotFound ignored) {}
             } else if (accessedType instanceof ListType listType) {
-                accessedType = (listType.getType() == null) ? new NoType() : listType.getType();
+                accessedType = (listType.getType() instanceof VoidType) ? new NoType() : listType.getType();
             }
         }
         return accessedType;
@@ -152,7 +152,7 @@ public class TypeChecker extends Visitor<Type> {
         Type forType = forStatement.getRangeExpression().accept(this);
         VarItem varItem = new VarItem(forStatement.getIteratorId());
         if (forType instanceof ListType type)
-            varItem.setType((type.getType() == null)? new NoType(): type.getType());
+            varItem.setType((type.getType() instanceof VoidType)? new NoType() : type.getType());
         else
             varItem.setType(forType);
         try{
@@ -233,10 +233,11 @@ public class TypeChecker extends Visitor<Type> {
     }
     @Override
     public Type visit(PushStatement pushStatement){
-        //TODO:visit push statement
         Type initialType = pushStatement.getInitial().accept(this);
         Type toBeAddedType = pushStatement.getToBeAdded().accept(this);
-        if (!(initialType instanceof StringType) && !(initialType instanceof ListType)){
+
+        if (!(initialType instanceof StringType) && !(initialType instanceof ListType) &&
+            !(initialType instanceof NoType)){
             typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
             return new NoType();
         }
@@ -246,7 +247,7 @@ public class TypeChecker extends Visitor<Type> {
         }
 
         if (initialType instanceof ListType listType){
-            if (!(listType.getType() == null)) {
+            if (!(listType.getType() instanceof VoidType)) {
                 if (!listType.getType().sameType(toBeAddedType)) {
                     typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
                     return new NoType();
@@ -289,7 +290,7 @@ public class TypeChecker extends Visitor<Type> {
             return new NoType();
         }
 
-        types.add(null);
+        types.add(new VoidType());
         return new ListType(types.getFirst());
     }
     @Override
