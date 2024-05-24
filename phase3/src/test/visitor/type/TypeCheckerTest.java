@@ -183,4 +183,9 @@ public class TypeCheckerTest {
         testCaseNumber = 28;
     }
 
+    @Test
+    public void not_changing_previous_scope_variable_types() {
+        testCaseNumber = 29;
+    }
+
 }

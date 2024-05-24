@@ -1,0 +1,9 @@
+def f(b)
+     b = "abi";
+end
+
+def main()
+      b = 1;
+      f(b);
+      c = b + 3;
+end
