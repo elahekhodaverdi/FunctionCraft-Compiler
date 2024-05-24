@@ -1,0 +1,14 @@
+def main()
+    a = 3.4;
+    b = "Mehdi";
+
+    if (true)
+        a = 2;
+        b = a + 3;
+    else
+        b = a + 2;
+    end
+
+    push(b, "E");
+    a = a + 2.5;
+end

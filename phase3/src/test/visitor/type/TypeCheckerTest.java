@@ -180,11 +180,6 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void same_operand_error_after_change_tyoe_infor_range() {
-        testCaseNumber = 28;
-    } // TODO: change scope after for statement
-
-    @Test
     public void not_changing_previous_scope_variable_types_in_function_call() {
         testCaseNumber = 29;
     }
@@ -242,5 +237,20 @@ public class TypeCheckerTest {
     @Test
     public void push_to_no_type() {
         testCaseNumber = 41;
+    }
+
+    @Test
+    public void change_scope_within_for_loop_works() {
+        testCaseNumber = 28;
+    }
+
+    @Test
+    public void change_scope_within_do_loop_works() {
+        testCaseNumber = 42;
+    }
+
+    @Test
+    public void change_scope_within_if_statement_works() {
+        testCaseNumber = 43;
     }
 }
