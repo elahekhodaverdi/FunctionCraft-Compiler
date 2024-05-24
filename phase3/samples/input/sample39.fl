@@ -8,6 +8,6 @@ def main()
    g = len(a);
    h = len(b);
    f = len(e); 
-   j = len(e); 
-   k = len(e); 
+   j = len(j);
+   k = len(k);
 end

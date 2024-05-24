@@ -1,10 +1,6 @@
 package test.visitor.type;
 
 import main.FunctionCraft;
-import main.ast.nodes.expression.operators.BinaryOperator;
-import main.ast.type.FptrType;
-import main.ast.type.primitiveType.BoolType;
-import main.ast.type.primitiveType.IntType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -166,30 +162,31 @@ public class TypeCheckerTest {
     @Test
     public void same_operand_error_when_for_range_is_list() {
         testCaseNumber = 25;
-    }
+    } // TODO: handle type of i in for statement
 
     @Test
     public void same_operand_error_when_for_range_is_variable() {
         testCaseNumber = 26;
-    }
+    } // TODO: handle type of i in for statement
 
     @Test
     public void no_same_operand_error_when_for_range_is_double_dot() {
         testCaseNumber = 27;
-    }
+    }// TODO: handle type of i in for statement
+
 
     @Test
     public void same_operand_error_after_change_tyoe_infor_range() {
         testCaseNumber = 28;
-    }
+    } // TODO: change scope after for statement
 
     @Test
-    public void not_changing_previous_scope_variable_types() {
+    public void not_changing_previous_scope_variable_types_in_function_call() {
         testCaseNumber = 29;
     }
 
     @Test
-    public void call_function_with_error_twice() {
+    public void call_twice_a_function_with_error() {
         testCaseNumber = 30;
     }
 
@@ -209,12 +206,12 @@ public class TypeCheckerTest {
     }
 
     @Test
-    public void no_error_in_adding_empty_initialized_list() {
+    public void no_error_in_pushing_to_empty_initialized_list() {
         testCaseNumber = 34;
     }
 
     @Test
-    public void mis_match_push_arguments_error_in_adding_empty_initialized_list() {
+    public void mis_match_push_arguments_error_in_pushing_to_empty_initialized_list() {
         testCaseNumber = 35;
     }
 
