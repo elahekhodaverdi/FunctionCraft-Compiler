@@ -178,4 +178,9 @@ public class TypeCheckerTest {
         testCaseNumber = 27;
     }
 
+    @Test
+    public void same_operand_error_after_change_tyoe_infor_range() {
+        testCaseNumber = 28;
+    }
+
 }
