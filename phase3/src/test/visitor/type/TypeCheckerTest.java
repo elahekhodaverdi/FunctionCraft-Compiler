@@ -222,4 +222,9 @@ public class TypeCheckerTest {
     public void no_error_in_accessing_list_elements_in_expressions() {
         testCaseNumber = 36;
     }
+
+    @Test
+    public void same_operand_error_in_accessing_list_elements_in_expressions() {
+        testCaseNumber = 37;
+    }
 }

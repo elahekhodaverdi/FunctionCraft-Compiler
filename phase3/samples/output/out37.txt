@@ -1,0 +1,1 @@
+Line:3-> operands of operator PLUS must be the same
