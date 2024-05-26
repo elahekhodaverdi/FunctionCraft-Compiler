@@ -83,7 +83,7 @@ public class TypeChecker extends Visitor<Type> {
                 SymbolTable.top.put(varItem);
             }catch (ItemAlreadyExists ignored){}
             for(Expression expression : patternDeclaration.getConditions()){
-                if(!(expression.accept(this) instanceof BoolType)){
+                if(!(expression.accept(this).sameType(BoolType.class))){
                     typeErrors.add(new ConditionIsNotBool(expression.getLine()));
                     returnType = new NoType();
                 }
@@ -173,7 +173,7 @@ public class TypeChecker extends Visitor<Type> {
     public Type visit(IfStatement ifStatement){
         SymbolTable.push(SymbolTable.top.copy());
         for(Expression expression : ifStatement.getConditions())
-            if(!(expression.accept(this) instanceof BoolType))
+            if(!(expression.accept(this).sameType(BoolType.class)))
                 typeErrors.add(new ConditionIsNotBool(expression.getLine()));
         for(Statement statement : ifStatement.getThenBody())
             statement.accept(this);
@@ -217,7 +217,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(BreakStatement breakStatement){
         for(Expression expression : breakStatement.getConditions())
-            if(!((expression.accept(this)) instanceof BoolType))
+            if(!((expression.accept(this)).sameType(BoolType.class)))
                 typeErrors.add(new ConditionIsNotBool(expression.getLine()));
 
         return null;
@@ -225,7 +225,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(NextStatement nextStatement){
         for(Expression expression : nextStatement.getConditions())
-            if(!((expression.accept(this)) instanceof BoolType))
+            if(!((expression.accept(this)).sameType(BoolType.class)))
                 typeErrors.add(new ConditionIsNotBool(expression.getLine()));
 
         return null;
@@ -340,11 +340,11 @@ public class TypeChecker extends Visitor<Type> {
             typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
             return new NoType();
         }
-        else if ( !(op == UnaryOperator.NOT) && !(exprType instanceof IntType)){
+        else if ( !(op == UnaryOperator.NOT) && !(exprType instanceof IntType) && !(exprType instanceof FloatType)){
             typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
             return new NoType();
         }
-        return exprType;
+        return (op == UnaryOperator.NOT) ? new BoolType() : exprType;
     }
     @Override
     public Type visit(ChompStatement chompStatement){
