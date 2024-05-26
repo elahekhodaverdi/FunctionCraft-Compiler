@@ -1,5 +1,6 @@
 package main.symbolTable.item;
 
+import lombok.Setter;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.type.Type;
 import main.symbolTable.SymbolTable;
@@ -11,8 +12,13 @@ public class FunctionItem extends SymbolTableItem{
     private SymbolTable functionSymbolTable;
     private FunctionDeclaration functionDeclaration;
     private ArrayList<Type> argumentTypes = new ArrayList<>();
+    @Setter
+    private ArrayList<Type> defaultArgumentTypes = new ArrayList<>();
 
     public ArrayList<Type> getArgumentTypes() {
+        int numOfDefaultArgs = defaultArgumentTypes.size();
+        int startIndex = numOfDefaultArgs - (functionDeclaration.getArgs().size() - argumentTypes.size());
+        argumentTypes.addAll(defaultArgumentTypes.subList(startIndex, numOfDefaultArgs));
         return argumentTypes;
     }
 

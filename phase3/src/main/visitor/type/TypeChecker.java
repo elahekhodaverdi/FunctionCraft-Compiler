@@ -28,6 +28,9 @@ public class TypeChecker extends Visitor<Type> {
         SymbolTable.top = new SymbolTable();
         for(FunctionDeclaration functionDeclaration : program.getFunctionDeclarations()){
             FunctionItem functionItem = new FunctionItem(functionDeclaration);
+            functionItem.setDefaultArgumentTypes(
+                    getDefaultargumentTypes(functionDeclaration)
+            );
             try {
                 SymbolTable.root.put(functionItem);
             }catch (ItemAlreadyExists ignored){}
@@ -437,5 +440,15 @@ public class TypeChecker extends Visitor<Type> {
             return new NoType();
         }
         return returnStack.getFirst().isEmpty() ? new VoidType() : returnStack.getFirst().getFirst();
+    }
+
+    private ArrayList<Type> getDefaultargumentTypes(FunctionDeclaration functionDeclaration) {
+        ArrayList<Type> defaultType = new ArrayList<>();
+        for(VarDeclaration varDeclaration : functionDeclaration.getArgs()) {
+            if (varDeclaration.getDefaultVal() != null) {
+                defaultType.add(varDeclaration.getDefaultVal().accept(this));
+            }
+        }
+        return defaultType;
     }
 }
