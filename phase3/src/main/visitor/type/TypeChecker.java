@@ -75,9 +75,9 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(PatternDeclaration patternDeclaration){
         SymbolTable.push(new SymbolTable());
-
+        returnStack.push(new ArrayList<>());
+        Type returnType = null;
         try {
-            returnStack.push(new ArrayList<>());
             PatternItem patternItem = (PatternItem) SymbolTable.root.getItem(PatternItem.START_KEY +
                     patternDeclaration.getPatternName().getName());
             VarItem varItem = new VarItem(patternDeclaration.getTargetVariable());
@@ -86,10 +86,9 @@ public class TypeChecker extends Visitor<Type> {
                 SymbolTable.top.put(varItem);
             }catch (ItemAlreadyExists ignored){}
             for(Expression expression : patternDeclaration.getConditions()){
-                if(!(expression.accept(this) instanceof BoolType)){
+                if(!(expression.accept(this).sameType(BoolType.class))){
                     typeErrors.add(new ConditionIsNotBool(expression.getLine()));
-                    SymbolTable.pop();
-                    return new NoType();
+                    returnType = new NoType();
                 }
             }
             for (Expression expression: patternDeclaration.getReturnExp())
@@ -97,8 +96,10 @@ public class TypeChecker extends Visitor<Type> {
 
         }catch (ItemNotFound ignored){}
 
-        Type returnType = getReturnType(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName());
-        
+        if (returnType == null)
+            returnType = getReturnType(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName());
+
+        returnStack.pop();
         SymbolTable.pop();
         return returnType;
     }
@@ -175,7 +176,7 @@ public class TypeChecker extends Visitor<Type> {
     public Type visit(IfStatement ifStatement){
         SymbolTable.push(SymbolTable.top.copy());
         for(Expression expression : ifStatement.getConditions())
-            if(!(expression.accept(this) instanceof BoolType))
+            if(!(expression.accept(this).sameType(BoolType.class)))
                 typeErrors.add(new ConditionIsNotBool(expression.getLine()));
         for(Statement statement : ifStatement.getThenBody())
             statement.accept(this);
@@ -219,7 +220,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(BreakStatement breakStatement){
         for(Expression expression : breakStatement.getConditions())
-            if(!((expression.accept(this)) instanceof BoolType))
+            if(!((expression.accept(this)).sameType(BoolType.class)))
                 typeErrors.add(new ConditionIsNotBool(expression.getLine()));
 
         return null;
@@ -227,7 +228,7 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(NextStatement nextStatement){
         for(Expression expression : nextStatement.getConditions())
-            if(!((expression.accept(this)) instanceof BoolType))
+            if(!((expression.accept(this)).sameType(BoolType.class)))
                 typeErrors.add(new ConditionIsNotBool(expression.getLine()));
 
         return null;
@@ -342,11 +343,11 @@ public class TypeChecker extends Visitor<Type> {
             typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
             return new NoType();
         }
-        else if (!(exprType instanceof IntType)){
+        else if ( !(op == UnaryOperator.NOT) && !(exprType instanceof IntType) && !(exprType instanceof FloatType)){
             typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
             return new NoType();
         }
-        return exprType;
+        return (op == UnaryOperator.NOT) ? new BoolType() : exprType;
     }
     @Override
     public Type visit(ChompStatement chompStatement){
