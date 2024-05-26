@@ -72,9 +72,9 @@ public class TypeChecker extends Visitor<Type> {
     @Override
     public Type visit(PatternDeclaration patternDeclaration){
         SymbolTable.push(new SymbolTable());
-
+        returnStack.push(new ArrayList<>());
+        Type returnType = null;
         try {
-            returnStack.push(new ArrayList<>());
             PatternItem patternItem = (PatternItem) SymbolTable.root.getItem(PatternItem.START_KEY +
                     patternDeclaration.getPatternName().getName());
             VarItem varItem = new VarItem(patternDeclaration.getTargetVariable());
@@ -85,8 +85,7 @@ public class TypeChecker extends Visitor<Type> {
             for(Expression expression : patternDeclaration.getConditions()){
                 if(!(expression.accept(this) instanceof BoolType)){
                     typeErrors.add(new ConditionIsNotBool(expression.getLine()));
-                    SymbolTable.pop();
-                    return new NoType();
+                    returnType = new NoType();
                 }
             }
             for (Expression expression: patternDeclaration.getReturnExp())
@@ -94,8 +93,10 @@ public class TypeChecker extends Visitor<Type> {
 
         }catch (ItemNotFound ignored){}
 
-        Type returnType = getReturnType(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName());
-        
+        if (returnType == null)
+            returnType = getReturnType(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName());
+
+        returnStack.pop();
         SymbolTable.pop();
         return returnType;
     }
@@ -339,7 +340,7 @@ public class TypeChecker extends Visitor<Type> {
             typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
             return new NoType();
         }
-        else if (!(exprType instanceof IntType)){
+        else if ( !(op == UnaryOperator.NOT) && !(exprType instanceof IntType)){
             typeErrors.add(new UnsupportedOperandType(unaryExpression.getLine(), op.toString()));
             return new NoType();
         }
