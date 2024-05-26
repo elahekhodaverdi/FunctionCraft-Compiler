@@ -280,7 +280,16 @@ public class TypeCheckerTest {
     }
 
     @Test
+    public void error_in_pattern_conditions() {
+        testCaseNumber = 48;
+    }
+    @Test
     public void type_of_default_arguments_are_correct() {
         testCaseNumber = 49;
+    }
+
+    @Test
+    public void different_return_types_in_pattern_declaration() {
+        testCaseNumber = 50;
     }
 }

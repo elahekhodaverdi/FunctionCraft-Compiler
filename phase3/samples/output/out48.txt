@@ -1,0 +1,2 @@
+Line:3-> operands of operator EQUAL must be the same
+Line:4-> operands of operator EQUAL must be the same
