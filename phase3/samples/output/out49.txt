@@ -1,0 +1,3 @@
+Line:2-> operands of operator PLUS must be the same
+Line:7-> unsupported operand type for operator PLUS
+Line:8-> operands of operator PLUS must be the same

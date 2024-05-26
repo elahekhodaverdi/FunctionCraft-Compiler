@@ -40,6 +40,11 @@ public class TypeCheckerTest {
     }
 
     @Test
+    public void several_type_check_errors() {
+        testCaseNumber = 0;
+    }
+
+    @Test
     public void access_index_is_not_int_in_left_value() {
         testCaseNumber = 1;
     }
@@ -272,5 +277,10 @@ public class TypeCheckerTest {
     @Test
     public void no_type_as_element_of_list_wont_count_as_different_type() {
         testCaseNumber = 47;
+    }
+
+    @Test
+    public void type_of_default_arguments_are_correct() {
+        testCaseNumber = 49;
     }
 }

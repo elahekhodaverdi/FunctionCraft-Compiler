@@ -1,0 +1,19 @@
+def func(a, b, [c = "Mehdi", d = 1])
+    f = c + d;
+    return a + b;
+end
+
+def g(a, b, [c = "Mehdi", d = "Ali"])
+    f = c + d;
+    return a + b;
+end
+
+
+def main()
+    func(1, 1);
+    func(1, 1, 1);
+    func(1, 1, 1, 1);
+
+    g(1, "Mehdi");
+    g(1, 1, 1, 1);
+end
