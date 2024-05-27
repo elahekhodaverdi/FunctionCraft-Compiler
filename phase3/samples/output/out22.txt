@@ -1,3 +1,10 @@
 Line:2-> operands of operator PLUS must be the same
 Line:2-> unsupported operand type for operator PLUS
 Line:2-> operands of operator PLUS must be the same
+Line:3-> operands of operator PLUS must be the same
+Line:3-> unsupported operand type for operator PLUS
+Line:4-> operands of operator PLUS must be the same
+Line:4-> unsupported operand type for operator PLUS
+Line:5-> unsupported operand type for operator PLUS
+Line:6-> operands of operator PLUS must be the same
+Line:6-> operands of operator PLUS must be the same
