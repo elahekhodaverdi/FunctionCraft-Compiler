@@ -322,7 +322,7 @@ public class TypeChecker extends Visitor<Type> {
             return new NoType();
         }
 
-        if (!operator.support(firstOperandType)) {
+        if (!operator.support(firstOperandType) || !operator.support(secondOpenrandType)) {
                 typeErrors.add(new UnsupportedOperandType(binaryExpression.getLine(), operator.toString()));
                 return new NoType();
         }
