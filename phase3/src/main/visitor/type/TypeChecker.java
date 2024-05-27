@@ -405,6 +405,7 @@ public class TypeChecker extends Visitor<Type> {
             }
             case RangeType.LIST -> {
                 var listValue = new ListValue(rangeExpression.getRangeExpressions());
+                listValue.setLine(rangeExpression.getLine());
                 yield listValue.accept(this);
             }
             case RangeType.DOUBLE_DOT -> new ListType(

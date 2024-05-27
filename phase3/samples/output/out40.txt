@@ -1,1 +1,1 @@
-Line:0-> all elements of the list must have same type
+Line:6-> all elements of the list must have same type
