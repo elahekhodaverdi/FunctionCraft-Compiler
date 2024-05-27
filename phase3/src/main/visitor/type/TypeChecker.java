@@ -240,7 +240,7 @@ public class TypeChecker extends Visitor<Type> {
 
         if (!(initialType instanceof StringType) && !(initialType instanceof ListType) &&
             !(initialType instanceof NoType)){
-            typeErrors.add(new PushArgumentsTypesMisMatch(pushStatement.getLine()));
+            typeErrors.add(new IsNotPushedable(pushStatement.getLine()));
             return new NoType();
         }
         if ((initialType instanceof StringType) && !toBeAddedType.sameType(initialType)){
