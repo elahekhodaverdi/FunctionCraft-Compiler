@@ -66,7 +66,7 @@ public class TypeChecker extends Visitor<Type> {
         for(Statement statement : functionDeclaration.getBody())
             statement.accept(this);
 
-        Type returnType = getReturnType(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName());
+        Type returnType = getReturnType(functionDeclaration.getLine(), functionDeclaration.getFunctionName().getName(), FunctionDeclaration.class);
 
         returnStack.pop();
         SymbolTable.pop();
@@ -97,7 +97,7 @@ public class TypeChecker extends Visitor<Type> {
         }catch (ItemNotFound ignored){}
 
         if (returnType == null)
-            returnType = getReturnType(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName());
+            returnType = getReturnType(patternDeclaration.getLine(), patternDeclaration.getPatternName().getName(), PatternDeclaration.class);
 
         returnStack.pop();
         SymbolTable.pop();
@@ -110,7 +110,7 @@ public class TypeChecker extends Visitor<Type> {
 
         mainDeclaration.getBody().forEach(statement -> statement.accept(this));
 
-        Type returnType = getReturnType(mainDeclaration.getLine(), "main");
+        Type returnType = getReturnType(mainDeclaration.getLine(), "main", MainDeclaration.class);
 
         returnStack.pop();
         SymbolTable.pop();
@@ -431,14 +431,17 @@ public class TypeChecker extends Visitor<Type> {
         );
     }
 
-    private Type getReturnType(int line, String functionName) {
+    private Type getReturnType(int line, String name, Class<?> class_) {
         HashSet<Type> uniqueReturnTypes = new HashSet<>(returnStack.getFirst());
 
         if (uniqueReturnTypes.contains(new NoType()) && uniqueReturnTypes.size() <= 2)
             return new NoType();
 
         if (uniqueReturnTypes.size() > 1) {
-            typeErrors.add(new FunctionIncompatibleReturnTypes(line, functionName));
+            if (class_ == FunctionDeclaration.class || class_ == MainDeclaration.class)
+                typeErrors.add(new FunctionIncompatibleReturnTypes(line, name));
+            if (class_ == PatternDeclaration.class)
+                typeErrors.add(new PatternIncompatibleReturnTypes(line, name));
             return new NoType();
         }
         return returnStack.getFirst().isEmpty() ? new VoidType() : returnStack.getFirst().getFirst();
