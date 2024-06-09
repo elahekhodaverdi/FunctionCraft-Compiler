@@ -319,7 +319,6 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(StringValue stringValue) {
-        //TODO
-        return null;
+        return "ldc \"" + stringValue + "\"";
     }
 }
