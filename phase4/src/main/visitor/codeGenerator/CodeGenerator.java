@@ -309,8 +309,7 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(IntValue intValue) {
-        //TODO, use "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer" to convert to primitive
-        return null;
+        return "ldc " + intValue.getIntVal();
     }
 
     @Override
