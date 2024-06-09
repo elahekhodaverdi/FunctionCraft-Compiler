@@ -35,12 +35,13 @@ public class CodeGenerator extends Visitor<String> {
     private final HashMap<String, Integer> slots = new HashMap<>();
     private int curLabel = 0;
 
-    public CodeGenerator(TypeChecker typeChecker){
+    public CodeGenerator(TypeChecker typeChecker) {
         this.typeChecker = typeChecker;
         this.visited = typeChecker.visited;
         outputPath = "./codeGenOutput/";
         prepareOutputFolder();
     }
+
     private int slotOf(String var) {
         if (!slots.containsKey(var)) {
             slots.put(var, slots.size());
@@ -48,14 +49,16 @@ public class CodeGenerator extends Visitor<String> {
         }
         return slots.get(var);
     }
-    public String getFreshLabel(){
+
+    public String getFreshLabel() {
         String fresh = "Label_" + curLabel;
         curLabel++;
         return fresh;
     }
-    public String getType(Type element){
+
+    public String getType(Type element) {
         String type = "";
-        switch (element){
+        switch (element) {
             case StringType stringType -> type += "Ljava/lang/String;";
             case IntType intType -> type += "Ljava/lang/Integer;";
             case FptrType fptrType -> type += "LFptr;";
@@ -66,19 +69,19 @@ public class CodeGenerator extends Visitor<String> {
         }
         return type;
     }
-    private void prepareOutputFolder(){
+
+    private void prepareOutputFolder() {
         String jasminPath = "utilities/jarFiles/jasmin.jar";
         String listClassPath = "utilities/codeGenerationUtilityClasses/List.j";
         String fptrClassPath = "utilities/codeGenerationUtilityClasses/Fptr.j";
-        try{
+        try {
             File directory = new File(this.outputPath);
             File[] files = directory.listFiles();
-            if(files != null)
+            if (files != null)
                 for (File file : files)
                     file.delete();
             directory.mkdir();
-        }
-        catch(SecurityException e){
+        } catch (SecurityException e) {
             // ignore
         }
         copyFile(jasminPath, this.outputPath + "jasmin.jar");
@@ -90,11 +93,12 @@ public class CodeGenerator extends Visitor<String> {
             File file = new File(path);
             file.createNewFile();
             mainFile = new FileWriter(path);
-        } catch (IOException e){
+        } catch (IOException e) {
             // ignore
         }
     }
-    private void copyFile(String toBeCopied, String toBePasted){
+
+    private void copyFile(String toBeCopied, String toBePasted) {
         try {
             File readingFile = new File(toBeCopied);
             File writingFile = new File(toBePasted);
@@ -106,25 +110,27 @@ public class CodeGenerator extends Visitor<String> {
                 writingFileStream.write(buffer, 0, readLength);
             readingFileStream.close();
             writingFileStream.close();
-        } catch (IOException e){
+        } catch (IOException e) {
             // ignore
         }
     }
-    private void addCommand(String command){
+
+    private void addCommand(String command) {
         try {
             command = String.join("\n\t\t", command.split("\n"));
-            if(command.startsWith("Label_"))
+            if (command.startsWith("Label_"))
                 mainFile.write("\t" + command + "\n");
-            else if(command.startsWith("."))
+            else if (command.startsWith("."))
                 mainFile.write(command + "\n");
             else
                 mainFile.write("\t\t" + command + "\n");
             mainFile.flush();
-        } catch (IOException e){
+        } catch (IOException e) {
             // ignore
         }
     }
-    private void handleMainClass(){
+
+    private void handleMainClass() {
         String commands = """
                 .method public static main([Ljava/lang/String;)V
                 .limit stack 128
@@ -138,7 +144,7 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     @Override
-    public String visit(Program program){
+    public String visit(Program program) {
         String commands = """
                 .class public Main
                 .super java/lang/Object
@@ -146,19 +152,21 @@ public class CodeGenerator extends Visitor<String> {
         addCommand(commands);
         handleMainClass();
 
-        for(String funcName : this.visited) {
+        for (String funcName : this.visited) {
             try {
                 this.curFunction = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY +
                         funcName);
                 this.curFunction.getFunctionDeclaration().accept(this);
-            } catch(ItemNotFound ignored) {}
+            } catch (ItemNotFound ignored) {
+            }
         }
 
         program.getMain().accept(this);
         return null;
     }
+
     @Override
-    public String visit(FunctionDeclaration functionDeclaration){
+    public String visit(FunctionDeclaration functionDeclaration) {
         slots.clear();
 
         String commands = "";
@@ -171,8 +179,9 @@ public class CodeGenerator extends Visitor<String> {
         addCommand(commands);
         return null;
     }
+
     @Override
-    public String visit(MainDeclaration mainDeclaration){
+    public String visit(MainDeclaration mainDeclaration) {
         slots.clear();
 
         String commands = "";
@@ -189,85 +198,99 @@ public class CodeGenerator extends Visitor<String> {
         addCommand(commands);
         return null;
     }
-    public String visit(AccessExpression accessExpression){
+
+    public String visit(AccessExpression accessExpression) {
         if (accessExpression.isFunctionCall()) {
-            Identifier functionName = (Identifier)accessExpression.getAccessedExpression();
+            Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
             String args = ""; // TODO
             String returnType = ""; // TODO
             return "invokestatic Main/" + functionName.getName() + args + returnType + "\n";
-        }
-        else {
+        } else {
             // TODO
         }
         //TODO
         return null;
     }
+
     @Override
-    public String visit(AssignStatement assignStatement){
+    public String visit(AssignStatement assignStatement) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(IfStatement ifStatement){
+    public String visit(IfStatement ifStatement) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(PutStatement putStatement){
+    public String visit(PutStatement putStatement) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(ReturnStatement returnStatement){
+    public String visit(ReturnStatement returnStatement) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(ExpressionStatement expressionStatement){
+    public String visit(ExpressionStatement expressionStatement) {
         return expressionStatement.getExpression().accept(this);
     }
+
     @Override
-    public String visit(BinaryExpression binaryExpression){
+    public String visit(BinaryExpression binaryExpression) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(UnaryExpression unaryExpression){
+    public String visit(UnaryExpression unaryExpression) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(Identifier identifier){
+    public String visit(Identifier identifier) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(LoopDoStatement loopDoStatement){
+    public String visit(LoopDoStatement loopDoStatement) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(BreakStatement breakStatement){
+    public String visit(BreakStatement breakStatement) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(NextStatement nextStatement){
+    public String visit(NextStatement nextStatement) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(LenStatement lenStatement){
+    public String visit(LenStatement lenStatement) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(ChopStatement chopStatement){
+    public String visit(ChopStatement chopStatement) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(FunctionPointer functionPointer){
+    public String visit(FunctionPointer functionPointer) {
         FptrType fptr = (FptrType) functionPointer.accept(typeChecker);
         String commands = "";
         commands += "new Fptr\n";
@@ -277,23 +300,26 @@ public class CodeGenerator extends Visitor<String> {
         commands += "invokespecial Fptr/<init>(Ljava/lang/Object;Ljava/lang/String;)V\n";
         return commands;
     }
+
     @Override
-    public String visit(ListValue listValue){
+    public String visit(ListValue listValue) {
         //TODO
         return null;
     }
+
     @Override
-    public String visit(IntValue intValue){
+    public String visit(IntValue intValue) {
         //TODO, use "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer" to convert to primitive
         return null;
     }
+
     @Override
-    public String visit(BoolValue boolValue){
-        //TODO, use "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean" to convert to primitive
-        return null;
+    public String visit(BoolValue boolValue) {
+        return boolValue.getBool() ? "ldc " + 1 : "ldc " + 0;
     }
+
     @Override
-    public String visit(StringValue stringValue){
+    public String visit(StringValue stringValue) {
         //TODO
         return null;
     }
