@@ -26,6 +26,8 @@ import main.visitor.type.TypeChecker;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class CodeGenerator extends Visitor<String> {
     private final String outputPath;
@@ -35,6 +37,8 @@ public class CodeGenerator extends Visitor<String> {
     private FunctionItem curFunction;
     private final HashMap<String, Integer> slots = new HashMap<>();
     private int curLabel = 0;
+
+    private static LinkedList<String> breakLabels = new LinkedList<>();
 
     public CodeGenerator(TypeChecker typeChecker) {
         this.typeChecker = typeChecker;
@@ -332,13 +336,22 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(LoopDoStatement loopDoStatement) {
-        //TODO
+        List<String> commands = new LinkedList<>();
+        String nStart = getFreshLabel();
+        String nAfter = getFreshLabel();
+        breakLabels.push(nAfter);
+        commands.add(nStart + ":");
+        for (Statement stmt : loopDoStatement.getLoopBodyStmts())
+            commands.add(stmt.accept(this));
+        commands.add("goto " + nStart);
+        commands.add(nAfter + ":");
+        breakLabels.pop();
         return null;
     }
 
     @Override
     public String visit(BreakStatement breakStatement) {
-        //TODO
+        
         return null;
     }
 
