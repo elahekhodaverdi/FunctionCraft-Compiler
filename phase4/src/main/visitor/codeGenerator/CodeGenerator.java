@@ -96,9 +96,8 @@ public class CodeGenerator extends Visitor<String> {
                 for (File file : files)
                     file.delete();
             directory.mkdir();
-        } catch (SecurityException e) {
-            // ignore
-        }
+        } catch (SecurityException ignored) {}
+
         copyFile(jasminPath, this.outputPath + "jasmin.jar");
         copyFile(listClassPath, this.outputPath + "List.j");
         copyFile(fptrClassPath, this.outputPath + "Fptr.j");
@@ -125,9 +124,7 @@ public class CodeGenerator extends Visitor<String> {
                 writingFileStream.write(buffer, 0, readLength);
             readingFileStream.close();
             writingFileStream.close();
-        } catch (IOException e) {
-            // ignore
-        }
+        } catch (IOException ignored) {}
     }
 
     private void addCommand(String command) {
@@ -140,9 +137,7 @@ public class CodeGenerator extends Visitor<String> {
             else
                 mainFile.write("\t\t" + command + "\n");
             mainFile.flush();
-        } catch (IOException e) {
-            // ignore
-        }
+        } catch (IOException ignored) {}
     }
 
     private void handleMainClass() {
