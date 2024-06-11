@@ -4,6 +4,7 @@ import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.declaration.MainDeclaration;
 import main.ast.nodes.expression.*;
+import main.ast.nodes.expression.operators.BinaryOperator;
 import main.ast.nodes.expression.value.FunctionPointer;
 import main.ast.nodes.expression.value.ListValue;
 import main.ast.nodes.expression.value.primitive.BoolValue;
@@ -89,6 +90,13 @@ public class CodeGenerator extends Visitor<String> {
             }
         }
         return type;
+    }
+
+    public String getTypeSign(Type type) {
+        if (type instanceof IntType)
+            return "i";
+        else
+            return "a";
     }
 
     private void prepareOutputFolder() {
@@ -263,8 +271,70 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(BinaryExpression binaryExpression) {
-        //TODO
-        return null;
+        StringBuilder command = new StringBuilder();
+        Expression firstOperand = binaryExpression.getFirstOperand();
+        Expression secondOperand = binaryExpression.getSecondOperand();
+        BinaryOperator op = binaryExpression.getOperator();
+
+        command.append(firstOperand.accept(this));
+        command.append(secondOperand.accept(this));
+
+        switch (op) {
+            case PLUS:
+                command.append("iadd\n");
+                break;
+            case MINUS:
+                command.append("isub\n");
+                break;
+            case MULT:
+                command.append("imul\n");
+                break;
+            case DIVIDE:
+                command.append("idiv\n");
+                break;
+            case EQUAL:
+            case NOT_EQUAL:
+            case GREATER_THAN:
+            case LESS_THAN:
+            case LESS_EQUAL_THAN:
+            case GREATER_EQUAL_THAN:
+                appendConditionalCommand(command, op);
+                break;
+        }
+
+        return command.toString();
+    }
+
+    private void appendConditionalCommand(StringBuilder command, BinaryOperator op) {
+        String L1 = getFreshLabel();
+        String L2 = getFreshLabel();
+
+        switch (op) {
+            case EQUAL:
+                command.append("if_icmpeq ").append(L1).append("\n");
+                break;
+            case NOT_EQUAL:
+                command.append("if_icmpne ").append(L1).append("\n");
+                break;
+            case GREATER_THAN:
+                command.append("if_icmpgt ").append(L1).append("\n");
+                break;
+            case LESS_THAN:
+                command.append("if_icmplt ").append(L1).append("\n");
+                break;
+            case LESS_EQUAL_THAN:
+                command.append("if_icmple ").append(L1).append("\n");
+                break;
+            case GREATER_EQUAL_THAN:
+                command.append("if_icmpge ").append(L1).append("\n");
+                break;
+        }
+
+        command.append("ldc 0\n");
+        command.append("goto ").append(L2).append("\n");
+        command.append(L1).append(":\n");
+        command.append("ldc 1\n");
+        command.append(L2).append(":\n");
     }
 
     @Override
@@ -298,8 +368,9 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(Identifier identifier) {
-        //TODO
-        return null;
+        Type type = identifier.accept(typeChecker);
+        String typeSign = getTypeSign(type);
+        return typeSign + "load " + slotOf(identifier.getName());
     }
 
     @Override
