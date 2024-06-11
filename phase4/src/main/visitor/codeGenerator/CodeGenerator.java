@@ -408,7 +408,7 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(Identifier identifier) {
         Type type = identifier.accept(typeChecker);
-        String typeSign = getTypeSign(type);
+        String typeSign = getSimpleTypeSign(type);
         return typeSign + "load " + slotOf(identifier.getName());
     }
 
