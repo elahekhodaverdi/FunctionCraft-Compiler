@@ -96,7 +96,8 @@ public class CodeGenerator extends Visitor<String> {
                 for (File file : files)
                     file.delete();
             directory.mkdir();
-        } catch (SecurityException ignored) {}
+        } catch (SecurityException ignored) {
+        }
 
         copyFile(jasminPath, this.outputPath + "jasmin.jar");
         copyFile(listClassPath, this.outputPath + "List.j");
@@ -124,7 +125,8 @@ public class CodeGenerator extends Visitor<String> {
                 writingFileStream.write(buffer, 0, readLength);
             readingFileStream.close();
             writingFileStream.close();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
     private void addCommand(String command) {
@@ -137,21 +139,22 @@ public class CodeGenerator extends Visitor<String> {
             else
                 mainFile.write("\t\t" + command + "\n");
             mainFile.flush();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
     private void handleMainClass() {
         String commands = """
-            .class public Main
-            .super java/lang/Object
-            .method public static main([Ljava/lang/String;)V
-                .limit stack 128
-                .limit locals 128
-                new Main
-                invokespecial Main/<init>()V
-                return
-            .end method
-            """;
+                .class public Main
+                .super java/lang/Object
+                .method public static main([Ljava/lang/String;)V
+                    .limit stack 128
+                    .limit locals 128
+                    new Main
+                    invokespecial Main/<init>()V
+                    return
+                .end method
+                """;
         addCommand(commands);
     }
 
@@ -163,7 +166,8 @@ public class CodeGenerator extends Visitor<String> {
             try {
                 this.curFunction = SymbolTable.root.getFunctionItem(funcName);
                 this.curFunction.getFunctionDeclaration().accept(this);
-            } catch (ItemNotFound ignored) {}
+            } catch (ItemNotFound ignored) {
+            }
         }
 
         program.getMain().accept(this);
@@ -222,13 +226,12 @@ public class CodeGenerator extends Visitor<String> {
         List<String> command = new LinkedList<>();
         String rightValue = assignStatement.getAssignExpression().accept(this);
 
-        if(assignStatement.isAccessList()) {
+        if (assignStatement.isAccessList()) {
             command.add("aload " + slotOf(assignStatement.getAssignedId().getName()));
             command.add(assignStatement.getAccessListExpression().accept(this));
             command.add(rightValue);
             command.add("aastore");
-        }
-        else {
+        } else {
             command.add(rightValue);
             command.add("astore " + slotOf(assignStatement.getAssignedId().getName()));
         }
@@ -237,8 +240,28 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(IfStatement ifStatement) {
-        //TODO
-        return null;
+        List<String> commands = new LinkedList<>();
+        commands.add(ifStatement.getConditions().getFirst().accept(this));
+
+        String nAfter = getFreshLabel();
+        String nElse = null;
+
+        if (ifStatement.getElseBody().isEmpty()) {
+            commands.add("ifeq " + nAfter);
+        } else {
+            nElse = getFreshLabel();
+            commands.add("ifeq " + nElse);
+        }
+
+        ifStatement.getThenBody().forEach(statement -> commands.add(statement.accept(this)));
+        commands.add("goto " + nAfter);
+
+        if (nElse != null) {
+            commands.add(nElse + ":");
+            ifStatement.getElseBody().forEach(statement -> commands.add(statement.accept(this)));
+        }
+        commands.add(nAfter + ":");
+        return String.join("\n", commands);
     }
 
     @Override
@@ -248,7 +271,7 @@ public class CodeGenerator extends Visitor<String> {
         command.add(putStatement.getExpression().accept(this));
         command.add("invokevirtual java/io/PrintStream/println(I)V");
         command.add("\n");
-        return String.join("\n",command);
+        return String.join("\n", command);
     }
 
     @Override
