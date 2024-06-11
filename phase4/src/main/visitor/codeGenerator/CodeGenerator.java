@@ -15,6 +15,7 @@ import main.ast.type.FptrType;
 import main.ast.type.ListType;
 import main.ast.type.Type;
 import main.ast.type.primitiveType.BoolType;
+import main.ast.type.primitiveType.FloatType;
 import main.ast.type.primitiveType.IntType;
 import main.ast.type.primitiveType.StringType;
 import main.symbolTable.SymbolTable;
@@ -78,12 +79,23 @@ public class CodeGenerator extends Visitor<String> {
         return type;
     }
 
-    public String getTypeSign(Type type) {
+    public String getSimpleTypeSign(Type type) {
         if (type instanceof IntType)
             return "i";
         else
             return "a";
     }
+
+    private String getJvmTypeDescriptor(Type t) {
+        if (t instanceof IntType)
+            return "I";
+        else if (t instanceof BoolType)
+            return "Z";
+        else if (t instanceof StringType)
+            return "Ljava/lang/String;";
+        return "V";
+    }
+
 
     private void prepareOutputFolder() {
         String jasminPath = "utilities/jarFiles/jasmin.jar";
@@ -142,16 +154,16 @@ public class CodeGenerator extends Visitor<String> {
 
     private void handleMainClass() {
         String commands = """
-            .class public Main
-            .super java/lang/Object
-            .method public static main([Ljava/lang/String;)V
-                .limit stack 128
-                .limit locals 128
-                new Main
-                invokespecial Main/<init>()V
-                return
-            .end method
-            """;
+                .class public Main
+                .super java/lang/Object
+                .method public static main([Ljava/lang/String;)V
+                    .limit stack 128
+                    .limit locals 128
+                    new Main
+                    invokespecial Main/<init>()V
+                    return
+                .end method
+                """;
         addCommand(commands);
     }
 
@@ -237,8 +249,28 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(IfStatement ifStatement) {
-        //TODO
-        return null;
+        List<String> commands = new LinkedList<>();
+        commands.add(ifStatement.getConditions().getFirst().accept(this));
+
+        String nAfter = getFreshLabel();
+        String nElse = null;
+
+        if (ifStatement.getElseBody().isEmpty()) {
+            commands.add("ifeq " + nAfter);
+        } else {
+            nElse = getFreshLabel();
+            commands.add("ifeq " + nElse);
+        }
+
+        ifStatement.getThenBody().forEach(statement -> commands.add(statement.accept(this)));
+        commands.add("goto " + nAfter);
+
+        if (nElse != null) {
+            commands.add(nElse + ":");
+            ifStatement.getElseBody().forEach(statement -> commands.add(statement.accept(this)));
+        }
+        commands.add(nAfter + ":");
+        return String.join("\n", commands);
     }
 
     @Override
@@ -254,7 +286,7 @@ public class CodeGenerator extends Visitor<String> {
             command.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.STRING_TYPE));
         }
         command.add("\n");
-        return String.join("\n",command);
+        return String.join("\n", command);
     }
 
     @Override
@@ -264,7 +296,7 @@ public class CodeGenerator extends Visitor<String> {
         Type retType = null;
         if (returnStatement.hasRetExpression()) {
             retType = returnStatement.getReturnExp().accept(typeChecker);
-            typeSign = getTypeSign(retType);
+            typeSign = getSimpleTypeSign(retType);
             commands += returnStatement.getReturnExp().accept(this);
         }
 
@@ -394,7 +426,7 @@ public class CodeGenerator extends Visitor<String> {
         commands.add(nAfter + ":");
         breakLabels.pop();
         afterLabels.pop();
-        return null;
+        return String.join("\n", commands);
     }
 
     @Override
@@ -409,8 +441,15 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(LenStatement lenStatement) {
-        //TODO
-        return null;
+        List<String> commands = new LinkedList<>();
+        Expression expr = lenStatement.getExpression();
+        Type type = expr.accept(typeChecker);
+        commands.add(expr.accept(this));
+        if (type instanceof StringType)
+            commands.add("invokevirtual java/lang/String/length()I");
+        if (type instanceof ListType)
+            commands.add("invokeinterface java/util/List/size()I 1");
+        return String.join("\n", commands);
     }
 
     @Override
