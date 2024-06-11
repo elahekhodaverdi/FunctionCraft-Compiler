@@ -64,24 +64,6 @@ public class CodeGenerator extends Visitor<String> {
         return fresh;
     }
 
-//    public void convertToPrimitive(Type type) {
-//        String command = switch (type) {
-//            case IntType intType ->  "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;";
-//            case BoolType boolType -> "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;";
-//            default -> "";
-//        };
-//        addCommand(command);
-//    }
-//
-//    public void convertToNonPrimitive(Type type) {
-//        String command = switch (type) {
-//            case IntType intType ->  "invokevirtual java/lang/Integer/intValue()I";
-//            case BoolType boolType -> "invokevirtual java/lang/Boolean/booleanValue()Z";
-//            default -> "";
-//        };
-//        addCommand(command);
-//    }
-
     public String getType(Type element) {
         String type = "";
         switch (element) {
