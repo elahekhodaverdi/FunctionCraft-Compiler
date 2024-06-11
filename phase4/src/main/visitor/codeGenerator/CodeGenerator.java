@@ -251,37 +251,70 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(BinaryExpression binaryExpression) {
-        String command = "";
+        StringBuilder command = new StringBuilder();
         Expression firstOperand = binaryExpression.getFirstOperand();
         Expression secondOperand = binaryExpression.getSecondOperand();
         BinaryOperator op = binaryExpression.getOperator();
-        command += firstOperand.accept(this);
-        command += secondOperand.accept(this);
+
+        command.append(firstOperand.accept(this));
+        command.append(secondOperand.accept(this));
+
+        switch (op) {
+            case PLUS:
+                command.append("iadd\n");
+                break;
+            case MINUS:
+                command.append("isub\n");
+                break;
+            case MULT:
+                command.append("imul\n");
+                break;
+            case DIVIDE:
+                command.append("idiv\n");
+                break;
+            case EQUAL:
+            case NOT_EQUAL:
+            case GREATER_THAN:
+            case LESS_THAN:
+            case LESS_EQUAL_THAN:
+            case GREATER_EQUAL_THAN:
+                appendConditionalCommand(command, op);
+                break;
+        }
+
+        return command.toString();
+    }
+
+    private void appendConditionalCommand(StringBuilder command, BinaryOperator op) {
+        String L1 = getFreshLabel();
+        String L2 = getFreshLabel();
 
         switch (op) {
             case EQUAL:
-
+                command.append("if_icmpeq ").append(L1).append("\n");
                 break;
             case NOT_EQUAL:
+                command.append("if_icmpne ").append(L1).append("\n");
                 break;
             case GREATER_THAN:
+                command.append("if_icmpgt ").append(L1).append("\n");
                 break;
             case LESS_THAN:
+                command.append("if_icmplt ").append(L1).append("\n");
                 break;
             case LESS_EQUAL_THAN:
+                command.append("if_icmple ").append(L1).append("\n");
                 break;
             case GREATER_EQUAL_THAN:
-                break;
-            case PLUS:
-                break;
-            case MINUS:
-                break;
-            case MULT:
-                break;
-            case DIVIDE:
+                command.append("if_icmpge ").append(L1).append("\n");
                 break;
         }
-        return null;
+
+        command.append("ldc 0\n");
+        command.append("goto ").append(L2).append("\n");
+        command.append(L1).append(":\n");
+        command.append("ldc 1\n");
+        command.append(L2).append(":\n");
     }
 
     @Override
@@ -294,8 +327,8 @@ public class CodeGenerator extends Visitor<String> {
     public String visit(Identifier identifier) {
         try {
             sym
+        } catch (ItemNotFound) {
         }
-        catch (ItemNotFound) {}
         return ""
     }
 
