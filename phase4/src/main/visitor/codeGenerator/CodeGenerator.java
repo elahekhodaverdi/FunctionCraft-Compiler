@@ -142,16 +142,16 @@ public class CodeGenerator extends Visitor<String> {
 
     private void handleMainClass() {
         String commands = """
-                .class public Main
-                .super java/lang/Object
-                .method public static main([Ljava/lang/String;)V
+            .class public Main
+            .super java/lang/Object
+            .method public static main([Ljava/lang/String;)V
                 .limit stack 128
                 .limit locals 128
                 new Main
                 invokespecial Main/<init>()V
                 return
-                .end method
-                """;
+            .end method
+            """;
         addCommand(commands);
     }
 
@@ -197,7 +197,7 @@ public class CodeGenerator extends Visitor<String> {
         commands += "invokespecial java/lang/Object/<init>()V\n";
         for (var statement : mainDeclaration.getBody())
             commands += statement.accept(this);
-        commands += "return\n";
+        commands += "\nreturn\n";
         commands += ".end method\n";
 
         addCommand(commands);
@@ -223,14 +223,14 @@ public class CodeGenerator extends Visitor<String> {
         String rightValue = assignStatement.getAssignExpression().accept(this);
 
         if(assignStatement.isAccessList()) {
-            command.add("aload" + slotOf(assignStatement.getAssignedId().getName()));
+            command.add("aload " + slotOf(assignStatement.getAssignedId().getName()));
             command.add(assignStatement.getAccessListExpression().accept(this));
             command.add(rightValue);
             command.add("aastore");
         }
         else {
             command.add(rightValue);
-            command.add("astore" + slotOf(assignStatement.getAssignedId().getName()));
+            command.add("astore " + slotOf(assignStatement.getAssignedId().getName()));
         }
         return String.join("\n", command);
     }
@@ -243,8 +243,12 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(PutStatement putStatement) {
-        //TODO
-        return null;
+        List<String> command = new LinkedList<>();
+        command.add("getstatic java/lang/System/out Ljava/io/PrintStream;");
+        command.add(putStatement.getExpression().accept(this));
+        command.add("invokevirtual java/io/PrintStream/println(I)V");
+        command.add("\n");
+        return String.join("\n",command);
     }
 
     @Override

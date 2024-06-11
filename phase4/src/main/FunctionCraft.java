@@ -50,8 +50,8 @@ public class FunctionCraft {
             else
                 Runtime.getRuntime().exec("java -jar jasmin.jar *.j", null, dir);
             Process process = Runtime.getRuntime().exec("java Main", null, dir);
-            printResults(process.getInputStream());
-            printResults(process.getErrorStream());
+//            printResults(process.getInputStream());
+//            printResults(process.getErrorStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
