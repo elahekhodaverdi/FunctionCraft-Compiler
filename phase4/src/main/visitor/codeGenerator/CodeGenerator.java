@@ -24,7 +24,10 @@ import main.visitor.type.TypeChecker;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CodeGenerator extends Visitor<String> {
     private final String outputPath;
@@ -55,6 +58,24 @@ public class CodeGenerator extends Visitor<String> {
         curLabel++;
         return fresh;
     }
+
+//    public void convertToPrimitive(Type type) {
+//        String command = switch (type) {
+//            case IntType intType ->  "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;";
+//            case BoolType boolType -> "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;";
+//            default -> "";
+//        };
+//        addCommand(command);
+//    }
+//
+//    public void convertToNonPrimitive(Type type) {
+//        String command = switch (type) {
+//            case IntType intType ->  "invokevirtual java/lang/Integer/intValue()I";
+//            case BoolType boolType -> "invokevirtual java/lang/Boolean/booleanValue()Z";
+//            default -> "";
+//        };
+//        addCommand(command);
+//    }
 
     public String getType(Type element) {
         String type = "";
@@ -214,7 +235,6 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(AssignStatement assignStatement) {
-        //TODO
         return null;
     }
 
@@ -249,8 +269,31 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(UnaryExpression unaryExpression) {
-        //TODO
-        return null;
+        String exprCommand = unaryExpression.getExpression().accept(this);
+        List<String> command  = new LinkedList<>();
+        switch (unaryExpression.getOperator()){
+            case NOT:
+                command.add("iconst_1");
+                command.add(exprCommand);
+                command.add("isub");
+                break;
+            case DEC:
+                command.add(exprCommand);
+                command.add("iconst_0");
+                command.add("isub");
+                break;
+            case INC:
+                command.add(exprCommand);
+                command.add("iconst_0");
+                command.add("iadd");
+                break;
+            case MINUS:
+                command.add("iconst_0");
+                command.add(exprCommand);
+                command.add("isub");
+                break;
+        }
+        return String.join("\n", command);
     }
 
     @Override
