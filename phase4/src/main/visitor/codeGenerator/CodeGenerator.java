@@ -244,9 +244,15 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(PutStatement putStatement) {
         List<String> command = new LinkedList<>();
-        command.add("getstatic java/lang/System/out Ljava/io/PrintStream;");
+        command.add(JasminCode.GET_PRINT_STREAM);
         command.add(putStatement.getExpression().accept(this));
-        command.add("invokevirtual java/io/PrintStream/println(I)V");
+
+        Type type = putStatement.getExpression().accept(typeChecker);
+        if (type instanceof IntType) {
+            command.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.INTEGER_TYPE));
+        } else if (type instanceof StringType) {
+            command.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.STRING_TYPE));
+        }
         command.add("\n");
         return String.join("\n",command);
     }
