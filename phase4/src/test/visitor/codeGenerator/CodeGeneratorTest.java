@@ -11,9 +11,6 @@ import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -28,20 +25,6 @@ public class CodeGeneratorTest {
         System.setOut(new PrintStream(outputStream));
     }
 
-//    @After
-//    public void assertEqualErrors() throws IOException {
-//
-//        String[] args = new String[]{"samples/" + folderName + "/sample" + testCaseNumber + ".fl"};
-//        String expectedOutputPath = "samples/" + folderName + "/out" + testCaseNumber + ".txt";
-//
-//        FunctionCraft.main(args);
-//
-//        Path path = Paths.get(expectedOutputPath);
-//        String actualOutput = outputStream.toString().trim();
-//        String expectedOutput = Files.readString(path).trim();
-//
-//        assertEquals(expectedOutput, actualOutput.lines());
-//    }
     @After
     public void assertEqualErrors() throws IOException {
         String[] args = new String[]{"samples/" + folderName + "/sample" + testCaseNumber + ".fl"};
