@@ -4,6 +4,7 @@ import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.declaration.MainDeclaration;
 import main.ast.nodes.expression.*;
+import main.ast.nodes.expression.operators.BinaryOperator;
 import main.ast.nodes.expression.value.FunctionPointer;
 import main.ast.nodes.expression.value.ListValue;
 import main.ast.nodes.expression.value.primitive.BoolValue;
@@ -68,6 +69,13 @@ public class CodeGenerator extends Visitor<String> {
             }
         }
         return type;
+    }
+
+    public String getTypeSign(Type type) {
+        if (type instanceof IntType)
+            return "i";
+        else
+            return "a";
     }
 
     private void prepareOutputFolder() {
@@ -243,7 +251,36 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(BinaryExpression binaryExpression) {
-        //TODO
+        String command = "";
+        Expression firstOperand = binaryExpression.getFirstOperand();
+        Expression secondOperand = binaryExpression.getSecondOperand();
+        BinaryOperator op = binaryExpression.getOperator();
+        command += firstOperand.accept(this);
+        command += secondOperand.accept(this);
+
+        switch (op) {
+            case EQUAL:
+
+                break;
+            case NOT_EQUAL:
+                break;
+            case GREATER_THAN:
+                break;
+            case LESS_THAN:
+                break;
+            case LESS_EQUAL_THAN:
+                break;
+            case GREATER_EQUAL_THAN:
+                break;
+            case PLUS:
+                break;
+            case MINUS:
+                break;
+            case MULT:
+                break;
+            case DIVIDE:
+                break;
+        }
         return null;
     }
 
@@ -255,8 +292,11 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(Identifier identifier) {
-        //TODO
-        return null;
+        try {
+            sym
+        }
+        catch (ItemNotFound) {}
+        return ""
     }
 
     @Override
