@@ -264,8 +264,15 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ReturnStatement returnStatement) {
-        //TODO
-        return null;
+        String commands = "";
+        String typeSign = "";
+        Type retType = null;
+        if (returnStatement.hasRetExpression())
+             retType = returnStatement.getReturnExp().accept(typeChecker);
+            typeSign = getTypeSign(retType);
+            commands += returnStatement.getReturnExp().accept(this);
+
+        return commands + "\n" + typeSign + "return";
     }
 
     @Override
