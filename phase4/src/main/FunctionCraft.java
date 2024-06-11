@@ -23,6 +23,7 @@ public class FunctionCraft {
         CommonTokenStream tokens = new CommonTokenStream(flLexer);
         FunctionCraftParser flParser = new FunctionCraftParser(tokens);
         Program program = flParser.program().flProgram;
+
         TypeChecker typeChecker = new TypeChecker();
         typeChecker.visit(program);
         typeChecker.typeErrors.sort(Comparator.comparingInt(CompileError::getLine));
@@ -44,8 +45,11 @@ public class FunctionCraft {
         try {
             System.out.println("---------------------------Compilation Successful---------------------------");
             File dir = new File("./codeGenOutput");
-            Process process = Runtime.getRuntime().exec("java -jar jasmin.jar *.j", null, dir);
-            process = Runtime.getRuntime().exec("java Main", null, dir);
+            if (System.getProperty("os.name").toLowerCase().contains("linux"))
+                 Runtime.getRuntime().exec(new String[]{"sh", "-c", "java -jar jasmin.jar *.j"},null, dir);
+            else
+                Runtime.getRuntime().exec("java -jar jasmin.jar *.j", null, dir);
+            Process process = Runtime.getRuntime().exec("java Main", null, dir);
             printResults(process.getInputStream());
             printResults(process.getErrorStream());
         } catch (IOException e) {

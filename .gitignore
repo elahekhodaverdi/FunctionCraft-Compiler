@@ -7,3 +7,5 @@
 */src/parsers/
 */videos
 */*.iml
+*/codeGenOutput/
+phase4/samples/sample.fl
