@@ -219,7 +219,20 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(AssignStatement assignStatement) {
-        return null;
+        List<String> command = new LinkedList<>();
+        String rightValue = assignStatement.getAssignExpression().accept(this);
+
+        if(assignStatement.isAccessList()) {
+            command.add("aload" + slotOf(assignStatement.getAssignedId().getName()));
+            command.add(assignStatement.getAccessListExpression().accept(this));
+            command.add(rightValue);
+            command.add("aastore");
+        }
+        else {
+            command.add(rightValue);
+            command.add("astore" + slotOf(assignStatement.getAssignedId().getName()));
+        }
+        return String.join("\n", command);
     }
 
     @Override
