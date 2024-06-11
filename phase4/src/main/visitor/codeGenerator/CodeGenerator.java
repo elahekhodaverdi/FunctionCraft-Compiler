@@ -279,10 +279,11 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(PutStatement putStatement) {
         List<String> command = new LinkedList<>();
+        Expression putExpr = putStatement.getExpression();
+        Type type = putExpr.accept(typeChecker);
         command.add("getstatic java/lang/System/out Ljava/io/PrintStream;");
-        command.add(putStatement.getExpression().accept(this));
-
-        command.add("invokevirtual java/io/PrintStream/println(I)V");
+        command.add(putExpr.accept(this));
+        command.add("invokevirtual java/io/PrintStream/println(" + getJvmTypeDescriptor(type) +")V");
         command.add("\n");
         return String.join("\n", command);
     }
@@ -294,7 +295,7 @@ public class CodeGenerator extends Visitor<String> {
         Type retType = null;
         if (returnStatement.hasRetExpression()) {
             retType = returnStatement.getReturnExp().accept(typeChecker);
-            typeSign = getTypeSign(retType);
+            typeSign = getSimpleTypeSign(retType);
             commands += returnStatement.getReturnExp().accept(this);
         }
 
@@ -406,7 +407,7 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(Identifier identifier) {
         Type type = identifier.accept(typeChecker);
-        String typeSign = getTypeSign(type);
+        String typeSign = getSimpleTypeSign(type);
         return typeSign + "load " + slotOf(identifier.getName());
     }
 
