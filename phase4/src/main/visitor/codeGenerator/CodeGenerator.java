@@ -267,10 +267,11 @@ public class CodeGenerator extends Visitor<String> {
         String commands = "";
         String typeSign = "";
         Type retType = null;
-        if (returnStatement.hasRetExpression())
-             retType = returnStatement.getReturnExp().accept(typeChecker);
+        if (returnStatement.hasRetExpression()) {
+            retType = returnStatement.getReturnExp().accept(typeChecker);
             typeSign = getTypeSign(retType);
             commands += returnStatement.getReturnExp().accept(this);
+        }
 
         return commands + "\n" + typeSign + "return";
     }
