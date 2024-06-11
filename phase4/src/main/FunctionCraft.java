@@ -1,5 +1,5 @@
 package main;
-
+import java.util.concurrent.Semaphore;
 import main.ast.nodes.Program;
 import main.compileError.CompileError;
 import main.visitor.codeGenerator.CodeGenerator;
@@ -37,7 +37,6 @@ public class FunctionCraft {
 
         CodeGenerator codeGenerator = new CodeGenerator(typeChecker);
         codeGenerator.visit(program);
-
         runJasminCode();
     }
 
@@ -46,12 +45,17 @@ public class FunctionCraft {
             System.out.println("---------------------------Compilation Successful---------------------------");
             File dir = new File("./codeGenOutput");
             if (System.getProperty("os.name").toLowerCase().contains("linux"))
-                 Runtime.getRuntime().exec(new String[]{"sh", "-c", "java -jar jasmin.jar *.j"},null, dir);
+                Runtime.getRuntime().exec(new String[]{"sh", "-c", "java -jar jasmin.jar *.j"}, null, dir);
             else
                 Runtime.getRuntime().exec("java -jar jasmin.jar *.j", null, dir);
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignored) {}
+
             Process process = Runtime.getRuntime().exec("java Main", null, dir);
-//            printResults(process.getInputStream());
-//            printResults(process.getErrorStream());
+            printResults(process.getInputStream());
+            printResults(process.getErrorStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
