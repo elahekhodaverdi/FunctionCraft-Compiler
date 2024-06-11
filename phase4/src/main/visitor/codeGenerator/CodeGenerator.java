@@ -1,8 +1,10 @@
 package main.visitor.codeGenerator;
 
+import com.sun.jdi.event.StepEvent;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.declaration.MainDeclaration;
+import main.ast.nodes.declaration.VarDeclaration;
 import main.ast.nodes.expression.*;
 import main.ast.nodes.expression.operators.BinaryOperator;
 import main.ast.nodes.expression.value.FunctionPointer;
@@ -88,12 +90,12 @@ public class CodeGenerator extends Visitor<String> {
 
     private String getJvmTypeDescriptor(Type t) {
         if (t instanceof IntType)
-            return "I";
+            return JasminCode.INTEGER_TYPE;
         else if (t instanceof BoolType)
-            return "Z";
+            return JasminCode.BOOLEAN_TYPE;
         else if (t instanceof StringType)
-            return "Ljava/lang/String;";
-        return "V";
+            return JasminCode.STRING_TYPE;
+        return JasminCode.VOID_TYPE;
     }
 
 
@@ -108,7 +110,8 @@ public class CodeGenerator extends Visitor<String> {
                 for (File file : files)
                     file.delete();
             directory.mkdir();
-        } catch (SecurityException ignored) {}
+        } catch (SecurityException ignored) {
+        }
 
         copyFile(jasminPath, this.outputPath + "jasmin.jar");
         copyFile(listClassPath, this.outputPath + "List.j");
@@ -136,7 +139,8 @@ public class CodeGenerator extends Visitor<String> {
                 writingFileStream.write(buffer, 0, readLength);
             readingFileStream.close();
             writingFileStream.close();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
     private void addCommand(String command) {
@@ -149,7 +153,8 @@ public class CodeGenerator extends Visitor<String> {
             else
                 mainFile.write("\t\t" + command + "\n");
             mainFile.flush();
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
     }
 
     private void handleMainClass() {
@@ -175,7 +180,8 @@ public class CodeGenerator extends Visitor<String> {
             try {
                 this.curFunction = SymbolTable.root.getFunctionItem(funcName);
                 this.curFunction.getFunctionDeclaration().accept(this);
-            } catch (ItemNotFound ignored) {}
+            } catch (ItemNotFound ignored) {
+            }
         }
 
         program.getMain().accept(this);
@@ -187,12 +193,27 @@ public class CodeGenerator extends Visitor<String> {
         slots.clear();
 
         String commands = "";
-        String args = ""; // TODO and add to the slots
-        String returnType = ""; // TODO
-        commands += ".method public " + functionDeclaration.getFunctionName().getName();
-        commands += args + returnType + "\n";
-        // TODO headers, body and return with corresponding type
+        String args = "";
+        String adding_to_slots = "";
 
+        List<Type> argTypes = this.curFunction.getArgumentTypes();
+        List<VarDeclaration> varDeclarations = this.curFunction.getFunctionDeclaration().getArgs();
+
+        for (int i = 0; i < argTypes.size(); i++) {
+            Type argType = argTypes.get(i);
+            args += getJvmTypeDescriptor(argType);
+            adding_to_slots += getSimpleTypeSign(argType) + "load " + slotOf(varDeclarations.get(i).getName().getName()) + "\n";
+        }
+        String returnType = getJvmTypeDescriptor(this.curFunction.getReturnType());
+
+        commands += ".method public " + functionDeclaration.getFunctionName().getName();
+        commands += "(" + args + ")" + returnType + "\n";
+        commands += adding_to_slots;
+        for (Statement stmt : functionDeclaration.getBody())
+            commands += stmt.accept(this) + "\n";
+        if (this.curFunction.getReturnType() == null)
+            commands += "return\n";
+        commands += ".end method";
         addCommand(commands);
         return null;
     }
@@ -234,13 +255,12 @@ public class CodeGenerator extends Visitor<String> {
         List<String> command = new LinkedList<>();
         String rightValue = assignStatement.getAssignExpression().accept(this);
 
-        if(assignStatement.isAccessList()) {
+        if (assignStatement.isAccessList()) {
             command.add("aload " + slotOf(assignStatement.getAssignedId().getName()));
             command.add(assignStatement.getAccessListExpression().accept(this));
             command.add(rightValue);
             command.add("aastore");
-        }
-        else {
+        } else {
             command.add(rightValue);
             command.add("astore " + slotOf(assignStatement.getAssignedId().getName()));
         }
