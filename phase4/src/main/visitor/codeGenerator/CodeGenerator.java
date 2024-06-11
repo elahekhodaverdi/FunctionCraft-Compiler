@@ -142,6 +142,8 @@ public class CodeGenerator extends Visitor<String> {
 
     private void handleMainClass() {
         String commands = """
+                .class public Main
+                .super java/lang/Object
                 .method public static main([Ljava/lang/String;)V
                 .limit stack 128
                 .limit locals 128
@@ -155,20 +157,13 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(Program program) {
-        String commands = """
-                .class public Main
-                .super java/lang/Object
-                """;
-        addCommand(commands);
         handleMainClass();
 
         for (String funcName : this.visited) {
             try {
-                this.curFunction = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY +
-                        funcName);
+                this.curFunction = SymbolTable.root.getFunctionItem(funcName);
                 this.curFunction.getFunctionDeclaration().accept(this);
-            } catch (ItemNotFound ignored) {
-            }
+            } catch (ItemNotFound ignored) {}
         }
 
         program.getMain().accept(this);
