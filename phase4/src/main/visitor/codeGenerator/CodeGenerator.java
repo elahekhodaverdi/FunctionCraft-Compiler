@@ -325,11 +325,9 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(Identifier identifier) {
-        try {
-            sym
-        } catch (ItemNotFound) {
-        }
-        return ""
+        Type type = identifier.accept(typeChecker);
+        String typeSign = getTypeSign(type);
+        return typeSign + "load " + slotOf(identifier.getName());
     }
 
     @Override
