@@ -41,6 +41,7 @@ public class CodeGenerator extends Visitor<String> {
     private int curLabel = 0;
 
     private static LinkedList<String> breakLabels = new LinkedList<>();
+    private static LinkedList<String> afterLabels = new LinkedList<>();
 
     public CodeGenerator(TypeChecker typeChecker) {
         this.typeChecker = typeChecker;
@@ -343,8 +344,8 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(UnaryExpression unaryExpression) {
         String exprCommand = unaryExpression.getExpression().accept(this);
-        List<String> command  = new LinkedList<>();
-        switch (unaryExpression.getOperator()){
+        List<String> command = new LinkedList<>();
+        switch (unaryExpression.getOperator()) {
             case NOT:
                 command.add("iconst_1");
                 command.add(exprCommand);
@@ -382,25 +383,25 @@ public class CodeGenerator extends Visitor<String> {
         String nStart = getFreshLabel();
         String nAfter = getFreshLabel();
         breakLabels.push(nAfter);
+        afterLabels.push(nStart);
         commands.add(nStart + ":");
         for (Statement stmt : loopDoStatement.getLoopBodyStmts())
             commands.add(stmt.accept(this));
         commands.add("goto " + nStart);
         commands.add(nAfter + ":");
         breakLabels.pop();
+        afterLabels.pop();
         return null;
     }
 
     @Override
     public String visit(BreakStatement breakStatement) {
-        
-        return null;
+        return "goto " + breakLabels.getLast();
     }
 
     @Override
     public String visit(NextStatement nextStatement) {
-        //TODO
-        return null;
+        return "goto " + afterLabels.getLast();
     }
 
     @Override
