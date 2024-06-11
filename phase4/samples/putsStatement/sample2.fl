@@ -1,0 +1,5 @@
+def main()
+    puts("First String");
+    puts("Second String");
+    puts("3rd String");
+end

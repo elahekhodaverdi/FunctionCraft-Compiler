@@ -1,0 +1,5 @@
+def main()
+    puts(10);
+    puts(20);
+    puts(30);
+end
