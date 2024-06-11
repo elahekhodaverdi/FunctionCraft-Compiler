@@ -15,6 +15,7 @@ import main.ast.type.FptrType;
 import main.ast.type.ListType;
 import main.ast.type.Type;
 import main.ast.type.primitiveType.BoolType;
+import main.ast.type.primitiveType.FloatType;
 import main.ast.type.primitiveType.IntType;
 import main.ast.type.primitiveType.StringType;
 import main.symbolTable.SymbolTable;
@@ -78,12 +79,23 @@ public class CodeGenerator extends Visitor<String> {
         return type;
     }
 
-    public String getTypeSign(Type type) {
+    public String getSimpleTypeSign(Type type) {
         if (type instanceof IntType)
             return "i";
         else
             return "a";
     }
+
+    private String getJvmTypeDescriptor(Type t) {
+        if (t instanceof IntType)
+            return "I";
+        else if (t instanceof BoolType)
+            return "Z";
+        else if (t instanceof StringType)
+            return "Ljava/lang/String;";
+        return "V";
+    }
+
 
     private void prepareOutputFolder() {
         String jasminPath = "utilities/jarFiles/jasmin.jar";
@@ -269,6 +281,7 @@ public class CodeGenerator extends Visitor<String> {
         List<String> command = new LinkedList<>();
         command.add("getstatic java/lang/System/out Ljava/io/PrintStream;");
         command.add(putStatement.getExpression().accept(this));
+
         command.add("invokevirtual java/io/PrintStream/println(I)V");
         command.add("\n");
         return String.join("\n", command);
@@ -411,7 +424,7 @@ public class CodeGenerator extends Visitor<String> {
         commands.add(nAfter + ":");
         breakLabels.pop();
         afterLabels.pop();
-        return null;
+        return String.join("\n", commands);
     }
 
     @Override
@@ -426,8 +439,15 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(LenStatement lenStatement) {
-        //TODO
-        return null;
+        List<String> commands = new LinkedList<>();
+        Expression expr = lenStatement.getExpression();
+        Type type = expr.accept(typeChecker);
+        commands.add(expr.accept(this));
+        if (type instanceof StringType)
+            commands.add("invokevirtual java/lang/String/length()I");
+        if (type instanceof ListType)
+            commands.add("invokeinterface java/util/List/size()I 1");
+        return String.join("\n", commands);
     }
 
     @Override
