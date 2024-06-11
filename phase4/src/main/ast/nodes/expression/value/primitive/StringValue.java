@@ -5,7 +5,7 @@ import main.visitor.IVisitor;
 
 public class StringValue extends Value {
     private String str;
-    public StringValue(String str){this.str = str;}
+    public StringValue(String str){this.str = str.isEmpty()? str: str.substring(1, str.length()-1);}
 
     public String getStr() {
         return str;
@@ -15,7 +15,7 @@ public class StringValue extends Value {
         this.str = str;
     }
     @Override
-    public String toString(){return "StringValue:"+this.str;}
+    public String toString(){return this.str;}
     @Override
     public <T> T accept(IVisitor<T> visitor){return visitor.visit(this);}
 }
