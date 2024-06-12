@@ -1,0 +1,8 @@
+def main()
+    puts(--10);
+    puts(--0);
+    puts(--(-10));
+
+    puts(--(--10));
+    puts(--(++10));
+end

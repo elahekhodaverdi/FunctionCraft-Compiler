@@ -67,5 +67,29 @@ public class CodeGeneratorTest {
         folderName = "chopStatement";
         testCaseNumber = 1;
     }
+
+    @Test
+    public void not_operator() {
+        folderName = "unaryExpression";
+        testCaseNumber = 1;
+    }
+
+    @Test
+    public void minus_operator() {
+        folderName = "unaryExpression";
+        testCaseNumber = 2;
+    }
+
+    @Test
+    public void decrement_operator() {
+        folderName = "unaryExpression";
+        testCaseNumber = 3;
+    }
+
+    @Test
+    public void increment_operator() {
+        folderName = "unaryExpression";
+        testCaseNumber = 4;
+    }
 }
 

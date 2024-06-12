@@ -1,6 +1,5 @@
 package main.visitor.codeGenerator;
 
-import com.sun.jdi.event.StepEvent;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.declaration.MainDeclaration;
@@ -17,7 +16,6 @@ import main.ast.type.FptrType;
 import main.ast.type.ListType;
 import main.ast.type.Type;
 import main.ast.type.primitiveType.BoolType;
-import main.ast.type.primitiveType.FloatType;
 import main.ast.type.primitiveType.IntType;
 import main.ast.type.primitiveType.StringType;
 import main.symbolTable.SymbolTable;
@@ -31,8 +29,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.*;
-import java.util.stream.Collectors;
 
 public class CodeGenerator extends Visitor<String> {
     private final String outputPath;
@@ -398,30 +394,30 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(UnaryExpression unaryExpression) {
         String exprCommand = unaryExpression.getExpression().accept(this);
-        List<String> command = new LinkedList<>();
+        List<String> commands = new LinkedList<>();
         switch (unaryExpression.getOperator()) {
             case NOT:
-                command.add(JasminCode.ICONST_1);
-                command.add(exprCommand);
-                command.add(JasminCode.ISUB);
+                commands.add(JasminCode.ICONST_1);
+                commands.add(exprCommand);
+                commands.add(JasminCode.ISUB);
                 break;
             case DEC:
-                command.add(exprCommand);
-                command.add("iconst_1");
-                command.add("isub");
+                commands.add(exprCommand);
+                commands.add(JasminCode.ICONST_1);
+                commands.add(JasminCode.ISUB);
                 break;
             case INC:
-                command.add(exprCommand);
-                command.add("iconst_1");
-                command.add("iadd");
+                commands.add(exprCommand);
+                commands.add(JasminCode.ICONST_1);
+                commands.add(JasminCode.IADD);
                 break;
             case MINUS:
-                command.add("iconst_0");
-                command.add(exprCommand);
-                command.add("isub");
+                commands.add(JasminCode.ICONST_0);
+                commands.add(exprCommand);
+                commands.add(JasminCode.ISUB);
                 break;
         }
-        return String.join("\n", command);
+        return JasminCode.join(commands);
     }
 
     @Override
