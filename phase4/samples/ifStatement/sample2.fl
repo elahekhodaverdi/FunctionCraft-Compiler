@@ -1,0 +1,5 @@
+def main()
+    if (false)
+        puts(10);
+    end
+end

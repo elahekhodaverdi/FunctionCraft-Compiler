@@ -91,5 +91,42 @@ public class CodeGeneratorTest {
         folderName = "unaryExpression";
         testCaseNumber = 4;
     }
+
+    @Test
+    public void true_if() {
+        folderName = "ifStatement";
+        testCaseNumber = 1;
+    }
+
+    @Test
+    public void false_if() {
+        folderName = "ifStatement";
+        testCaseNumber = 2;
+    }
+
+    @Test
+    public void true_else() {
+        folderName = "ifStatement";
+        testCaseNumber = 3;
+    }
+
+    @Test
+    public void false_else() {
+        folderName = "ifStatement";
+        testCaseNumber = 4;
+    }
+
+    @Test
+    public void multiple_if() {
+        folderName = "ifStatement";
+        testCaseNumber = 5;
+    }
+
+    @Test
+    public void variable_in_if_condition() {
+        folderName = "ifStatement";
+        testCaseNumber = 6;
+    }
+
 }
 
