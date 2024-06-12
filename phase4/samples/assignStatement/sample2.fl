@@ -1,0 +1,13 @@
+def main()
+    integers = [20, 21, 22];
+    booleans = [true, true, false];
+    strings = ["First", "Second", "3rd"];
+
+    integers[0] = 100;
+    booleans[0] = false;
+    strings[1] = "Updated";
+
+    puts(integers);
+    puts(booleans);
+    puts(strings);
+end

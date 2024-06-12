@@ -187,6 +187,17 @@ public class CodeGeneratorTest {
         testCaseNumber = 10;
     }
 
+    @Test
+    public void assign_to_an_identifier() {
+        folderName = "assignStatement";
+        testCaseNumber = 1;
+    }
+
+    @Test
+    public void assign_to_an_element_of_list() {
+        folderName = "assignStatement";
+        testCaseNumber = 2;
+    }
 
 }
 

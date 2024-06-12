@@ -1,0 +1,13 @@
+def main()
+    a = 10;
+    b = true;
+    c = "First";
+    d = [20, 21, 22];
+    e = ["First", "Second"];
+
+    puts(a);
+    puts(b);
+    puts(c);
+    puts(d);
+    puts(e);
+end
