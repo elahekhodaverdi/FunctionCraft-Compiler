@@ -217,19 +217,17 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(MainDeclaration mainDeclaration) {
         slots.clear();
-
-        String commands = "";
-        commands += ".method public <init>()V\n";
-        commands += ".limit stack 128\n";
-        commands += ".limit locals 128\n";
-        commands += "aload_0\n";
-        commands += "invokespecial java/lang/Object/<init>()V\n";
+        List<String> commands = new LinkedList<>();
+        commands.add(".method public <init>()V");
+        commands.add(".limit stack 128");
+        commands.add(".limit locals 128");
+        commands.add("aload_0");
+        commands.add("invokespecial java/lang/Object/<init>()V");
         for (var statement : mainDeclaration.getBody())
-            commands += statement.accept(this);
-        commands += "\nreturn\n";
-        commands += ".end method\n";
-
-        addCommand(commands);
+            commands.add(statement.accept(this));
+        commands.add("return");
+        commands.add(".end method");
+        addCommand(JasminCode.join(commands));
         return null;
     }
 
@@ -287,22 +285,22 @@ public class CodeGenerator extends Visitor<String> {
             ifStatement.getElseBody().forEach(statement -> commands.add(statement.accept(this)));
         }
         commands.add(nAfter + ":");
-        return String.join("\n", commands);
+        return JasminCode.join(commands);
     }
 
     @Override
     public String visit(PutStatement putStatement) {
-        List<String> command = new LinkedList<>();
-        command.add(JasminCode.GET_PRINT_STREAM);
-        command.add(putStatement.getExpression().accept(this));
+        List<String> commands = new LinkedList<>();
+        commands.add(JasminCode.GET_PRINT_STREAM);
+        commands.add(putStatement.getExpression().accept(this));
 
         Type type = putStatement.getExpression().accept(typeChecker);
         if (type instanceof IntType || type instanceof BoolType) {
-            command.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.INTEGER_TYPE));
+            commands.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.INTEGER_TYPE));
         } else if (type instanceof StringType) {
-            command.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.STRING_TYPE));
+            commands.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.STRING_TYPE));
         }
-        return JasminCode.join(command);
+        return JasminCode.join(commands);
     }
 
     @Override
@@ -314,9 +312,10 @@ public class CodeGenerator extends Visitor<String> {
             retType = returnStatement.getReturnExp().accept(typeChecker);
             typeSign = getSimpleTypeSign(retType);
             commands += returnStatement.getReturnExp().accept(this);
+            commands += "\n";
         }
 
-        return commands + "\n" + typeSign + "return";
+        return commands + typeSign + "return";
     }
 
     @Override
@@ -326,26 +325,26 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(BinaryExpression binaryExpression) {
-        StringBuilder command = new StringBuilder();
+        List<String> commands = new LinkedList<>();
         Expression firstOperand = binaryExpression.getFirstOperand();
         Expression secondOperand = binaryExpression.getSecondOperand();
         BinaryOperator op = binaryExpression.getOperator();
 
-        command.append(firstOperand.accept(this));
-        command.append(secondOperand.accept(this));
+        commands.add(firstOperand.accept(this));
+        commands.add(secondOperand.accept(this));
 
         switch (op) {
             case PLUS:
-                command.append("iadd\n");
+                commands.add("iadd");
                 break;
             case MINUS:
-                command.append("isub\n");
+                commands.add("isub");
                 break;
             case MULT:
-                command.append("imul\n");
+                commands.add("imul");
                 break;
             case DIVIDE:
-                command.append("idiv\n");
+                commands.add("idiv");
                 break;
             case EQUAL:
             case NOT_EQUAL:
@@ -353,43 +352,43 @@ public class CodeGenerator extends Visitor<String> {
             case LESS_THAN:
             case LESS_EQUAL_THAN:
             case GREATER_EQUAL_THAN:
-                appendConditionalCommand(command, op);
+                appendConditionalCommand(commands, op);
                 break;
         }
 
-        return command.toString();
+        return JasminCode.join(commands);
     }
 
-    private void appendConditionalCommand(StringBuilder command, BinaryOperator op) {
+    private void appendConditionalCommand(List<String> commands, BinaryOperator op) {
         String L1 = getFreshLabel();
         String L2 = getFreshLabel();
 
         switch (op) {
             case EQUAL:
-                command.append("if_icmpeq ").append(L1).append("\n");
+                commands.add("if_icmpeq " + L1);
                 break;
             case NOT_EQUAL:
-                command.append("if_icmpne ").append(L1).append("\n");
+                commands.add("if_icmpne " + L1);
                 break;
             case GREATER_THAN:
-                command.append("if_icmpgt ").append(L1).append("\n");
+                commands.add("if_icmpgt " + L1);
                 break;
             case LESS_THAN:
-                command.append("if_icmplt ").append(L1).append("\n");
+                commands.add("if_icmplt " + L1);
                 break;
             case LESS_EQUAL_THAN:
-                command.append("if_icmple ").append(L1).append("\n");
+                commands.add("if_icmple " + L1);
                 break;
             case GREATER_EQUAL_THAN:
-                command.append("if_icmpge ").append(L1).append("\n");
+                commands.add("if_icmpge " + L1);
                 break;
         }
 
-        command.append("ldc 0\n");
-        command.append("goto ").append(L2).append("\n");
-        command.append(L1).append(":\n");
-        command.append("ldc 1\n");
-        command.append(L2).append(":\n");
+        commands.add("ldc 0");
+        commands.add("goto "+ L2);
+        commands.add(L1);
+        commands.add("ldc 1");
+        commands.add(L2);
     }
 
     @Override
@@ -442,7 +441,7 @@ public class CodeGenerator extends Visitor<String> {
         commands.add(nAfter + ":");
         breakLabels.pop();
         afterLabels.pop();
-        return String.join("\n", commands);
+        return JasminCode.join(commands);
     }
 
     @Override
@@ -465,7 +464,7 @@ public class CodeGenerator extends Visitor<String> {
             commands.add("invokevirtual java/lang/String/length()I");
         if (type instanceof ListType)
             commands.add("invokeinterface java/util/List/size()I 1");
-        return String.join("\n", commands);
+        return JasminCode.join(commands);
     }
 
     @Override

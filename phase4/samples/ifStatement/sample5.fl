@@ -1,0 +1,20 @@
+def main()
+    if (true)
+        puts(10);
+    end
+    if (false)
+        puts(20);
+    end
+
+    if (false)
+        puts(20);
+    else
+        puts("elahe");
+    end
+
+    if (true)
+        puts(20);
+    else
+        puts("elahe");
+    end
+end

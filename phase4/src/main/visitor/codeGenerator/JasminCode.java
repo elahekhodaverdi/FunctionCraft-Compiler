@@ -34,6 +34,6 @@ public class JasminCode {
     public static final String EMPTY = "";
 
     public static String join(List<String> commands) {
-        return String.join("\n", commands) + "\n";
+        return String.join("\n", commands) ;
     }
 }
