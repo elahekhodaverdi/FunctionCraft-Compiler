@@ -285,8 +285,8 @@ public class CodeGenerator extends Visitor<String> {
         } else if (type instanceof StringType) {
             command.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.STRING_TYPE));
         }
-        command.add("\n");
-        return String.join("\n", command);
+
+        return JasminCode.join(command);
     }
 
     @Override
@@ -470,10 +470,27 @@ public class CodeGenerator extends Visitor<String> {
         return commands;
     }
 
+    private String convertToNonPrimitive(Expression expression) {
+        Type type = expression.accept(typeChecker);
+        if (type instanceof IntType)
+            return JasminCode.INT_TO_INTEGER;
+        if (type instanceof BoolType)
+            return JasminCode.BOOL_TO_BOOLEAN;
+        return null;
+    }
+
     @Override
     public String visit(ListValue listValue) {
-        //TODO
-        return null;
+        List<String> commands = new LinkedList<>();
+        commands.add("new java/util/ArrayList");
+        commands.add("dup");
+        for (Expression element : listValue.getElements()) {
+            commands.add(element.accept(this));
+            commands.add(convertToNonPrimitive(element));
+        }
+        commands.add("InterfaceMethod java/util/List.of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;");
+        commands.add("invokespecial java/util/ArrayList/<init>(Ljava/util/Collection;)V");
+        return JasminCode.join(commands);
     }
 
     @Override
