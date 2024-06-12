@@ -473,8 +473,16 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ChopStatement chopStatement) {
-        //TODO
-        return null;
+        List<String> commands = new LinkedList<>();
+        commands.add(chopStatement.getChopExpression().accept(this));
+        commands.add(JasminCode.DUP);
+        commands.add(JasminCode.INVOKE_STRING_LENGTH);
+        commands.add(JasminCode.ICONST_1);
+        commands.add(JasminCode.ISUB);
+        commands.add(JasminCode.ICONST_0);
+        commands.add(JasminCode.SWAP);
+        commands.add(JasminCode.INVOKE_STRING_SUBSTRING);
+        return JasminCode.join(commands);
     }
 
     @Override

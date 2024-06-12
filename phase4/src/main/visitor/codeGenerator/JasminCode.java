@@ -15,8 +15,15 @@ public class JasminCode {
     public static final String INVOKE_ARRAY_LIST_ININT = "invokespecial java/util/ArrayList/<init>()V";
     public static final String INVOKE_ARRAY_LIST_ADD = "invokevirtual java/util/ArrayList/add(Ljava/lang/Object;)Z";
 
+    public static final String INVOKE_STRING_LENGTH = "invokevirtual java/lang/String/length()I";
+    public static final String INVOKE_STRING_SUBSTRING ="invokevirtual java/lang/String/substring(II)Ljava/lang/String;";
+
     public static final String DUP = "dup";
     public static final String POP = "pop";
+    public static final String SWAP = "swap";
+    public static final String ICONST_0 = "iconst_0";
+    public static final String ICONST_1 = "iconst_1";
+    public static final String ISUB = "isub";
 
     public static final String STRING_TYPE = "Ljava/lang/String;";
     public static final String INTEGER_TYPE = "I";
