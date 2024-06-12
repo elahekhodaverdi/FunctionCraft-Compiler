@@ -506,15 +506,16 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ChopStatement chopStatement) {
-        List<String> commands = new LinkedList<>();
-        commands.add(chopStatement.getChopExpression().accept(this));
-        commands.add(Jasmin.DUP);
-        commands.add(Jasmin.INVOKE_STRING_LENGTH);
-        commands.add(Jasmin.ICONST_1);
-        commands.add(Jasmin.ISUB);
-        commands.add(Jasmin.ICONST_0);
-        commands.add(Jasmin.SWAP);
-        commands.add(Jasmin.INVOKE_STRING_SUBSTRING);
+        List<String> commands = new LinkedList<>(List.of(
+                chopStatement.getChopExpression().accept(this),
+                Jasmin.DUP,
+                Jasmin.INVOKE_STRING_LENGTH,
+                Jasmin.ICONST_1,
+                Jasmin.ISUB,
+                Jasmin.ICONST_0,
+                Jasmin.SWAP,
+                Jasmin.INVOKE_STRING_SUBSTRING
+        ));
         return Jasmin.join(commands);
     }
 
