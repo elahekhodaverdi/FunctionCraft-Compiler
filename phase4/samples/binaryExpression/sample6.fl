@@ -1,0 +1,4 @@
+def main()
+    puts(3 != 3);
+    puts(16 != 2);
+end
