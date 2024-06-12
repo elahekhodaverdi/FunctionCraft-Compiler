@@ -78,7 +78,7 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     public String getSimpleTypeSign(Type type) {
-        if (type instanceof IntType)
+        if (type instanceof IntType || type instanceof BoolType)
             return "i";
         else
             return "a";
@@ -246,19 +246,21 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(AssignStatement assignStatement) {
-        List<String> command = new LinkedList<>();
-        String rightValue = assignStatement.getAssignExpression().accept(this);
+        List<String> commands = new LinkedList<>();
+        Expression assignExpression = assignStatement.getAssignExpression();
+        Type assignedType = assignStatement.getAssignedId().accept(typeChecker);
+        String rightValue = assignExpression.accept(this);
 
         if (assignStatement.isAccessList()) {
-            command.add("aload " + slotOf(assignStatement.getAssignedId().getName()));
-            command.add(assignStatement.getAccessListExpression().accept(this));
-            command.add(rightValue);
-            command.add("aastore");
+            commands.add("aload " + slotOf(assignStatement.getAssignedId().getName()));
+            commands.add(assignStatement.getAccessListExpression().accept(this));
+            commands.add(rightValue);
+            commands.add(getSimpleTypeSign(assignedType) + "astore");
         } else {
-            command.add(rightValue);
-            command.add("astore " + slotOf(assignStatement.getAssignedId().getName()));
+            commands.add(rightValue);
+            commands.add(getSimpleTypeSign(assignExpression.accept(typeChecker)) + "store " + slotOf(assignStatement.getAssignedId().getName()));
         }
-        return String.join("\n", command);
+        return JasminCode.join(commands);
     }
 
     @Override
