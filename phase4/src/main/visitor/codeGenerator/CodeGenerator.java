@@ -258,6 +258,7 @@ public class CodeGenerator extends Visitor<String> {
             command.add("aastore");
         } else {
             command.add(rightValue);
+            command.add(convertToNonPrimitive(assignStatement.getAssignExpression()));
             command.add("astore " + slotOf(assignStatement.getAssignedId().getName()));
         }
         return String.join("\n", command);
