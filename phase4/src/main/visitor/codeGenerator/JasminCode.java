@@ -11,6 +11,8 @@ public class JasminCode {
 
     public static final String STRING_TYPE = "Ljava/lang/String;";
     public static final String INTEGER_TYPE = "I";
+    public static final String BOOLEAN_TYPE = "Z";
+    public static final String VOID_TYPE = "V";
 
     public static String join(List<String> commands) {
         return String.join("\n", commands) + "\n";
