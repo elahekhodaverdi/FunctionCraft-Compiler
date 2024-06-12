@@ -123,10 +123,70 @@ public class CodeGeneratorTest {
     }
 
     @Test
-    public void variable_in_if_condition() {
+    public void expression_in_if_condition() {
         folderName = "ifStatement";
         testCaseNumber = 6;
     }
+
+    @Test
+    public void plus_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 1;
+    }
+
+    @Test
+    public void binary_minus_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 2;
+    }
+
+    @Test
+    public void multiply_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 3;
+    }
+
+    @Test
+    public void divide_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 4;
+    }
+    @Test
+    public void equal_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 5;
+    }
+
+    @Test
+    public void not_equal_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 6;
+    }
+
+    @Test
+    public void greater_than_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 7;
+    }
+
+    @Test
+    public void less_than_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 8;
+    }
+
+    @Test
+    public void greater_or_equal_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 9;
+    }
+
+    @Test
+    public void less_or_equal_operator() {
+        folderName = "binaryExpression";
+        testCaseNumber = 10;
+    }
+
 
 }
 
