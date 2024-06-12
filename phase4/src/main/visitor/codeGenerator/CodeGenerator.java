@@ -300,7 +300,7 @@ public class CodeGenerator extends Visitor<String> {
         command.add(putStatement.getExpression().accept(this));
 
         Type type = putStatement.getExpression().accept(typeChecker);
-        if (type instanceof IntType) {
+        if (type instanceof IntType || type instanceof BoolType) {
             command.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.INTEGER_TYPE));
         } else if (type instanceof StringType) {
             command.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.STRING_TYPE));
@@ -401,18 +401,18 @@ public class CodeGenerator extends Visitor<String> {
         List<String> command = new LinkedList<>();
         switch (unaryExpression.getOperator()) {
             case NOT:
-                command.add("iconst_1");
+                command.add(JasminCode.ICONST_1);
                 command.add(exprCommand);
-                command.add("isub");
+                command.add(JasminCode.ISUB);
                 break;
             case DEC:
                 command.add(exprCommand);
-                command.add("iconst_0");
+                command.add("iconst_1");
                 command.add("isub");
                 break;
             case INC:
                 command.add(exprCommand);
-                command.add("iconst_0");
+                command.add("iconst_1");
                 command.add("iadd");
                 break;
             case MINUS:

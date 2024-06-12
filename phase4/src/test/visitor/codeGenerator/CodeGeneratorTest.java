@@ -57,6 +57,12 @@ public class CodeGeneratorTest {
     }
 
     @Test
+    public void puts_boolean() {
+        folderName = "putsStatement";
+        testCaseNumber = 3;
+    }
+
+    @Test
     public void chop() {
         folderName = "chopStatement";
         testCaseNumber = 1;
