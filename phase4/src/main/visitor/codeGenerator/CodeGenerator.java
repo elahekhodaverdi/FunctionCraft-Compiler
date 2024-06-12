@@ -86,12 +86,12 @@ public class CodeGenerator extends Visitor<String> {
 
     private String getJvmTypeDescriptor(Type t) {
         if (t instanceof IntType)
-            return JasminCode.INTEGER_TYPE;
+            return Jasmin.INT_TYPE;
         else if (t instanceof BoolType)
-            return JasminCode.BOOLEAN_TYPE;
+            return Jasmin.BOOLEAN_TYPE;
         else if (t instanceof StringType)
-            return JasminCode.STRING_TYPE;
-        return JasminCode.VOID_TYPE;
+            return String.format(Jasmin.REF, Jasmin.STRING_TYPE);
+        return Jasmin.VOID_TYPE;
     }
 
 
@@ -227,21 +227,34 @@ public class CodeGenerator extends Visitor<String> {
             commands.add(statement.accept(this));
         commands.add("return");
         commands.add(".end method");
-        addCommand(JasminCode.join(commands));
+        addCommand(Jasmin.join(commands));
         return null;
     }
 
     public String visit(AccessExpression accessExpression) {
+        List<String> commands = new LinkedList<>();
         if (accessExpression.isFunctionCall()) {
             Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
             String args = ""; // TODO
             String returnType = ""; // TODO
             return "invokestatic Main/" + functionName.getName() + args + returnType + "\n";
         } else {
-            // TODO
+            commands.add(accessExpression.getAccessedExpression().accept(this));
+            commands.add(accessExpression.getDimentionalAccess().getFirst().accept(this));
+            commands.add(Jasmin.INVOKE_ARRAY_LIST_GET);
+            if(getListType(accessExpression.getAccessedExpression()) instanceof StringType)
+                commands.add("checkcast " + Jasmin.STRING_TYPE);
+            else {
+                commands.add("checkcast " + Jasmin.INTEGER_TYE);
+                commands.add("invokevirtual java/lang/Integer/intValue()I");
+            }
         }
-        //TODO
-        return null;
+        return Jasmin.join(commands);
+    }
+
+    private Type getListType(Expression expression) {
+        var listType = (ListType) expression.accept(typeChecker);
+        return listType.getType();
     }
 
     @Override
@@ -257,7 +270,7 @@ public class CodeGenerator extends Visitor<String> {
         } else {
             command.add(rightValue);
             Type type = assignStatement.getAssignExpression().accept(typeChecker);
-            if (type instanceof StringType)
+            if (type instanceof StringType || type instanceof ListType)
                 command.add("astore " + slotOf(assignStatement.getAssignedId().getName()));
             else
                 command.add("istore " + slotOf(assignStatement.getAssignedId().getName()));
@@ -288,22 +301,22 @@ public class CodeGenerator extends Visitor<String> {
             ifStatement.getElseBody().forEach(statement -> commands.add(statement.accept(this)));
         }
         commands.add(nAfter + ":");
-        return JasminCode.join(commands);
+        return Jasmin.join(commands);
     }
 
     @Override
     public String visit(PutStatement putStatement) {
         List<String> commands = new LinkedList<>();
-        commands.add(JasminCode.GET_PRINT_STREAM);
+        commands.add(Jasmin.GET_PRINT_STREAM);
         commands.add(putStatement.getExpression().accept(this));
 
         Type type = putStatement.getExpression().accept(typeChecker);
         if (type instanceof IntType || type instanceof BoolType) {
-            commands.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.INTEGER_TYPE));
+            commands.add(String.format(Jasmin.INVOKE_PRINTLN, Jasmin.INT_TYPE));
         } else if (type instanceof StringType) {
-            commands.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.STRING_TYPE));
+            commands.add(String.format(Jasmin.INVOKE_PRINTLN, String.format(Jasmin.REF, Jasmin.STRING_TYPE)));
         }
-        return JasminCode.join(commands);
+        return Jasmin.join(commands);
     }
 
     @Override
@@ -359,7 +372,7 @@ public class CodeGenerator extends Visitor<String> {
                 break;
         }
 
-        return JasminCode.join(commands);
+        return Jasmin.join(commands);
     }
 
     private void appendConditionalCommand(List<String> commands, BinaryOperator op) {
@@ -400,33 +413,33 @@ public class CodeGenerator extends Visitor<String> {
         List<String> commands = new LinkedList<>();
         switch (unaryExpression.getOperator()) {
             case NOT:
-                commands.add(JasminCode.ICONST_1);
+                commands.add(Jasmin.ICONST_1);
                 commands.add(exprCommand);
-                commands.add(JasminCode.ISUB);
+                commands.add(Jasmin.ISUB);
                 break;
             case MINUS:
-                commands.add(JasminCode.ICONST_0);
+                commands.add(Jasmin.ICONST_0);
                 commands.add(exprCommand);
-                commands.add(JasminCode.ISUB);
+                commands.add(Jasmin.ISUB);
                 break;
             case DEC:
                 commands.add(exprCommand);
-                commands.add(JasminCode.DUP);
-                commands.add(JasminCode.ICONST_1);
-                commands.add(JasminCode.ISUB);
+                commands.add(Jasmin.DUP);
+                commands.add(Jasmin.ICONST_1);
+                commands.add(Jasmin.ISUB);
                 Identifier identifier = (Identifier) unaryExpression.getExpression();
                 commands.add("istore " + slotOf(identifier.getName()));
                 break;
             case INC:
                 commands.add(exprCommand);
-                commands.add(JasminCode.DUP);
-                commands.add(JasminCode.ICONST_1);
-                commands.add(JasminCode.IADD);
+                commands.add(Jasmin.DUP);
+                commands.add(Jasmin.ICONST_1);
+                commands.add(Jasmin.IADD);
                 identifier = (Identifier) unaryExpression.getExpression();
                 commands.add("istore " + slotOf(identifier.getName()));
                 break;
         }
-        return JasminCode.join(commands);
+        return Jasmin.join(commands);
     }
 
     @Override
@@ -450,7 +463,7 @@ public class CodeGenerator extends Visitor<String> {
         commands.add(nAfter + ":");
         breakLabels.pop();
         afterLabels.pop();
-        return JasminCode.join(commands);
+        return Jasmin.join(commands);
     }
 
     @Override
@@ -473,21 +486,21 @@ public class CodeGenerator extends Visitor<String> {
             commands.add("invokevirtual java/lang/String/length()I");
         if (type instanceof ListType)
             commands.add("invokeinterface java/util/List/size()I 1");
-        return JasminCode.join(commands);
+        return Jasmin.join(commands);
     }
 
     @Override
     public String visit(ChopStatement chopStatement) {
         List<String> commands = new LinkedList<>();
         commands.add(chopStatement.getChopExpression().accept(this));
-        commands.add(JasminCode.DUP);
-        commands.add(JasminCode.INVOKE_STRING_LENGTH);
-        commands.add(JasminCode.ICONST_1);
-        commands.add(JasminCode.ISUB);
-        commands.add(JasminCode.ICONST_0);
-        commands.add(JasminCode.SWAP);
-        commands.add(JasminCode.INVOKE_STRING_SUBSTRING);
-        return JasminCode.join(commands);
+        commands.add(Jasmin.DUP);
+        commands.add(Jasmin.INVOKE_STRING_LENGTH);
+        commands.add(Jasmin.ICONST_1);
+        commands.add(Jasmin.ISUB);
+        commands.add(Jasmin.ICONST_0);
+        commands.add(Jasmin.SWAP);
+        commands.add(Jasmin.INVOKE_STRING_SUBSTRING);
+        return Jasmin.join(commands);
     }
 
     @Override
@@ -505,30 +518,27 @@ public class CodeGenerator extends Visitor<String> {
     private String convertToNonPrimitive(Expression expression) {
         Type type = expression.accept(typeChecker);
         if (type instanceof IntType)
-            return JasminCode.INT_TO_INTEGER;
+            return Jasmin.INT_TO_INTEGER;
         if (type instanceof BoolType)
-            return JasminCode.BOOL_TO_BOOLEAN;
+            return Jasmin.BOOL_TO_BOOLEAN;
 
-        return JasminCode.EMPTY;
+        return Jasmin.EMPTY;
     }
 
     @Override
     public String visit(ListValue listValue) {
         List<String> commands = new LinkedList<>();
-        commands.add(JasminCode.NEW_LIST);
-        commands.add(JasminCode.DUP);
-        commands.add(JasminCode.NEW_ARRAY_LIST);
-        commands.add(JasminCode.DUP);
-        commands.add(JasminCode.INVOKE_ARRAY_LIST_ININT);
+        commands.add(Jasmin.NEW_ARRAY_LIST);
+        commands.add(Jasmin.DUP);
+        commands.add(Jasmin.INVOKE_ARRAY_LIST_ININT);
         for (Expression element : listValue.getElements()) {
-            commands.add(JasminCode.DUP);
+            commands.add(Jasmin.DUP);
             commands.add(element.accept(this));
             commands.add(convertToNonPrimitive(element));
-            commands.add(JasminCode.INVOKE_ARRAY_LIST_ADD);
-            commands.add(JasminCode.POP);
+            commands.add(Jasmin.INVOKE_ARRAY_LIST_ADD);
+            commands.add(Jasmin.POP);
         }
-        commands.add(JasminCode.INVOKE_LIST_ININT);
-        return JasminCode.join(commands);
+        return Jasmin.join(commands);
     }
 
     @Override
