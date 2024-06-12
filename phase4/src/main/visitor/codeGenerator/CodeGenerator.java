@@ -542,16 +542,19 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ListValue listValue) {
-        List<String> commands = new LinkedList<>();
-        commands.add(Jasmin.NEW_ARRAY_LIST);
-        commands.add(Jasmin.DUP);
-        commands.add(Jasmin.INVOKE_ARRAY_LIST_ININT);
+        List<String> commands = new LinkedList<>(List.of(
+                Jasmin.NEW_ARRAY_LIST,
+                Jasmin.DUP,
+                Jasmin.INVOKE_ARRAY_LIST_ININT
+        ));
         for (Expression element : listValue.getElements()) {
-            commands.add(Jasmin.DUP);
-            commands.add(element.accept(this));
-            commands.add(convertToNonPrimitive(element));
-            commands.add(Jasmin.INVOKE_ARRAY_LIST_ADD);
-            commands.add(Jasmin.POP);
+            commands.addAll(List.of(
+                    Jasmin.DUP,
+                    element.accept(this),
+                    convertToNonPrimitive(element),
+                    Jasmin.INVOKE_ARRAY_LIST_ADD,
+                    Jasmin.POP
+            ));
         }
         return Jasmin.join(commands);
     }
