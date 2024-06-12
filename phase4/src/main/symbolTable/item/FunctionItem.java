@@ -1,11 +1,13 @@
 package main.symbolTable.item;
 
+import lombok.Getter;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.type.Type;
 import main.symbolTable.SymbolTable;
 
 import java.util.ArrayList;
 
+@Getter
 public class FunctionItem extends SymbolTableItem{
     public static final String START_KEY = "Function:";
     private SymbolTable functionSymbolTable;
