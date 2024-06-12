@@ -305,7 +305,6 @@ public class CodeGenerator extends Visitor<String> {
         } else if (type instanceof StringType) {
             command.add(String.format(JasminCode.INVOKE_PRINTLN, JasminCode.STRING_TYPE));
         }
-
         return JasminCode.join(command);
     }
 
@@ -496,20 +495,26 @@ public class CodeGenerator extends Visitor<String> {
             return JasminCode.INT_TO_INTEGER;
         if (type instanceof BoolType)
             return JasminCode.BOOL_TO_BOOLEAN;
-        return null;
+
+        return JasminCode.EMPTY;
     }
 
     @Override
     public String visit(ListValue listValue) {
         List<String> commands = new LinkedList<>();
-        commands.add("new java/util/ArrayList");
-        commands.add("dup");
+        commands.add(JasminCode.NEW_LIST);
+        commands.add(JasminCode.DUP);
+        commands.add(JasminCode.NEW_ARRAY_LIST);
+        commands.add(JasminCode.DUP);
+        commands.add(JasminCode.INVOKE_ARRAY_LIST_ININT);
         for (Expression element : listValue.getElements()) {
+            commands.add(JasminCode.DUP);
             commands.add(element.accept(this));
             commands.add(convertToNonPrimitive(element));
+            commands.add(JasminCode.INVOKE_ARRAY_LIST_ADD);
+            commands.add(JasminCode.POP);
         }
-        commands.add("InterfaceMethod java/util/List.of(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;");
-        commands.add("invokespecial java/util/ArrayList/<init>(Ljava/util/Collection;)V");
+        commands.add(JasminCode.INVOKE_LIST_ININT);
         return JasminCode.join(commands);
     }
 

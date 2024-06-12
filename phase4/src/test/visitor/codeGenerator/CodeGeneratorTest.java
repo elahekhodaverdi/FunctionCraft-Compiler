@@ -53,7 +53,7 @@ public class CodeGeneratorTest {
     @Test
     public void puts_string() {
         folderName = "putsStatement";
-        testCaseNumber = 1;
+        testCaseNumber = 2;
     }
 }
 
