@@ -401,20 +401,26 @@ public class CodeGenerator extends Visitor<String> {
                 commands.add(exprCommand);
                 commands.add(JasminCode.ISUB);
                 break;
-            case DEC:
-                commands.add(exprCommand);
-                commands.add(JasminCode.ICONST_1);
-                commands.add(JasminCode.ISUB);
-                break;
-            case INC:
-                commands.add(exprCommand);
-                commands.add(JasminCode.ICONST_1);
-                commands.add(JasminCode.IADD);
-                break;
             case MINUS:
                 commands.add(JasminCode.ICONST_0);
                 commands.add(exprCommand);
                 commands.add(JasminCode.ISUB);
+                break;
+            case DEC:
+                commands.add(exprCommand);
+                commands.add(JasminCode.DUP);
+                commands.add(JasminCode.ICONST_1);
+                commands.add(JasminCode.ISUB);
+                Identifier identifier = (Identifier) unaryExpression.getExpression();
+                commands.add("istore " + slotOf(identifier.getName()));
+                break;
+            case INC:
+                commands.add(exprCommand);
+                commands.add(JasminCode.DUP);
+                commands.add(JasminCode.ICONST_1);
+                commands.add(JasminCode.IADD);
+                identifier = (Identifier) unaryExpression.getExpression();
+                commands.add("istore " + slotOf(identifier.getName()));
                 break;
         }
         return JasminCode.join(commands);
