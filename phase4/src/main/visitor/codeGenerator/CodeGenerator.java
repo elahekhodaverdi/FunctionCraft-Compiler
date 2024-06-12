@@ -78,7 +78,7 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     public String getSimpleTypeSign(Type type) {
-        if (type instanceof IntType)
+        if (type instanceof IntType || type instanceof BoolType)
             return "i";
         else
             return "a";
@@ -372,7 +372,7 @@ public class CodeGenerator extends Visitor<String> {
                 break;
         }
 
-        return Jasmin.join(commands);
+        return JasminCode.join(commands);
     }
 
     private void appendConditionalCommand(List<String> commands, BinaryOperator op) {
