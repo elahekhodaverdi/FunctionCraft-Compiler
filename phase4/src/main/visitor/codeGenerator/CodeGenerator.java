@@ -372,7 +372,7 @@ public class CodeGenerator extends Visitor<String> {
                 break;
         }
 
-        return JasminCode.join(commands);
+        return Jasmin.join(commands);
     }
 
     private void appendConditionalCommand(List<String> commands, BinaryOperator op) {
