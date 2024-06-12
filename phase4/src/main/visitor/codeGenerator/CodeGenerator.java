@@ -384,10 +384,10 @@ public class CodeGenerator extends Visitor<String> {
         }
 
         commands.add("ldc 0");
-        commands.add("goto "+ L2);
-        commands.add(L1);
+        commands.add("goto " + L2);
+        commands.add(L1 + ":");
         commands.add("ldc 1");
-        commands.add(L2);
+        commands.add(L2 + ":");
     }
 
     @Override
