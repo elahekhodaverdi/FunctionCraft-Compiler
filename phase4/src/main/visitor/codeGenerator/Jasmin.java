@@ -15,6 +15,7 @@ public class Jasmin {
     public static final String INVOKE_ARRAY_LIST_ININT = "invokespecial java/util/ArrayList/<init>()V";
     public static final String INVOKE_ARRAY_LIST_ADD = "invokevirtual java/util/ArrayList/add(Ljava/lang/Object;)Z";
     public static final String INVOKE_ARRAY_LIST_GET = "invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;";
+    public static final String INVOKE_ARRAY_LIST_SET = "invokevirtual java/util/ArrayList/set(ILjava/lang/Object;)Ljava/lang/Object;";
 
     public static final String INVOKE_STRING_LENGTH = "invokevirtual java/lang/String/length()I";
     public static final String INVOKE_STRING_SUBSTRING ="invokevirtual java/lang/String/substring(II)Ljava/lang/String;";
@@ -22,14 +23,19 @@ public class Jasmin {
     public static final String DUP = "dup";
     public static final String POP = "pop";
     public static final String SWAP = "swap";
+    public static final String ALOAD = "aload ";
+    public static final String ASTORE = "astore ";
+    public static final String ISTORE = "istore ";
     public static final String ISUB = "isub";
     public static final String IADD = "iadd";
     public static final String ICONST_0 = "iconst_0";
     public static final String ICONST_1 = "iconst_1";
+    public static final String CHECKCAST = "checkcast ";
 
     public static final String REF = "L%s;";
     public static final String STRING_TYPE = "java/lang/String";
     public static final String INTEGER_TYE = "java/lang/Integer";
+    public static final String OBJECT_TYPE = "java/lang/Object";
     public static final String INT_TYPE = "I";
     public static final String BOOLEAN_TYPE = "Z";
     public static final String VOID_TYPE = "V";
@@ -38,5 +44,8 @@ public class Jasmin {
 
     public static String join(List<String> commands) {
         return String.join("\n", commands) ;
+    }
+    public static String refOf(String type) {
+        return String.format(REF, type);
     }
 }

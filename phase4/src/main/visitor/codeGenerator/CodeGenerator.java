@@ -259,23 +259,36 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(AssignStatement assignStatement) {
-        List<String> command = new LinkedList<>();
+        List<String> commands = new LinkedList<>();
+
         String rightValue = assignStatement.getAssignExpression().accept(this);
+        int leftSlot = slotOf(assignStatement.getAssignedId().getName());
 
         if (assignStatement.isAccessList()) {
-            command.add("aload " + slotOf(assignStatement.getAssignedId().getName()));
-            command.add(assignStatement.getAccessListExpression().accept(this));
-            command.add(rightValue);
-            command.add("aastore");
+            commands.addAll(List.of(
+                    Jasmin.ALOAD + leftSlot,
+                    assignStatement.getAccessListExpression().accept(this),
+                    rightValue,
+                    convertToNonPrimitive(assignStatement.getAssignExpression()),
+                    Jasmin.CHECKCAST + Jasmin.OBJECT_TYPE,
+                    Jasmin.INVOKE_ARRAY_LIST_SET,
+                    Jasmin.POP
+            ));
         } else {
-            command.add(rightValue);
-            Type type = assignStatement.getAssignExpression().accept(typeChecker);
-            if (type instanceof StringType || type instanceof ListType)
-                command.add("astore " + slotOf(assignStatement.getAssignedId().getName()));
-            else
-                command.add("istore " + slotOf(assignStatement.getAssignedId().getName()));
+            commands.addAll(List.of(
+                    rightValue,
+                    store(assignStatement.getAssignExpression()) + leftSlot
+            ));
         }
-        return String.join("\n", command);
+        return Jasmin.join(commands);
+    }
+
+    private String store(Expression leftExpr) {
+        Type type = leftExpr.accept(typeChecker);
+        if (type instanceof StringType || type instanceof ListType)
+            return Jasmin.ASTORE;
+        else
+            return Jasmin.ISTORE;
     }
 
     @Override
@@ -314,7 +327,9 @@ public class CodeGenerator extends Visitor<String> {
         if (type instanceof IntType || type instanceof BoolType) {
             commands.add(String.format(Jasmin.INVOKE_PRINTLN, Jasmin.INT_TYPE));
         } else if (type instanceof StringType) {
-            commands.add(String.format(Jasmin.INVOKE_PRINTLN, String.format(Jasmin.REF, Jasmin.STRING_TYPE)));
+            commands.add(Jasmin.INVOKE_PRINTLN.formatted(Jasmin.refOf(Jasmin.STRING_TYPE)));
+        } else if (type instanceof ListType) {
+            commands.add(Jasmin.INVOKE_PRINTLN.formatted(Jasmin.refOf(Jasmin.OBJECT_TYPE)));
         }
         return Jasmin.join(commands);
     }
