@@ -256,8 +256,11 @@ public class CodeGenerator extends Visitor<String> {
             command.add("aastore");
         } else {
             command.add(rightValue);
-            command.add(convertToNonPrimitive(assignStatement.getAssignExpression()));
-            command.add("astore " + slotOf(assignStatement.getAssignedId().getName()));
+            Type type = assignStatement.getAssignExpression().accept(typeChecker);
+            if (type instanceof StringType)
+                command.add("astore " + slotOf(assignStatement.getAssignedId().getName()));
+            else
+                command.add("istore " + slotOf(assignStatement.getAssignedId().getName()));
         }
         return String.join("\n", command);
     }

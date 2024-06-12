@@ -1,8 +1,13 @@
 def main()
-    puts(++10);
-    puts(++0);
-    puts(++(-10));
+    a = 10;
+    puts(++a);
+    puts(a);
 
-    puts(++(++10));
-    puts(++(--10));
+    a = 0;
+    ++a;
+    puts(a);
+
+    a = -10;
+    ++a;
+    puts(a);
 end
