@@ -199,5 +199,11 @@ public class CodeGeneratorTest {
         testCaseNumber = 2;
     }
 
+    @Test
+    public void assign_from_an_identifier_to_an_identifier() {
+        folderName = "assignStatement";
+        testCaseNumber = 3;
+    }
+
 }
 
