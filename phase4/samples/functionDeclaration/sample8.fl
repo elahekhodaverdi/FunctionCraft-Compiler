@@ -1,0 +1,10 @@
+def f(b)
+    if (b)
+        return;
+    end
+end
+def main()
+    a = false;
+    f(a);
+    puts(50);
+end
