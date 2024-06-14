@@ -469,32 +469,42 @@ public class CodeGenerator extends Visitor<String> {
     public String visit(UnaryExpression unaryExpression) {
         String exprCommand = unaryExpression.getExpression().accept(this);
         List<String> commands = new LinkedList<>();
+        Identifier identifier;
+
         switch (unaryExpression.getOperator()) {
             case NOT:
-                commands.add(Jasmin.ICONST_1);
-                commands.add(exprCommand);
-                commands.add(Jasmin.ISUB);
+                commands.addAll(List.of(
+                        Jasmin.ICONST_1,
+                        exprCommand,
+                        Jasmin.ISUB
+                ));
                 break;
             case MINUS:
-                commands.add(Jasmin.ICONST_0);
-                commands.add(exprCommand);
-                commands.add(Jasmin.ISUB);
+                commands.addAll(List.of(
+                        Jasmin.ICONST_0,
+                        exprCommand,
+                        Jasmin.ISUB
+                ));
                 break;
             case DEC:
-                commands.add(exprCommand);
-                commands.add(Jasmin.DUP);
-                commands.add(Jasmin.ICONST_1);
-                commands.add(Jasmin.ISUB);
-                Identifier identifier = (Identifier) unaryExpression.getExpression();
-                commands.add("istore " + slotOf(identifier.getName()));
+                identifier = (Identifier) unaryExpression.getExpression();
+                commands.addAll(List.of(
+                        exprCommand,
+                        Jasmin.DUP,
+                        Jasmin.ICONST_1,
+                        Jasmin.ISUB,
+                        Jasmin.ISTORE + slotOf(identifier.getName())
+                ));
                 break;
             case INC:
-                commands.add(exprCommand);
-                commands.add(Jasmin.DUP);
-                commands.add(Jasmin.ICONST_1);
-                commands.add(Jasmin.IADD);
                 identifier = (Identifier) unaryExpression.getExpression();
-                commands.add("istore " + slotOf(identifier.getName()));
+                commands.addAll(List.of(
+                        exprCommand,
+                        Jasmin.DUP,
+                        Jasmin.ICONST_1,
+                        Jasmin.IADD,
+                        Jasmin.ISTORE + slotOf(identifier.getName())
+                ));
                 break;
         }
         return Jasmin.join(commands);
