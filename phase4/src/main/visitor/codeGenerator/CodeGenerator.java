@@ -64,7 +64,7 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     public String getType(Type element) {
-        String type = "";
+        String type = Jasmin.EMPTY;
         switch (element) {
             case StringType stringType -> type += "Ljava/lang/String;";
             case IntType intType -> type += "Ljava/lang/Integer;";
@@ -275,7 +275,7 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     private String getType2(ArrayList<Type> types) {
-        String commands = "";
+        String commands = Jasmin.EMPTY;
         for (Type type : types)
             commands += getType2(type);
         return commands;
@@ -386,8 +386,8 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ReturnStatement returnStatement) {
-        String commands = "";
-        String typeSign = "";
+        String commands = Jasmin.EMPTY;
+        String typeSign = Jasmin.EMPTY;
         Type retType = null;
         if (returnStatement.hasRetExpression()) {
             retType = returnStatement.getReturnExp().accept(typeChecker);
@@ -465,10 +465,10 @@ public class CodeGenerator extends Visitor<String> {
                 break;
         }
 
-        commands.add("ldc 0");
+        commands.add(Jasmin.LOAD_CONSTANT + "0");
         commands.add(Jasmin.GOTO + L2);
         commands.add(Jasmin.LABEL.formatted(L1));
-        commands.add("ldc 1");
+        commands.add(Jasmin.LOAD_CONSTANT + "1");
         commands.add(Jasmin.LABEL.formatted(L2));
     }
 
@@ -585,10 +585,10 @@ public class CodeGenerator extends Visitor<String> {
         FptrType fptr = (FptrType) functionPointer.accept(typeChecker);
         List<String> commands = new ArrayList<>();
         commands.addAll(List.of(
-                "new Fptr",
-                "dup",
+                Jasmin.NEW_FUNCTION_POINTER,
+                Jasmin.DUP,
                 "aload_0",
-                "ldc \"" + fptr.getFunctionName() + "\"",
+                Jasmin.LOAD_CONSTANT + "\"" + fptr.getFunctionName() + "\"",
                 "invokespecial Fptr/<init>(Ljava/lang/Object;Ljava/lang/String;)V"
         ));
         return Jasmin.join(commands) + "\n";
@@ -625,17 +625,17 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(IntValue intValue) {
-        return "ldc " + intValue.getIntVal();
+        return Jasmin.LOAD_CONSTANT + intValue.getIntVal();
     }
 
     @Override
     public String visit(BoolValue boolValue) {
-        return boolValue.getBool() ? "ldc " + 1 : "ldc " + 0;
+        return boolValue.getBool() ? Jasmin.LOAD_CONSTANT + 1 : Jasmin.LOAD_CONSTANT + 0;
     }
 
     @Override
     public String visit(StringValue stringValue) {
-        return "ldc \"" + stringValue + "\"";
+        return Jasmin.LOAD_CONSTANT + "\"" + stringValue + "\"";
     }
 
     private String accept(List<Statement> statements) {
