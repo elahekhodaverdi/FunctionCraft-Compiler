@@ -51,24 +51,10 @@ public class TypeChecker extends Visitor<Type> {
                         functionDeclaration.getFunctionName().getName())).getReturnType();
             } catch (ItemNotFound e) {}
         }
-        SymbolTable.push(new SymbolTable());
-        returnTypesStack.push(new HashSet<>());
+
         visited.add(functionDeclaration.getFunctionName().getName());
-        try {
-            FunctionItem functionItem = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY +
-                    functionDeclaration.getFunctionName().getName());
-            ArrayList<Type> currentArgTypes = functionItem.getArgumentTypes();
-            for (int i = 0; i < functionDeclaration.getArgs().size(); i++) {
-                VarItem argItem = new VarItem(functionDeclaration.getArgs().get(i).getName());
-                argItem.setType(currentArgTypes.get(i));
-                try {
-                    SymbolTable.top.put(argItem);
-                }catch (ItemAlreadyExists ignored){
-                    var item = (VarItem) SymbolTable.top.getItem(VarItem.START_KEY + argItem.getName());
-                    item.setType(currentArgTypes.get(i));
-                }
-            }
-        }catch (ItemNotFound ignored){}
+        functionDeclarationStarted(functionDeclaration);
+
         for(Statement statement : functionDeclaration.getBody())
             statement.accept(this);
 
@@ -92,6 +78,34 @@ public class TypeChecker extends Visitor<Type> {
             return new NoType();
         }
     }
+
+    public void functionDeclarationStarted(FunctionDeclaration functionDeclaration){
+        SymbolTable.push(new SymbolTable());
+        returnTypesStack.push(new HashSet<>());
+        try {
+            FunctionItem functionItem = (FunctionItem) SymbolTable.root.getItem(FunctionItem.START_KEY +
+                    functionDeclaration.getFunctionName().getName());
+
+            ArrayList<Type> currentArgTypes = functionItem.getArgumentTypes();
+            for (int i = 0; i < functionDeclaration.getArgs().size(); i++) {
+                VarItem argItem = new VarItem(functionDeclaration.getArgs().get(i).getName());
+                argItem.setType(currentArgTypes.get(i));
+                try {
+                    SymbolTable.top.put(argItem);
+                } catch (ItemAlreadyExists ignored) {
+                    var item = (VarItem) SymbolTable.top.getItem(VarItem.START_KEY + argItem.getName());
+                    item.setType(currentArgTypes.get(i));
+
+                }
+            }
+        }catch (ItemNotFound ignored) {}
+    }
+
+    public void functionDeclarationEnded() {
+        SymbolTable.pop();
+        returnTypesStack.pop();
+    }
+
     @Override
     public Type visit(PatternDeclaration patternDeclaration){
         SymbolTable.push(new SymbolTable());
@@ -239,9 +253,10 @@ public class TypeChecker extends Visitor<Type> {
         SymbolTable.pop();
         return null;
     }
+
     @Override
     public Type visit(IfStatement ifStatement){
-        SymbolTable.push(SymbolTable.top.copy());
+        ifStatementStarted();
         for(Expression expression : ifStatement.getConditions())
             if(!(expression.accept(this) instanceof BoolType))
                 typeErrors.add(new ConditionIsNotBool(expression.getLine()));
@@ -249,17 +264,35 @@ public class TypeChecker extends Visitor<Type> {
             statement.accept(this);
         for(Statement statement : ifStatement.getElseBody())
             statement.accept(this);
-        SymbolTable.pop();
+        ifStatementEnded();
         return new NoType();
     }
+
+    public void ifStatementEnded() {
+        SymbolTable.pop();
+    }
+
+    public void ifStatementStarted() {
+        SymbolTable.push(SymbolTable.top.copy());
+    }
+
     @Override
     public Type visit(LoopDoStatement loopDoStatement){
-        SymbolTable.push(SymbolTable.top.copy());
+        loopDoStatementStarted();
         for(Statement statement : loopDoStatement.getLoopBodyStmts())
             statement.accept(this);
-        SymbolTable.pop();
+        loopDoStatementEnded();
         return new NoType();
     }
+
+    public void loopDoStatementEnded() {
+        SymbolTable.pop();
+    }
+
+    public void loopDoStatementStarted() {
+        SymbolTable.push(SymbolTable.top.copy());
+    }
+
     @Override
     public Type visit(AssignStatement assignStatement){
         if(assignStatement.isAccessList()){
