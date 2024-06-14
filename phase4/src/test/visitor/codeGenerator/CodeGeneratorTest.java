@@ -249,18 +249,18 @@ public class CodeGeneratorTest {
 
 
     @Test
-    public void return_in_simple_false_if_scope_of_function() {
+    public void return_function() {
         folderName = "functionDeclaration";
         testCaseNumber = 5;
     }
     @Test
-    public void return_in_simple_do_loop_scope_of_function() {
+    public void return_in_do_loop_scope_of_function() {
         folderName = "functionDeclaration";
         testCaseNumber = 6;
     }
 
     @Test
-    public void return_in_nested_scopes_of_function() {
+    public void return_in_if_scope_of_function() {
         folderName = "functionDeclaration";
         testCaseNumber = 7;
     }

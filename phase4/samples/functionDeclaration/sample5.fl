@@ -1,11 +1,7 @@
-def f(b)
-    if (b)
-        return;
-    end
-    puts(40);
+def f()
+    return 1;
 end
 def main()
-    a = false;
-    f(a);
-    puts(50);
+    a = f();
+    puts(a);
 end

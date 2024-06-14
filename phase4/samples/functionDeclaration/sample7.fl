@@ -1,19 +1,10 @@
 def f(b)
-    loop do
-        puts(10);
-        if(b)
-            puts("elahe");
-            return;
-        end
-        b = true;
-        next;
-        puts(20);
-        break;
+    if(b)
+        return 3;
     end
-    puts("end");
+    return 4;
 end
 def main()
-    a = false;
-    f(a);
-    puts(30);
+    puts(f(true));
+    puts(f(false));
 end
