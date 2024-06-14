@@ -1,6 +1,5 @@
 package main.visitor.codeGenerator;
 
-import com.sun.jdi.VoidType;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.declaration.MainDeclaration;
@@ -15,7 +14,6 @@ import main.ast.nodes.expression.value.primitive.StringValue;
 import main.ast.nodes.statement.*;
 import main.ast.type.FptrType;
 import main.ast.type.ListType;
-import main.ast.type.NoType;
 import main.ast.type.Type;
 import main.ast.type.primitiveType.BoolType;
 import main.ast.type.primitiveType.IntType;
@@ -25,7 +23,6 @@ import main.symbolTable.exceptions.ItemNotFound;
 import main.symbolTable.item.FunctionItem;
 import main.visitor.Visitor;
 import main.visitor.type.TypeChecker;
-import org.antlr.v4.runtime.atn.SemanticContext;
 
 import java.io.*;
 import java.util.*;
@@ -212,7 +209,7 @@ public class CodeGenerator extends Visitor<String> {
             commands.add(Jasmin.DEFAULT_LIMIT_STACK);
             commands.add(Jasmin.DEFAULT_LIMIT_LOCALS);
 
-            commands.add(accept(functionDeclaration.getBody()));
+            commands.add(acceptBody(functionDeclaration.getBody()));
 
             if (functionItem.isReturnTypeVoid())
                 commands.add(Jasmin.RETURN);
@@ -234,7 +231,7 @@ public class CodeGenerator extends Visitor<String> {
         commands.add(Jasmin.DEFAULT_LIMIT_LOCALS);
         commands.add("aload_0");
         commands.add(Jasmin.INVOKE_OBJECT_INIT);
-        commands.add(accept(mainDeclaration.getBody()));
+        commands.add(acceptBody(mainDeclaration.getBody()));
         commands.add(Jasmin.RETURN);
         commands.add(Jasmin.END_METHOD);
         addCommand(Jasmin.join(commands));
@@ -351,13 +348,13 @@ public class CodeGenerator extends Visitor<String> {
             nElse = getFreshLabel();
             commands.add(Jasmin.IF_EQ + nElse);
         }
-        commands.add(accept(ifStatement.getThenBody()));
+        commands.add(acceptBody(ifStatement.getThenBody()));
 
         commands.add(Jasmin.GOTO + nAfter);
 
         if (nElse != null) {
             commands.add(Jasmin.LABEL.formatted(nElse));
-            commands.add(accept(ifStatement.getElseBody()));
+            commands.add(acceptBody(ifStatement.getElseBody()));
         }
         commands.add(Jasmin.LABEL.formatted(nAfter));
         typeChecker.ifStatementEnded();
@@ -529,7 +526,7 @@ public class CodeGenerator extends Visitor<String> {
         afterLabels.push(nStart);
 
         commands.add(Jasmin.LABEL.formatted(nStart));
-        commands.add(accept(loopDoStatement.getLoopBodyStmts()));
+        commands.add(acceptBody(loopDoStatement.getLoopBodyStmts()));
         commands.add(Jasmin.GOTO + nStart);
         commands.add(Jasmin.LABEL.formatted(nAfter));
 
@@ -633,7 +630,7 @@ public class CodeGenerator extends Visitor<String> {
         return "ldc \"" + stringValue + "\"";
     }
 
-    private String accept(List<Statement> statements){
+    private String acceptBody(List<Statement> statements){
         List<String> commands = new LinkedList<>();
         for(Statement stmt : statements) {
             commands.addAll(List.of(
