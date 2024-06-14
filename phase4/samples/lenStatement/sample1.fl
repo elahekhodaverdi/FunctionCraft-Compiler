@@ -1,0 +1,8 @@
+def main()
+    puts(len("First"));
+    puts(len(""));
+
+    puts(len([1, 2, 3]));
+    puts(len([true, false, true]));
+    puts(len(["Mehdi", ""]));
+end

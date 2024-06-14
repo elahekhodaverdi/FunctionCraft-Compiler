@@ -542,9 +542,9 @@ public class CodeGenerator extends Visitor<String> {
         Type type = expr.accept(typeChecker);
         commands.add(expr.accept(this));
         if (type instanceof StringType)
-            commands.add("invokevirtual java/lang/String/length()I");
+            commands.add(Jasmin.INVOKE_STRING_LENGTH);
         if (type instanceof ListType)
-            commands.add("invokeinterface java/util/List/size()I 1");
+            commands.add(Jasmin.INVOKE_ARRAY_LIST_SIZE);
         return Jasmin.join(commands);
     }
 

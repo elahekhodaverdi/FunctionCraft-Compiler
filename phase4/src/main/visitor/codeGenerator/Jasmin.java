@@ -19,6 +19,7 @@ public class Jasmin {
     public static final String INVOKE_ARRAY_LIST_ADD = "invokevirtual java/util/ArrayList/add(Ljava/lang/Object;)Z";
     public static final String INVOKE_ARRAY_LIST_GET = "invokevirtual java/util/ArrayList/get(I)Ljava/lang/Object;";
     public static final String INVOKE_ARRAY_LIST_SET = "invokevirtual java/util/ArrayList/set(ILjava/lang/Object;)Ljava/lang/Object;";
+    public static final String INVOKE_ARRAY_LIST_SIZE = "invokevirtual java/util/ArrayList/size()I";
 
     public static final String INVOKE_STRING_LENGTH = "invokevirtual java/lang/String/length()I";
     public static final String INVOKE_STRING_SUBSTRING ="invokevirtual java/lang/String/substring(II)Ljava/lang/String;";

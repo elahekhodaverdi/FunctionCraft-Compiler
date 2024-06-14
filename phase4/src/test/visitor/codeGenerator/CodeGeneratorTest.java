@@ -205,5 +205,11 @@ public class CodeGeneratorTest {
         testCaseNumber = 3;
     }
 
+    @Test
+    public void len_statement() {
+        folderName = "lenStatement";
+        testCaseNumber = 1;
+    }
+
 }
 
