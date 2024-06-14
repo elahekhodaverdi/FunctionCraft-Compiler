@@ -1,0 +1,12 @@
+def f(a, b)
+    str = chop(a);
+    ++b;
+
+    puts(str);
+    puts(b);
+end
+
+
+def main()
+    f("Mehdi", 1);
+end

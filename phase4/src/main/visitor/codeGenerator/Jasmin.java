@@ -52,9 +52,10 @@ public class Jasmin {
     public static final String LABEL = "%s:";
 
     public static final String REF = "L%s;";
+    public static final String OBJECT_TYPE = "java/lang/Object";
     public static final String STRING_TYPE = "java/lang/String";
     public static final String INTEGER_TYE = "java/lang/Integer";
-    public static final String OBJECT_TYPE = "java/lang/Object";
+    public static final String ARRAY_LIST_TYPE = "java/util/ArrayList";
     public static final String INT_TYPE = "I";
     public static final String BOOLEAN_TYPE = "Z";
     public static final String VOID_TYPE = "V";

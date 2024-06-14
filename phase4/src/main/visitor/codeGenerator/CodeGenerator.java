@@ -1,5 +1,6 @@
 package main.visitor.codeGenerator;
 
+import com.sun.jdi.VoidType;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.declaration.MainDeclaration;
@@ -14,6 +15,7 @@ import main.ast.nodes.expression.value.primitive.StringValue;
 import main.ast.nodes.statement.*;
 import main.ast.type.FptrType;
 import main.ast.type.ListType;
+import main.ast.type.NoType;
 import main.ast.type.Type;
 import main.ast.type.primitiveType.BoolType;
 import main.ast.type.primitiveType.IntType;
@@ -89,6 +91,8 @@ public class CodeGenerator extends Visitor<String> {
             return Jasmin.BOOLEAN_TYPE;
         else if (type instanceof StringType)
             return Jasmin.refOf(Jasmin.STRING_TYPE);
+        else if (type instanceof ListType)
+            return Jasmin.refOf(Jasmin.ARRAY_LIST_TYPE);
         return Jasmin.VOID_TYPE;
     }
 
@@ -249,7 +253,7 @@ public class CodeGenerator extends Visitor<String> {
             for(Expression arg : accessExpression.getArguments())
                 commands.add(arg.accept(this));
 
-            String args = getType2(functionItem.getArgumentTypes());
+            String args = getJasminType(functionItem.getArgumentTypes());
             String returnType = getJasminType(functionItem.getReturnType());
 
             commands.add("invokestatic Main/" + functionName.getName() + "(" + args + ")" + returnType);
@@ -641,8 +645,18 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     private String popNonVoidStatement(Statement statement) {
-        if (statement instanceof ExpressionStatement)
+        if (statement instanceof ExpressionStatement expressionStatement) {
+            if (expressionStatement.getExpression() instanceof AccessExpression accessExpression
+                && accessExpression.isFunctionCall()) {
+                Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
+                try {
+                    FunctionItem functionItem = SymbolTable.root.getFunctionItem(functionName.getName());
+                    if (functionItem.getReturnType() == null)
+                        return Jasmin.EMPTY;
+                } catch (ItemNotFound ignored) {}
+            }
             return Jasmin.POP;
+        }
         return Jasmin.EMPTY;
     }
 }

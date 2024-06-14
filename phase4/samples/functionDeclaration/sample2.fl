@@ -1,0 +1,8 @@
+def f(a, b)
+    puts(!a);
+    puts(!b);
+end
+
+def main()
+    f(true, false);
+end

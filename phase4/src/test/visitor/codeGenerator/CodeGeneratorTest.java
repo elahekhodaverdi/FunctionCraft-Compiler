@@ -223,5 +223,28 @@ public class CodeGeneratorTest {
         testCaseNumber = 2;
     }
 
+    @Test
+    public void integer_type_argument() {
+        folderName = "functionDeclaration";
+        testCaseNumber = 1;
+    }
+
+    @Test
+    public void boolean_type_argument() {
+        folderName = "functionDeclaration";
+        testCaseNumber = 2;
+    }
+
+    @Test
+    public void string_type_argument() {
+        folderName = "functionDeclaration";
+        testCaseNumber = 3;
+    }
+
+    @Test
+    public void list_type_argument() {
+        folderName = "functionDeclaration";
+        testCaseNumber = 4;
+    }
 }
 

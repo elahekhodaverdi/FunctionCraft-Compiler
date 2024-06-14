@@ -1,0 +1,10 @@
+def f(list)
+    puts(list);
+end
+
+def main()
+    list = ["First", "Second", "3rd"];
+    f(list);
+    list = [1, 2, 3];
+    f(list);
+end
