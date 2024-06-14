@@ -196,23 +196,23 @@ public class CodeGenerator extends Visitor<String> {
             String functionName = functionDeclaration.getFunctionName().getName();
             FunctionItem functionItem = SymbolTable.root.getFunctionItem(functionName);
 
-
-            String args = getJasminType(functionItem.getArgumentTypes());
+            String argsType = getJasminType(functionItem.getArgumentTypes());
             String returnType = getJasminType(functionItem.getReturnType());
 
             for (VarDeclaration var : functionDeclaration.getArgs())
                 slotOf(var.getName().getName());
 
-            commands.add(".method public static " + functionName + "(" + args + ")" + returnType);
-            commands.add(".limit stack 128");
-            commands.add(".limit locals 128");
+            commands.add(Jasmin.BEGIN_METHOD.formatted(functionName, argsType, returnType));
+            commands.add(Jasmin.DEFAULT_LIMIT_STACK);
+            commands.add(Jasmin.DEFAULT_LIMIT_LOCALS);
+
             for (Statement stmt : functionDeclaration.getBody())
                 commands.add(stmt.accept(this));
 
             if (functionItem.getReturnType() == null)
                 commands.add(Jasmin.RETURN);
 
-            commands.add(".end method");
+            commands.add(Jasmin.END_METHOD);
 
             addCommand(Jasmin.join(commands));
         }catch (ItemNotFound ignored) {}
@@ -224,14 +224,14 @@ public class CodeGenerator extends Visitor<String> {
         slots.clear();
         List<String> commands = new LinkedList<>();
         commands.add(".method public <init>()V");
-        commands.add(".limit stack 128");
-        commands.add(".limit locals 128");
+        commands.add(Jasmin.DEFAULT_LIMIT_STACK);
+        commands.add(Jasmin.DEFAULT_LIMIT_LOCALS);
         commands.add("aload_0");
-        commands.add("invokespecial java/lang/Object/<init>()V");
+        commands.add(Jasmin.INVOKE_OBJECT_INIT);
         for (var statement : mainDeclaration.getBody())
             commands.add(statement.accept(this));
-        commands.add("return");
-        commands.add(".end method");
+        commands.add(Jasmin.RETURN);
+        commands.add(Jasmin.END_METHOD);
         addCommand(Jasmin.join(commands));
         return null;
     }
@@ -249,9 +249,8 @@ public class CodeGenerator extends Visitor<String> {
                 commands.add(arg.accept(this));
 
             String args = getType2(functionItem.getArgumentTypes());
-            String returnType = getType2(functionItem.getReturnType());
-            if (returnType.isEmpty())
-                returnType = "V";
+            String returnType = getJasminType(functionItem.getReturnType());
+
             commands.add("invokestatic Main/" + functionName.getName() + "(" + args + ")" + returnType);
             }catch (ItemNotFound ignored) {}
         } else {
@@ -259,10 +258,10 @@ public class CodeGenerator extends Visitor<String> {
             commands.add(accessExpression.getDimentionalAccess().getFirst().accept(this));
             commands.add(Jasmin.INVOKE_ARRAY_LIST_GET);
             if(getListType(accessExpression.getAccessedExpression()) instanceof StringType)
-                commands.add("checkcast " + Jasmin.STRING_TYPE);
+                commands.add(Jasmin.CHECKCAST + Jasmin.STRING_TYPE);
             else {
-                commands.add("checkcast " + Jasmin.INTEGER_TYE);
-                commands.add("invokevirtual java/lang/Integer/intValue()I");
+                commands.add(Jasmin.CHECKCAST + Jasmin.INTEGER_TYE);
+                commands.add(Jasmin.INTEGER_TO_INT);
             }
         }
         return Jasmin.join(commands);

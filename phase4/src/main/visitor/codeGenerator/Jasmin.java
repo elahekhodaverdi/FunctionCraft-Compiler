@@ -3,10 +3,13 @@ package main.visitor.codeGenerator;
 import java.util.List;
 
 public class Jasmin {
+    public static final String INVOKE_OBJECT_INIT = "invokespecial java/lang/Object/<init>()V";
+
     public static final String GET_PRINT_STREAM = "getstatic java/lang/System/out Ljava/io/PrintStream;";
     public static final String INVOKE_PRINTLN = "invokevirtual java/io/PrintStream/println(%s)V";
 
     public static final String INT_TO_INTEGER = "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;";
+    public static final String INTEGER_TO_INT = "invokevirtual java/lang/Integer/intValue()I";
     public static final String BOOL_TO_BOOLEAN = "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;";
 
     public static final String NEW_LIST = "new List";
@@ -41,6 +44,11 @@ public class Jasmin {
     public static final String INT_TYPE = "I";
     public static final String BOOLEAN_TYPE = "Z";
     public static final String VOID_TYPE = "V";
+
+    public static final String BEGIN_METHOD = ".method public static  %s(%s)%s";
+    public static final String DEFAULT_LIMIT_STACK = ".limit stack 128";
+    public static final String DEFAULT_LIMIT_LOCALS = ".limit locals 128";
+    public static final String END_METHOD = ".end method";
 
     public static final String EMPTY = "";
 
