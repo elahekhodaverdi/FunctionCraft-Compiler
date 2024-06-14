@@ -33,11 +33,21 @@ public class Jasmin {
     public static final String ISTORE = "istore ";
     public static final String ISUB = "isub";
     public static final String IADD = "iadd";
+    public static final String IMUL = "imul";
+    public static final String IDIV = "idiv";
     public static final String ICONST_0 = "iconst_0";
     public static final String ICONST_1 = "iconst_1";
     public static final String CHECKCAST = "checkcast ";
     public static final String RETURN = "return";
     public static final String GOTO = "goto ";
+
+    public static final String IF_EQ = "ifeq ";
+    public static final String IF_ICMPEQ = "if_icmpeq ";
+    public static final String IF_ICMPNE = "if_icmpne ";
+    public static final String IF_ICMPGT = "if_icmpgt ";
+    public static final String IF_ICMPLT = "if_icmplt ";
+    public static final String IF_ICMPLE = "if_icmple ";
+    public static final String IF_ICMPGE = "if_icmpge ";
 
     public static final String LABEL = "%s:";
 

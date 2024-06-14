@@ -342,20 +342,20 @@ public class CodeGenerator extends Visitor<String> {
         String nElse = null;
 
         if (ifStatement.getElseBody().isEmpty()) {
-            commands.add("ifeq " + nAfter);
+            commands.add(Jasmin.IF_EQ + nAfter);
         } else {
             nElse = getFreshLabel();
-            commands.add("ifeq " + nElse);
+            commands.add(Jasmin.IF_EQ + nElse);
         }
         commands.add(accept(ifStatement.getThenBody()));
 
-        commands.add("goto " + nAfter);
+        commands.add(Jasmin.GOTO + nAfter);
 
         if (nElse != null) {
-            commands.add(nElse + ":");
+            commands.add(Jasmin.LABEL.formatted(nElse));
             commands.add(accept(ifStatement.getElseBody()));
         }
-        commands.add(nAfter + ":");
+        commands.add(Jasmin.LABEL.formatted(nAfter));
         typeChecker.ifStatementEnded();
         return Jasmin.join(commands);
     }
@@ -389,7 +389,7 @@ public class CodeGenerator extends Visitor<String> {
             commands += "\n";
         }
 
-        return commands + typeSign + "return";
+        return commands + typeSign + Jasmin.RETURN;
     }
 
     @Override
@@ -409,16 +409,16 @@ public class CodeGenerator extends Visitor<String> {
 
         switch (op) {
             case PLUS:
-                commands.add("iadd");
+                commands.add(Jasmin.IADD);
                 break;
             case MINUS:
-                commands.add("isub");
+                commands.add(Jasmin.ISUB);
                 break;
             case MULT:
-                commands.add("imul");
+                commands.add(Jasmin.IMUL);
                 break;
             case DIVIDE:
-                commands.add("idiv");
+                commands.add(Jasmin.IDIV);
                 break;
             case EQUAL:
             case NOT_EQUAL:
@@ -439,30 +439,30 @@ public class CodeGenerator extends Visitor<String> {
 
         switch (op) {
             case EQUAL:
-                commands.add("if_icmpeq " + L1);
+                commands.add(Jasmin.IF_ICMPEQ + L1);
                 break;
             case NOT_EQUAL:
-                commands.add("if_icmpne " + L1);
+                commands.add(Jasmin.IF_ICMPNE + L1);
                 break;
             case GREATER_THAN:
-                commands.add("if_icmpgt " + L1);
+                commands.add(Jasmin.IF_ICMPGT + L1);
                 break;
             case LESS_THAN:
-                commands.add("if_icmplt " + L1);
+                commands.add(Jasmin.IF_ICMPLT + L1);
                 break;
             case LESS_EQUAL_THAN:
-                commands.add("if_icmple " + L1);
+                commands.add(Jasmin.IF_ICMPLE + L1);
                 break;
             case GREATER_EQUAL_THAN:
-                commands.add("if_icmpge " + L1);
+                commands.add(Jasmin.IF_ICMPGE + L1);
                 break;
         }
 
         commands.add("ldc 0");
-        commands.add("goto " + L2);
-        commands.add(L1 + ":");
+        commands.add(Jasmin.GOTO + L2);
+        commands.add(Jasmin.LABEL.formatted(L1));
         commands.add("ldc 1");
-        commands.add(L2 + ":");
+        commands.add(Jasmin.LABEL.formatted(L2));
     }
 
     @Override
