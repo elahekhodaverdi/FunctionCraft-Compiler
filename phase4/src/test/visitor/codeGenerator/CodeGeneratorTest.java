@@ -151,6 +151,7 @@ public class CodeGeneratorTest {
         folderName = "binaryExpression";
         testCaseNumber = 4;
     }
+
     @Test
     public void equal_operator() {
         folderName = "binaryExpression";
@@ -206,6 +207,12 @@ public class CodeGeneratorTest {
     }
 
     @Test
+    public void only_list_pass_by_reference() {
+        folderName = "assignStatement";
+        testCaseNumber = 4;
+    }
+
+    @Test
     public void len_statement() {
         folderName = "lenStatement";
         testCaseNumber = 1;
@@ -253,6 +260,7 @@ public class CodeGeneratorTest {
         folderName = "functionDeclaration";
         testCaseNumber = 5;
     }
+
     @Test
     public void return_in_do_loop_scope_of_function() {
         folderName = "functionDeclaration";
