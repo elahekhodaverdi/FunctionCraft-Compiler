@@ -37,6 +37,9 @@ public class Jasmin {
     public static final String ICONST_1 = "iconst_1";
     public static final String CHECKCAST = "checkcast ";
     public static final String RETURN = "return";
+    public static final String GOTO = "goto ";
+
+    public static final String LABEL = "%s:";
 
     public static final String REF = "L%s;";
     public static final String STRING_TYPE = "java/lang/String";

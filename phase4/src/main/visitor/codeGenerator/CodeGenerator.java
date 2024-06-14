@@ -514,11 +514,13 @@ public class CodeGenerator extends Visitor<String> {
         String nAfter = getFreshLabel();
         breakLabels.push(nAfter);
         afterLabels.push(nStart);
-        commands.add(nStart + ":");
+
+        commands.add(Jasmin.LABEL.formatted(nStart));
         for (Statement stmt : loopDoStatement.getLoopBodyStmts())
             commands.add(stmt.accept(this));
-        commands.add("goto " + nStart);
-        commands.add(nAfter + ":");
+        commands.add(Jasmin.GOTO + nStart);
+        commands.add(Jasmin.LABEL.formatted(nAfter));
+
         breakLabels.pop();
         afterLabels.pop();
         typeChecker.loopDoStatementEnded();
@@ -527,12 +529,12 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(BreakStatement breakStatement) {
-        return "goto " + breakLabels.getLast();
+        return Jasmin.GOTO + breakLabels.getLast();
     }
 
     @Override
     public String visit(NextStatement nextStatement) {
-        return "goto " + afterLabels.getLast();
+        return Jasmin.GOTO + afterLabels.getLast();
     }
 
     @Override
