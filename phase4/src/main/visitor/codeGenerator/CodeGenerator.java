@@ -214,7 +214,7 @@ public class CodeGenerator extends Visitor<String> {
 
             commands.add(accept(functionDeclaration.getBody()));
 
-            if (functionItem.getReturnType() == null)
+            if (functionItem.getReturnType() == null || functionItem.getReturnType() instanceof NoType)
                 commands.add(Jasmin.RETURN);
 
             commands.add(Jasmin.END_METHOD);
