@@ -214,7 +214,7 @@ public class CodeGenerator extends Visitor<String> {
 
             commands.add(accept(functionDeclaration.getBody()));
 
-            if (functionItem.getReturnType() == null || functionItem.getReturnType() instanceof NoType)
+            if (functionItem.isReturnTypeVoid())
                 commands.add(Jasmin.RETURN);
 
             commands.add(Jasmin.END_METHOD);
@@ -651,7 +651,7 @@ public class CodeGenerator extends Visitor<String> {
                 Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
                 try {
                     FunctionItem functionItem = SymbolTable.root.getFunctionItem(functionName.getName());
-                    if (functionItem.getReturnType() == null || functionItem.getReturnType() instanceof NoType)
+                    if (functionItem.isReturnTypeVoid())
                         return Jasmin.EMPTY;
                 } catch (ItemNotFound ignored) {}
             }

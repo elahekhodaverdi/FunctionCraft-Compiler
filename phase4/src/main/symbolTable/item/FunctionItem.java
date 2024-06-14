@@ -2,6 +2,7 @@ package main.symbolTable.item;
 
 import lombok.Getter;
 import main.ast.nodes.declaration.FunctionDeclaration;
+import main.ast.type.NoType;
 import main.ast.type.Type;
 import main.symbolTable.SymbolTable;
 
@@ -32,6 +33,10 @@ public class FunctionItem extends SymbolTableItem{
     public FunctionItem(FunctionDeclaration functionDeclaration){
         this.functionDeclaration = functionDeclaration;
         this.name = this.functionDeclaration.getFunctionName().getName();
+    }
+
+    public boolean isReturnTypeVoid() {
+        return returnType == null || returnType instanceof NoType;
     }
 
     public SymbolTable getFunctionSymbolTable() {
