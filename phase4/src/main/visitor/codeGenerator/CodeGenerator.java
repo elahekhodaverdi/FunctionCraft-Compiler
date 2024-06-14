@@ -97,10 +97,10 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     private String getJasminType(ArrayList<Type> types) {
-        String jasminTypes = "";
+        StringBuilder jasminTypes = new StringBuilder();
         for(Type type : types)
-            jasminTypes += getJasminType(type);
-        return jasminTypes;
+            jasminTypes.append(getJasminType(type));
+        return jasminTypes.toString();
     }
 
 
