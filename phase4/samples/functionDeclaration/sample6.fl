@@ -1,0 +1,12 @@
+def f(b)
+    loop do
+        puts(20);
+        return;
+    end
+    puts(40);
+end
+def main()
+    a = false;
+    f(a);
+    puts(50);
+end
