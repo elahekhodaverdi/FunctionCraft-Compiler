@@ -211,5 +211,17 @@ public class CodeGeneratorTest {
         testCaseNumber = 1;
     }
 
+    @Test
+    public void loop_do_statement_without_next() {
+        folderName = "loopDoStatement";
+        testCaseNumber = 1;
+    }
+
+    @Test
+    public void loop_do_statement_with_next() {
+        folderName = "loopDoStatement";
+        testCaseNumber = 2;
+    }
+
 }
 

@@ -1,0 +1,11 @@
+def main()
+    i = 0;
+    list = ["First", "second", "3rd", "4th", "5th"];
+    loop do
+       if (i == 4)
+          break;
+       end
+       puts(list[i]);
+       ++i;
+    end
+end
