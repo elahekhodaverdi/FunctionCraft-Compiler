@@ -191,6 +191,7 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(FunctionDeclaration functionDeclaration) {
         slots.clear();
+        typeChecker.functionDeclarationStarted(functionDeclaration);
         List<String> commands = new LinkedList<>();
         try {
             String functionName = functionDeclaration.getFunctionName().getName();
@@ -216,6 +217,7 @@ public class CodeGenerator extends Visitor<String> {
 
             addCommand(Jasmin.join(commands));
         }catch (ItemNotFound ignored) {}
+        typeChecker.functionDeclarationEnded();
         return null;
     }
 
@@ -311,6 +313,7 @@ public class CodeGenerator extends Visitor<String> {
                     store(assignStatement.getAssignExpression()) + leftSlot
             ));
 
+        assignStatement.accept(typeChecker);
         return Jasmin.join(commands);
     }
 
@@ -332,6 +335,7 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(IfStatement ifStatement) {
+        typeChecker.ifStatementStarted();
         List<String> commands = new LinkedList<>();
         commands.add(ifStatement.getConditions().getFirst().accept(this));
 
@@ -353,6 +357,7 @@ public class CodeGenerator extends Visitor<String> {
             ifStatement.getElseBody().forEach(statement -> commands.add(statement.accept(this)));
         }
         commands.add(nAfter + ":");
+        typeChecker.ifStatementEnded();
         return Jasmin.join(commands);
     }
 
@@ -503,6 +508,7 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(LoopDoStatement loopDoStatement) {
+        typeChecker.loopDoStatementStarted();
         List<String> commands = new LinkedList<>();
         String nStart = getFreshLabel();
         String nAfter = getFreshLabel();
@@ -515,6 +521,7 @@ public class CodeGenerator extends Visitor<String> {
         commands.add(nAfter + ":");
         breakLabels.pop();
         afterLabels.pop();
+        typeChecker.loopDoStatementEnded();
         return Jasmin.join(commands);
     }
 
