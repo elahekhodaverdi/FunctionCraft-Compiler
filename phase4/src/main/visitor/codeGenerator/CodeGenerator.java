@@ -651,7 +651,7 @@ public class CodeGenerator extends Visitor<String> {
                 Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
                 try {
                     FunctionItem functionItem = SymbolTable.root.getFunctionItem(functionName.getName());
-                    if (functionItem.getReturnType() == null)
+                    if (functionItem.getReturnType() == null || functionItem.getReturnType() instanceof NoType)
                         return Jasmin.EMPTY;
                 } catch (ItemNotFound ignored) {}
             }
