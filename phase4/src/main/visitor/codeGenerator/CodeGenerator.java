@@ -98,7 +98,7 @@ public class CodeGenerator extends Visitor<String> {
 
     private String getJasminType(ArrayList<Type> types) {
         StringBuilder jasminTypes = new StringBuilder();
-        for(Type type : types)
+        for (Type type : types)
             jasminTypes.append(getJasminType(type));
         return jasminTypes.toString();
     }
@@ -220,7 +220,8 @@ public class CodeGenerator extends Visitor<String> {
             commands.add(Jasmin.END_METHOD);
 
             addCommand(Jasmin.join(commands));
-        }catch (ItemNotFound ignored) {}
+        } catch (ItemNotFound ignored) {
+        }
         typeChecker.functionDeclarationEnded();
         return null;
     }
@@ -250,19 +251,20 @@ public class CodeGenerator extends Visitor<String> {
                 FunctionItem functionItem = SymbolTable.root.getFunctionItem(functionName.getName());
 
 
-            for(Expression arg : accessExpression.getArguments())
-                commands.add(arg.accept(this));
+                for (Expression arg : accessExpression.getArguments())
+                    commands.add(arg.accept(this));
 
-            String args = getJasminType(functionItem.getArgumentTypes());
-            String returnType = getJasminType(functionItem.getReturnType());
+                String args = getJasminType(functionItem.getArgumentTypes());
+                String returnType = getJasminType(functionItem.getReturnType());
 
-            commands.add("invokestatic Main/" + functionName.getName() + "(" + args + ")" + returnType);
-            }catch (ItemNotFound ignored) {}
+                commands.add("invokestatic Main/" + functionName.getName() + "(" + args + ")" + returnType);
+            } catch (ItemNotFound ignored) {
+            }
         } else {
             commands.add(accessExpression.getAccessedExpression().accept(this));
             commands.add(accessExpression.getDimentionalAccess().getFirst().accept(this));
             commands.add(Jasmin.INVOKE_ARRAY_LIST_GET);
-            if(getListType(accessExpression.getAccessedExpression()) instanceof StringType)
+            if (getListType(accessExpression.getAccessedExpression()) instanceof StringType)
                 commands.add(Jasmin.CHECKCAST + Jasmin.STRING_TYPE);
             else {
                 commands.add(Jasmin.CHECKCAST + Jasmin.INTEGER_TYE);
@@ -280,14 +282,15 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     private String getType2(Type type) {
-        if(type instanceof IntType)
+        if (type instanceof IntType)
             return Jasmin.INT_TYPE;
         if (type instanceof BoolType)
             return Jasmin.BOOLEAN_TYPE;
-        if(type instanceof StringType)
+        if (type instanceof StringType)
             return Jasmin.STRING_TYPE;
         return Jasmin.EMPTY;
     }
+
     private Type getListType(Expression expression) {
         var listType = (ListType) expression.accept(typeChecker);
         return listType.getType();
@@ -580,13 +583,15 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(FunctionPointer functionPointer) {
         FptrType fptr = (FptrType) functionPointer.accept(typeChecker);
-        String commands = "";
-        commands += "new Fptr\n";
-        commands += "dup\n";
-        commands += "aload_0\n";
-        commands += "ldc " + "\"" + fptr.getFunctionName() + "\"\n";
-        commands += "invokespecial Fptr/<init>(Ljava/lang/Object;Ljava/lang/String;)V\n";
-        return commands;
+        List<String> commands = new ArrayList<>();
+        commands.addAll(List.of(
+                "new Fptr",
+                "dup",
+                "aload_0",
+                "ldc \"" + fptr.getFunctionName() + "\"",
+                "invokespecial Fptr/<init>(Ljava/lang/Object;Ljava/lang/String;)V"
+        ));
+        return Jasmin.join(commands) + "\n";
     }
 
     private String convertToNonPrimitive(Expression expression) {
@@ -633,9 +638,9 @@ public class CodeGenerator extends Visitor<String> {
         return "ldc \"" + stringValue + "\"";
     }
 
-    private String accept(List<Statement> statements){
+    private String accept(List<Statement> statements) {
         List<String> commands = new LinkedList<>();
-        for(Statement stmt : statements) {
+        for (Statement stmt : statements) {
             commands.addAll(List.of(
                     stmt.accept(this),
                     popNonVoidStatement(stmt)
@@ -647,13 +652,14 @@ public class CodeGenerator extends Visitor<String> {
     private String popNonVoidStatement(Statement statement) {
         if (statement instanceof ExpressionStatement expressionStatement) {
             if (expressionStatement.getExpression() instanceof AccessExpression accessExpression
-                && accessExpression.isFunctionCall()) {
+                    && accessExpression.isFunctionCall()) {
                 Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
                 try {
                     FunctionItem functionItem = SymbolTable.root.getFunctionItem(functionName.getName());
                     if (functionItem.isReturnTypeVoid())
                         return Jasmin.EMPTY;
-                } catch (ItemNotFound ignored) {}
+                } catch (ItemNotFound ignored) {
+                }
             }
             return Jasmin.POP;
         }
