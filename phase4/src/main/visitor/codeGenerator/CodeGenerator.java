@@ -23,6 +23,7 @@ import main.symbolTable.exceptions.ItemNotFound;
 import main.symbolTable.item.FunctionItem;
 import main.visitor.Visitor;
 import main.visitor.type.TypeChecker;
+import org.antlr.v4.runtime.atn.SemanticContext;
 
 import java.io.*;
 import java.util.*;
@@ -207,8 +208,7 @@ public class CodeGenerator extends Visitor<String> {
             commands.add(Jasmin.DEFAULT_LIMIT_STACK);
             commands.add(Jasmin.DEFAULT_LIMIT_LOCALS);
 
-            for (Statement stmt : functionDeclaration.getBody())
-                commands.add(stmt.accept(this));
+            commands.add(accept(functionDeclaration.getBody()));
 
             if (functionItem.getReturnType() == null)
                 commands.add(Jasmin.RETURN);
@@ -230,8 +230,7 @@ public class CodeGenerator extends Visitor<String> {
         commands.add(Jasmin.DEFAULT_LIMIT_LOCALS);
         commands.add("aload_0");
         commands.add(Jasmin.INVOKE_OBJECT_INIT);
-        for (var statement : mainDeclaration.getBody())
-            commands.add(statement.accept(this));
+        commands.add(accept(mainDeclaration.getBody()));
         commands.add(Jasmin.RETURN);
         commands.add(Jasmin.END_METHOD);
         addCommand(Jasmin.join(commands));
@@ -348,13 +347,13 @@ public class CodeGenerator extends Visitor<String> {
             nElse = getFreshLabel();
             commands.add("ifeq " + nElse);
         }
+        commands.add(accept(ifStatement.getThenBody()));
 
-        ifStatement.getThenBody().forEach(statement -> commands.add(statement.accept(this)));
         commands.add("goto " + nAfter);
 
         if (nElse != null) {
             commands.add(nElse + ":");
-            ifStatement.getElseBody().forEach(statement -> commands.add(statement.accept(this)));
+            commands.add(accept(ifStatement.getElseBody()));
         }
         commands.add(nAfter + ":");
         typeChecker.ifStatementEnded();
@@ -516,8 +515,7 @@ public class CodeGenerator extends Visitor<String> {
         afterLabels.push(nStart);
 
         commands.add(Jasmin.LABEL.formatted(nStart));
-        for (Statement stmt : loopDoStatement.getLoopBodyStmts())
-            commands.add(stmt.accept(this));
+        commands.add(accept(loopDoStatement.getLoopBodyStmts()));
         commands.add(Jasmin.GOTO + nStart);
         commands.add(Jasmin.LABEL.formatted(nAfter));
 
@@ -619,5 +617,22 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(StringValue stringValue) {
         return "ldc \"" + stringValue + "\"";
+    }
+
+    private String accept(List<Statement> statements){
+        List<String> commands = new LinkedList<>();
+        for(Statement stmt : statements) {
+            commands.addAll(List.of(
+                    stmt.accept(this),
+                    popNonVoidStatement(stmt)
+            ));
+        }
+        return Jasmin.join(commands);
+    }
+
+    private String popNonVoidStatement(Statement statement) {
+        if (statement instanceof ExpressionStatement)
+            return Jasmin.POP;
+        return Jasmin.EMPTY;
     }
 }
