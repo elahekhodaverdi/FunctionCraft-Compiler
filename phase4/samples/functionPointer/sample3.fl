@@ -1,0 +1,10 @@
+def f(a)
+    puts(a);
+end
+
+def main()
+    list = [method(:f)];
+
+    f_pointer = list[0];
+    f_pointer("First");
+end

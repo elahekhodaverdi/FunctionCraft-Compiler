@@ -273,5 +273,17 @@ public class CodeGeneratorTest {
         testCaseNumber = 7;
     }
 
+    @Test
+    public void call_function_pointer() {
+        folderName = "function_pointer";
+        testCaseNumber = 1;
+    }
+
+    @Test
+    public void assign_function_pointer_to_an_identifier() {
+        folderName = "function_pointer";
+        testCaseNumber = 1;
+    }
+
 }
 
