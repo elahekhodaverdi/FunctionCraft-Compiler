@@ -13,6 +13,7 @@ public class Jasmin {
     public static final String BOOL_TO_BOOLEAN = "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;";
 
     public static final String NEW_LIST = "new List";
+    public static final String NEW_FUNCTION_POINTER = "new Fptr";
     public static final String INVOKE_LIST_ININT = "invokespecial List/<init>(Ljava/util/ArrayList;)V";
     public static final String NEW_ARRAY_LIST = "new java/util/ArrayList";
     public static final String INVOKE_ARRAY_LIST_ININT = "invokespecial java/util/ArrayList/<init>()V";
@@ -37,6 +38,7 @@ public class Jasmin {
     public static final String IDIV = "idiv";
     public static final String ICONST_0 = "iconst_0";
     public static final String ICONST_1 = "iconst_1";
+    public static final String LOAD_CONSTANT = "ldc ";
     public static final String CHECKCAST = "checkcast ";
     public static final String RETURN = "return";
     public static final String GOTO = "goto ";

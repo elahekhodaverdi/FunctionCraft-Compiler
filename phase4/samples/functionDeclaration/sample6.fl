@@ -1,4 +1,4 @@
-def f(b)
+def f()
     loop do
         puts(20);
         return;
@@ -6,7 +6,5 @@ def f(b)
     puts(40);
 end
 def main()
-    a = false;
-    f(a);
-    puts(50);
+    puts(f());
 end

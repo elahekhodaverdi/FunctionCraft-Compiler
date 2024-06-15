@@ -1,0 +1,22 @@
+def f()
+    return 1;
+end
+
+def g()
+    return "elahe";
+end
+
+def h()
+    return true;
+end
+
+def w()
+    return [1,2,3];
+end
+
+def main()
+    puts(f());
+    puts(g());
+    puts(h());
+    puts(w());
+end

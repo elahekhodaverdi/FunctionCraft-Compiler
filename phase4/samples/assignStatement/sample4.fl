@@ -1,0 +1,22 @@
+def f(a, b, c, d, e)
+    a = true;
+    b = "ggg";
+    c = 4;
+    d[0] = 9;
+    e = [1, 2, 3];
+end
+
+
+def main()
+    p = false;
+    h = "hi";
+    j = 7;
+    k = [3, 5, 6];
+    l = [1 , 2];
+    f(p ,h, j, k, l[0]);
+    puts(p);
+    puts(h);
+    puts(j);
+    puts(k);
+    puts(l);
+end
