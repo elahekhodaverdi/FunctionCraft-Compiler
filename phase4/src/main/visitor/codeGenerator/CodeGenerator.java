@@ -1,5 +1,6 @@
 package main.visitor.codeGenerator;
 
+import main.ast.nodes.Node;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.declaration.MainDeclaration;
@@ -273,16 +274,6 @@ public class CodeGenerator extends Visitor<String> {
         return functionItem;
     }
 
-    private String getType2(Type type) {
-        if (type instanceof IntType)
-            return Jasmin.INT_TYPE;
-        if (type instanceof BoolType)
-            return Jasmin.BOOLEAN_TYPE;
-        if (type instanceof StringType)
-            return Jasmin.STRING_TYPE;
-        return Jasmin.EMPTY;
-    }
-
     private Type getListType(Expression expression) {
         var listType = (ListType) expression.accept(typeChecker);
         return listType.getType();
@@ -316,19 +307,19 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     private String store(Expression leftExpr) {
-        Type type = leftExpr.accept(typeChecker);
-        if (isReference(type))
-            return Jasmin.ASTORE;
-        else
-            return Jasmin.ISTORE;
+        return typePrefix(leftExpr) + Jasmin.STORE;
     }
 
     private String load(Expression leftExpr) {
-        Type type = leftExpr.accept(typeChecker);
+        return typePrefix(leftExpr) + Jasmin.LOAD;
+    }
+
+    private String typePrefix(Node operand) {
+        Type type = operand.accept(typeChecker);
         if (isReference(type))
-            return Jasmin.ALOAD;
+            return Jasmin.ADDRESS_TYPE_PREFIX;
         else
-            return Jasmin.ILOAD;
+            return Jasmin.INTEGER_TYPE_PREFIX;
     }
 
     private boolean isReference(Type type) {
@@ -382,17 +373,17 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ReturnStatement returnStatement) {
-        String commands = Jasmin.EMPTY;
-        String typeSign = Jasmin.EMPTY;
-        Type retType = null;
-        if (returnStatement.hasRetExpression()) {
-            retType = returnStatement.getReturnExp().accept(typeChecker);
-            typeSign = getSimpleTypeSign(retType);
-            commands += returnStatement.getReturnExp().accept(this);
-            commands += "\n";
-        }
+        List<String> commands = new LinkedList<>();
 
-        return commands + typeSign + Jasmin.RETURN;
+        if (returnStatement.hasRetExpression())
+            commands.addAll(List.of(
+                    returnStatement.getReturnExp().accept(this),
+                    typePrefix(returnStatement) + Jasmin.RETURN
+            ));
+        else
+            commands.add(Jasmin.RETURN);
+
+        return Jasmin.join(commands);
     }
 
     @Override

@@ -27,6 +27,11 @@ public class Jasmin {
 
     public static final String INVOKE_MAIN_METHOD = "invokestatic Main/%s(%s)%s";
 
+    public static final String INTEGER_TYPE_PREFIX = "i";
+    public static final String ADDRESS_TYPE_PREFIX = "a";
+    public static final String LOAD = "load ";
+    public static final String STORE = "store ";
+
     public static final String DUP = "dup";
     public static final String POP = "pop";
     public static final String SWAP = "swap";
