@@ -1,0 +1,8 @@
+def g(a)
+    return a;
+end
+
+def main()
+    b = g([1, 2]);
+    puts(b);
+end

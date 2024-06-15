@@ -67,7 +67,10 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     public String getSimpleTypeSign(Type type) {
-        return (type instanceof StringType || type instanceof ListType) ? "a" : "i";
+        if (isReference(type))
+            return "a";
+        else
+            return "i";
     }
 
     private String getJasminType(Type type) {
@@ -75,7 +78,7 @@ public class CodeGenerator extends Visitor<String> {
             return Jasmin.INT_TYPE;
         else if (type instanceof BoolType)
             return Jasmin.BOOLEAN_TYPE;
-        else if (type instanceof StringType)
+        else if (type instanceof StringType || type instanceof FptrType)
             return Jasmin.refOf(Jasmin.STRING_TYPE);
         else if (type instanceof ListType)
             return Jasmin.refOf(Jasmin.ARRAY_LIST_TYPE);
@@ -243,8 +246,7 @@ public class CodeGenerator extends Visitor<String> {
                     commands.add(arg.accept(this));
 
                 commands.add(Jasmin.INVOKE_MAIN_METHOD.formatted(functionName, argsType, returnType));
-            } catch (ItemNotFound ignored) {
-            }
+            }catch (ItemNotFound ignored) {}
         } else {
             commands.addAll(List.of(
                     accessExpression.getAccessedExpression().accept(this),

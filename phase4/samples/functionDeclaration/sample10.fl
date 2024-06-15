@@ -1,0 +1,13 @@
+def f()
+    puts("call f");
+end
+
+def g()
+    a = method(:f);
+    return a;
+end
+
+def main()
+    b = g();
+    puts(b());
+end
