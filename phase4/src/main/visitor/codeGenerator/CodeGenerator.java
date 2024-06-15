@@ -243,25 +243,18 @@ public class CodeGenerator extends Visitor<String> {
         List<String> commands = new LinkedList<>();
 
         if (accessExpression.isFunctionCall()) {
-            Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
             try {
                 Identifier accessedIdentifier = (Identifier) accessExpression.getAccessedExpression();
-                FunctionItem functionItem;
-
-                if (accessedIdentifier.accept(typeChecker) instanceof FptrType fptrType)
-                    functionItem = SymbolTable.root.getFunctionItem(fptrType.getFunctionName());
-                else
-                    functionItem = SymbolTable.root.getFunctionItem(accessedIdentifier.getName());
-
+                FunctionItem functionItem = getFunctionItem(accessedIdentifier);
                 String functionName = functionItem.getFunctionDeclaration().getFunctionName().getName();
+
+                String argsType = getJasminType(functionItem.getArgumentTypes());
+                String returnType = getJasminType(functionItem.getReturnType());
 
                 for (Expression arg : accessExpression.getArguments())
                     commands.add(arg.accept(this));
 
-                String args = getJasminType(functionItem.getArgumentTypes());
-                String returnType = getJasminType(functionItem.getReturnType());
-
-                commands.add("invokestatic Main/" + functionName + "(" + args + ")" + returnType);
+                commands.add(Jasmin.INVOKE_MAIN_METHOD.formatted(functionName, argsType, returnType));
             }catch (ItemNotFound ignored) {}
         } else {
             commands.addAll(List.of(
@@ -278,18 +271,6 @@ public class CodeGenerator extends Visitor<String> {
             }
         }
         return Jasmin.join(commands);
-    }
-
-    private List<FunctionItem> getFunctionItems(Identifier accessedIdentifier) throws ItemNotFound {
-        List<FunctionItem> functionItems = new LinkedList<>();
-        FunctionItem functionItem = getFunctionItem(accessedIdentifier);
-
-        functionItems.add(functionItem);
-        while (functionItem.getReturnType() instanceof FptrType fptrType) {
-            functionItem = SymbolTable.root.getFunctionItem(fptrType.getFunctionName());
-            functionItems.add(functionItem);
-        }
-        return functionItems;
     }
 
     private FunctionItem getFunctionItem(Identifier accessedIdentifier) throws ItemNotFound {

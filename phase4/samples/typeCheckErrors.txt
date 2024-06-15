@@ -1,1 +1,0 @@
-Line:14-> function pointers cannot be printed
