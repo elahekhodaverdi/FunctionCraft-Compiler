@@ -268,9 +268,27 @@ public class CodeGeneratorTest {
 
 
     @Test
-    public void return_function() {
+    public void return_integer_type() {
         folderName = "functionDeclaration";
         testCaseNumber = 5;
+    }
+
+    @Test
+    public void return_string_type() {
+        folderName = "functionDeclaration";
+        testCaseNumber = 8;
+    }
+
+    @Test
+    public void return_list_type() {
+        folderName = "functionDeclaration";
+        testCaseNumber = 9;
+    }
+
+    @Test
+    public void return_function_pointer_type() {
+        folderName = "functionDeclaration";
+        testCaseNumber = 10;
     }
 
     @Test

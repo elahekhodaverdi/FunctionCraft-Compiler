@@ -75,7 +75,7 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     public String getSimpleTypeSign(Type type) {
-        if (type instanceof StringType || type instanceof ListType)
+        if (isReference(type))
             return "a";
         else
             return "i";
@@ -86,7 +86,7 @@ public class CodeGenerator extends Visitor<String> {
             return Jasmin.INT_TYPE;
         else if (type instanceof BoolType)
             return Jasmin.BOOLEAN_TYPE;
-        else if (type instanceof StringType)
+        else if (type instanceof StringType || type instanceof FptrType)
             return Jasmin.refOf(Jasmin.STRING_TYPE);
         else if (type instanceof ListType)
             return Jasmin.refOf(Jasmin.ARRAY_LIST_TYPE);
