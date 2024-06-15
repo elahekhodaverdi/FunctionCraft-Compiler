@@ -47,38 +47,27 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     private int slotOf(String var) {
-        if (!slots.containsKey(var)) {
-            slots.put(var, slots.size());
-            return slots.size() - 1;
-        }
-        return slots.get(var);
+        return slots.computeIfAbsent(var, k -> slots.size());
     }
 
+
     public String getFreshLabel() {
-        String fresh = "Label_" + curLabel;
-        curLabel++;
-        return fresh;
+        return "Label_" + curLabel++;
     }
 
     public String getType(Type element) {
-        String type = Jasmin.EMPTY;
-        switch (element) {
-            case StringType stringType -> type += "Ljava/lang/String;";
-            case IntType intType -> type += "Ljava/lang/Integer;";
-            case FptrType fptrType -> type += "LFptr;";
-            case ListType listType -> type += "LList;";
-            case BoolType boolType -> type += "Ljava/lang/Boolean;";
-            case null, default -> {
-            }
-        }
-        return type;
+        return switch (element) {
+            case StringType stringType -> "Ljava/lang/String;";
+            case IntType intType -> "Ljava/lang/Integer;";
+            case FptrType fptrType -> "LFptr;";
+            case ListType listType -> "LList;";
+            case BoolType boolType -> "Ljava/lang/Boolean;";
+            default -> Jasmin.EMPTY;
+        };
     }
 
     public String getSimpleTypeSign(Type type) {
-        if (type instanceof StringType || type instanceof ListType)
-            return "a";
-        else
-            return "i";
+        return (type instanceof StringType || type instanceof ListType) ? "a" : "i";
     }
 
     private String getJasminType(Type type) {
@@ -125,7 +114,6 @@ public class CodeGenerator extends Visitor<String> {
             file.createNewFile();
             mainFile = new FileWriter(path);
         } catch (IOException e) {
-            // ignore
         }
     }
 
@@ -255,7 +243,8 @@ public class CodeGenerator extends Visitor<String> {
                     commands.add(arg.accept(this));
 
                 commands.add(Jasmin.INVOKE_MAIN_METHOD.formatted(functionName, argsType, returnType));
-            }catch (ItemNotFound ignored) {}
+            } catch (ItemNotFound ignored) {
+            }
         } else {
             commands.addAll(List.of(
                     accessExpression.getAccessedExpression().accept(this),
@@ -280,13 +269,6 @@ public class CodeGenerator extends Visitor<String> {
         else
             functionItem = SymbolTable.root.getFunctionItem(accessedIdentifier.getName());
         return functionItem;
-    }
-
-    private String getType2(ArrayList<Type> types) {
-        String commands = Jasmin.EMPTY;
-        for (Type type : types)
-            commands += getType2(type);
-        return commands;
     }
 
     private String getType2(Type type) {
@@ -477,10 +459,10 @@ public class CodeGenerator extends Visitor<String> {
                 break;
         }
 
-        commands.add(Jasmin.LOAD_CONSTANT + "0");
+        commands.add(Jasmin.LOAD_CONSTANT + 0);
         commands.add(Jasmin.GOTO + L2);
         commands.add(Jasmin.LABEL.formatted(L1));
-        commands.add(Jasmin.LOAD_CONSTANT + "1");
+        commands.add(Jasmin.LOAD_CONSTANT + 1);
         commands.add(Jasmin.LABEL.formatted(L2));
     }
 
@@ -641,7 +623,7 @@ public class CodeGenerator extends Visitor<String> {
         return Jasmin.LOAD_CONSTANT + "\"" + stringValue + "\"";
     }
 
-    private String acceptBody(List<Statement> statements){
+    private String acceptBody(List<Statement> statements) {
         List<String> commands = new LinkedList<>();
         for (Statement stmt : statements) {
             commands.addAll(List.of(
