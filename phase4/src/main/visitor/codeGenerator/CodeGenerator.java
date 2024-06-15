@@ -242,10 +242,16 @@ public class CodeGenerator extends Visitor<String> {
         List<String> commands = new LinkedList<>();
 
         if (accessExpression.isFunctionCall()) {
-            Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
             try {
-                FunctionItem functionItem = SymbolTable.root.getFunctionItem(functionName.getName());
+                Identifier accessedIdentifier = (Identifier) accessExpression.getAccessedExpression();
+                FunctionItem functionItem;
 
+                if (accessedIdentifier.accept(typeChecker) instanceof FptrType fptrType)
+                    functionItem = SymbolTable.root.getFunctionItem(fptrType.getFunctionName());
+                else
+                    functionItem = SymbolTable.root.getFunctionItem(accessedIdentifier.getName());
+
+                String functionName = functionItem.getFunctionDeclaration().getFunctionName().getName();
 
             for(Expression arg : accessExpression.getArguments())
                 commands.add(arg.accept(this));
@@ -253,7 +259,7 @@ public class CodeGenerator extends Visitor<String> {
             String args = getJasminType(functionItem.getArgumentTypes());
             String returnType = getJasminType(functionItem.getReturnType());
 
-            commands.add("invokestatic Main/" + functionName.getName() + "(" + args + ")" + returnType);
+            commands.add("invokestatic Main/" + functionName + "(" + args + ")" + returnType);
             }catch (ItemNotFound ignored) {}
         } else {
             commands.add(accessExpression.getAccessedExpression().accept(this));
@@ -576,14 +582,15 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(FunctionPointer functionPointer) {
-        FptrType fptr = (FptrType) functionPointer.accept(typeChecker);
-        String commands = "";
-        commands += "new Fptr\n";
-        commands += "dup\n";
-        commands += "aload_0\n";
-        commands += "ldc " + "\"" + fptr.getFunctionName() + "\"\n";
-        commands += "invokespecial Fptr/<init>(Ljava/lang/Object;Ljava/lang/String;)V\n";
-        return commands;
+//        FptrType fptr = (FptrType) functionPointer.accept(typeChecker);
+//        String commands = "";
+//        commands += "new Fptr\n";
+//        commands += "dup\n";
+//        commands += "aload_0\n";
+//        commands += "ldc " + "\"" + fptr.getFunctionName() + "\"\n";
+//        commands += "invokespecial Fptr/<init>(Ljava/lang/Object;Ljava/lang/String;)V\n";
+//        return commands;
+        return "ldc 2";
     }
 
     private String convertToNonPrimitive(Expression expression) {
