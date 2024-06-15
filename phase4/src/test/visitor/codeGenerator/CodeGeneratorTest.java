@@ -213,6 +213,18 @@ public class CodeGeneratorTest {
     }
 
     @Test
+    public void assign_function_pointer_to_an_identifier() {
+        folderName = "assignStatement";
+        testCaseNumber = 5;
+    }
+
+    @Test
+    public void assign_an_element_of_function_pointer_list_to_an_identifier() {
+        folderName = "assignStatement";
+        testCaseNumber = 6;
+    }
+
+    @Test
     public void len_statement() {
         folderName = "lenStatement";
         testCaseNumber = 1;
@@ -271,6 +283,12 @@ public class CodeGeneratorTest {
     public void return_in_if_scope_of_function() {
         folderName = "functionDeclaration";
         testCaseNumber = 7;
+    }
+
+    @Test
+    public void call_function_pointer() {
+        folderName = "functionPointer";
+        testCaseNumber = 1;
     }
 
 }

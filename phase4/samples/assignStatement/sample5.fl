@@ -1,0 +1,10 @@
+def f(integer, string)
+    puts(integer);
+    puts(string);
+end
+
+def main()
+    a = method(:f);
+    copied_a = a;
+    copied_a(10, "First");
+end

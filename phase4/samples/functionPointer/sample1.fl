@@ -1,0 +1,10 @@
+def f(integer, string, boolean)
+    puts(integer);
+    puts(string);
+    puts(boolean);
+end
+
+def main()
+    a = method(:f);
+    a(10, "First", true);
+end
