@@ -262,7 +262,8 @@ public class CodeGenerator extends Visitor<String> {
                     accessExpression.getDimentionalAccess().getFirst().accept(this),
                     Jasmin.INVOKE_ARRAY_LIST_GET
             ));
-            if (getListType(accessExpression.getAccessedExpression()) instanceof StringType)
+            Type accessType = getListType(accessExpression.getAccessedExpression());
+            if (accessType instanceof StringType || accessType instanceof FptrType)
                 commands.add(Jasmin.CHECKCAST + Jasmin.STRING_TYPE);
             else {
                 commands.add(Jasmin.CHECKCAST + Jasmin.INTEGER_TYE);
@@ -332,7 +333,7 @@ public class CodeGenerator extends Visitor<String> {
 
     private String store(Expression leftExpr) {
         Type type = leftExpr.accept(typeChecker);
-        if (type instanceof StringType || type instanceof ListType || type instanceof FptrType)
+        if (isReference(type))
             return Jasmin.ASTORE;
         else
             return Jasmin.ISTORE;
@@ -340,10 +341,14 @@ public class CodeGenerator extends Visitor<String> {
 
     private String load(Expression leftExpr) {
         Type type = leftExpr.accept(typeChecker);
-        if (type instanceof StringType || type instanceof ListType)
+        if (isReference(type))
             return Jasmin.ALOAD;
         else
             return Jasmin.ILOAD;
+    }
+
+    private boolean isReference(Type type) {
+        return type instanceof StringType || type instanceof ListType || type instanceof FptrType;
     }
 
     @Override
@@ -651,9 +656,9 @@ public class CodeGenerator extends Visitor<String> {
         if (statement instanceof ExpressionStatement expressionStatement) {
             if (expressionStatement.getExpression() instanceof AccessExpression accessExpression
                     && accessExpression.isFunctionCall()) {
-                Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
+                Identifier accessedIdentifier = (Identifier) accessExpression.getAccessedExpression();
                 try {
-                    FunctionItem functionItem = SymbolTable.root.getFunctionItem(functionName.getName());
+                    FunctionItem functionItem = getFunctionItem(accessedIdentifier);
                     if (functionItem.isReturnTypeVoid())
                         return Jasmin.EMPTY;
                 } catch (ItemNotFound ignored) {
