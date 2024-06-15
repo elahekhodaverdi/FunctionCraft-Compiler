@@ -271,16 +271,6 @@ public class CodeGenerator extends Visitor<String> {
         return functionItem;
     }
 
-    private String getType2(Type type) {
-        if (type instanceof IntType)
-            return Jasmin.INT_TYPE;
-        if (type instanceof BoolType)
-            return Jasmin.BOOLEAN_TYPE;
-        if (type instanceof StringType)
-            return Jasmin.STRING_TYPE;
-        return Jasmin.EMPTY;
-    }
-
     private Type getListType(Expression expression) {
         var listType = (ListType) expression.accept(typeChecker);
         return listType.getType();
