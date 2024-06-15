@@ -55,7 +55,7 @@ public class CodeGenerator extends Visitor<String> {
     public String getFreshLabel() {
         return "Label_" + curLabel++;
     }
-    
+
     private String getJasminType(Type type) {
         if (type instanceof IntType)
             return Jasmin.INT_TYPE;
@@ -119,48 +119,36 @@ public class CodeGenerator extends Visitor<String> {
         }
     }
 
-    private void addCommand(String command) {
-        try {
-            command = String.join("\n\t\t", command.split("\n"));
-            if (command.startsWith("Label_"))
-                mainFile.write("\t" + command + "\n");
-            else if (command.startsWith("."))
-                mainFile.write(command + "\n");
-            else
-                mainFile.write("\t\t" + command + "\n");
-            mainFile.flush();
-        } catch (IOException ignored) {
-        }
-    }
-
-    private void handleMainClass() {
+    private String handleMainClass() {
         String commands = """
                 .class public Main
                 .super java/lang/Object
                 .method public static main([Ljava/lang/String;)V
-                    .limit stack 128
-                    .limit locals 128
-                    new Main
-                    invokespecial Main/<init>()V
-                    return
+                .limit stack 128
+                .limit locals 128
+                new Main
+                invokespecial Main/<init>()V
+                return
                 .end method
                 """;
-        addCommand(commands);
+        return commands;
     }
 
     @Override
     public String visit(Program program) {
-        handleMainClass();
+        List<String> commands = new LinkedList<>();
+        commands.add(handleMainClass());
 
         for (String funcName : this.visited) {
             try {
                 this.curFunction = SymbolTable.root.getFunctionItem(funcName);
-                this.curFunction.getFunctionDeclaration().accept(this);
+                commands.add(this.curFunction.getFunctionDeclaration().accept(this));
             } catch (ItemNotFound ignored) {
             }
         }
 
-        program.getMain().accept(this);
+        commands.add(program.getMain().accept(this));
+        Jasmin.write(Jasmin.join(commands), mainFile);
         return null;
     }
 
@@ -189,12 +177,11 @@ public class CodeGenerator extends Visitor<String> {
                 commands.add(Jasmin.RETURN);
 
             commands.add(Jasmin.END_METHOD);
-
-            addCommand(Jasmin.join(commands));
         } catch (ItemNotFound ignored) {
         }
         typeChecker.functionDeclarationEnded();
-        return null;
+
+        return Jasmin.join(commands);
     }
 
     @Override
@@ -209,8 +196,7 @@ public class CodeGenerator extends Visitor<String> {
         commands.add(acceptBody(mainDeclaration.getBody()));
         commands.add(Jasmin.RETURN);
         commands.add(Jasmin.END_METHOD);
-        addCommand(Jasmin.join(commands));
-        return null;
+        return Jasmin.join(commands);
     }
 
     public String visit(AccessExpression accessExpression) {

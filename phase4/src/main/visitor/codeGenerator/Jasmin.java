@@ -1,5 +1,7 @@
 package main.visitor.codeGenerator;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class Jasmin {
@@ -82,5 +84,22 @@ public class Jasmin {
     }
     public static String refOf(String type) {
         return String.format(REF, type);
+    }
+
+    public static void write(String commands, FileWriter mainFile) {
+        try {
+            for(String command : commands.split("\n")) {
+                if (command.isEmpty())
+                    continue;
+                if (command.startsWith("."))
+                    mainFile.write( command + "\n");
+                else if (command.startsWith("Label_"))
+                    mainFile.write("\t" + command + "\n");
+                else
+                    mainFile.write("\t\t" + command + "\n");
+                mainFile.flush();
+            }
+        } catch (IOException ignored) {
+        }
     }
 }
