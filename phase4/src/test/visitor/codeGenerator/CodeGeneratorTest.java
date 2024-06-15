@@ -309,5 +309,16 @@ public class CodeGeneratorTest {
         testCaseNumber = 1;
     }
 
+    @Test
+    public void print_a_list_recursively() {
+        folderName = "integration";
+        testCaseNumber = 1;
+    }
+
+    @Test
+    public void calculate_power_with_loop() {
+        folderName = "integration";
+        testCaseNumber = 2;
+    }
 }
 
