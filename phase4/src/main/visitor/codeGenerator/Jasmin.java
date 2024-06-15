@@ -25,6 +25,8 @@ public class Jasmin {
     public static final String INVOKE_STRING_LENGTH = "invokevirtual java/lang/String/length()I";
     public static final String INVOKE_STRING_SUBSTRING ="invokevirtual java/lang/String/substring(II)Ljava/lang/String;";
 
+    public static final String INVOKE_MAIN_METHOD = "invokestatic Main/%s(%s)%s";
+
     public static final String DUP = "dup";
     public static final String POP = "pop";
     public static final String SWAP = "swap";
@@ -39,6 +41,7 @@ public class Jasmin {
     public static final String ICONST_0 = "iconst_0";
     public static final String ICONST_1 = "iconst_1";
     public static final String LOAD_CONSTANT = "ldc ";
+    public static final String LOAD_STRING = "ldc \"%s\"";
     public static final String CHECKCAST = "checkcast ";
     public static final String RETURN = "return";
     public static final String GOTO = "goto ";

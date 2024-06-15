@@ -243,30 +243,25 @@ public class CodeGenerator extends Visitor<String> {
         List<String> commands = new LinkedList<>();
 
         if (accessExpression.isFunctionCall()) {
-            Identifier functionName = (Identifier) accessExpression.getAccessedExpression();
             try {
                 Identifier accessedIdentifier = (Identifier) accessExpression.getAccessedExpression();
-                FunctionItem functionItem;
-
-                if (accessedIdentifier.accept(typeChecker) instanceof FptrType fptrType)
-                    functionItem = SymbolTable.root.getFunctionItem(fptrType.getFunctionName());
-                else
-                    functionItem = SymbolTable.root.getFunctionItem(accessedIdentifier.getName());
-
+                FunctionItem functionItem = getFunctionItem(accessedIdentifier);
                 String functionName = functionItem.getFunctionDeclaration().getFunctionName().getName();
+
+                String argsType = getJasminType(functionItem.getArgumentTypes());
+                String returnType = getJasminType(functionItem.getReturnType());
 
                 for (Expression arg : accessExpression.getArguments())
                     commands.add(arg.accept(this));
 
-                String args = getJasminType(functionItem.getArgumentTypes());
-                String returnType = getJasminType(functionItem.getReturnType());
-
-            commands.add("invokestatic Main/" + functionName + "(" + args + ")" + returnType);
+                commands.add(Jasmin.INVOKE_MAIN_METHOD.formatted(functionName, argsType, returnType));
             }catch (ItemNotFound ignored) {}
         } else {
-            commands.add(accessExpression.getAccessedExpression().accept(this));
-            commands.add(accessExpression.getDimentionalAccess().getFirst().accept(this));
-            commands.add(Jasmin.INVOKE_ARRAY_LIST_GET);
+            commands.addAll(List.of(
+                    accessExpression.getAccessedExpression().accept(this),
+                    accessExpression.getDimentionalAccess().getFirst().accept(this),
+                    Jasmin.INVOKE_ARRAY_LIST_GET
+            ));
             if (getListType(accessExpression.getAccessedExpression()) instanceof StringType)
                 commands.add(Jasmin.CHECKCAST + Jasmin.STRING_TYPE);
             else {
@@ -275,6 +270,15 @@ public class CodeGenerator extends Visitor<String> {
             }
         }
         return Jasmin.join(commands);
+    }
+
+    private FunctionItem getFunctionItem(Identifier accessedIdentifier) throws ItemNotFound {
+        FunctionItem functionItem;
+        if (accessedIdentifier.accept(typeChecker) instanceof FptrType fptrType)
+            functionItem = SymbolTable.root.getFunctionItem(fptrType.getFunctionName());
+        else
+            functionItem = SymbolTable.root.getFunctionItem(accessedIdentifier.getName());
+        return functionItem;
     }
 
     private String getType2(ArrayList<Type> types) {
@@ -328,7 +332,7 @@ public class CodeGenerator extends Visitor<String> {
 
     private String store(Expression leftExpr) {
         Type type = leftExpr.accept(typeChecker);
-        if (type instanceof StringType || type instanceof ListType)
+        if (type instanceof StringType || type instanceof ListType || type instanceof FptrType)
             return Jasmin.ASTORE;
         else
             return Jasmin.ISTORE;
@@ -585,15 +589,7 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(FunctionPointer functionPointer) {
-//        FptrType fptr = (FptrType) functionPointer.accept(typeChecker);
-//        String commands = "";
-//        commands += "new Fptr\n";
-//        commands += "dup\n";
-//        commands += "aload_0\n";
-//        commands += "ldc " + "\"" + fptr.getFunctionName() + "\"\n";
-//        commands += "invokespecial Fptr/<init>(Ljava/lang/Object;Ljava/lang/String;)V\n";
-//        return commands;
-        return "ldc 2";
+        return Jasmin.LOAD_STRING.formatted("method:" + functionPointer.getId().getName());
     }
 
     private String convertToNonPrimitive(Expression expression) {
