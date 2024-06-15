@@ -50,7 +50,7 @@ public class FunctionCraft {
                 Runtime.getRuntime().exec("java -jar jasmin.jar *.j", null, dir);
 
             try {
-                Thread.sleep(500);
+                Thread.sleep(200);
             } catch (InterruptedException ignored) {}
 
             Process process = Runtime.getRuntime().exec("java Main", null, dir);

@@ -1,5 +1,6 @@
 package main.visitor.codeGenerator;
 
+import main.ast.nodes.Node;
 import main.ast.nodes.Program;
 import main.ast.nodes.declaration.FunctionDeclaration;
 import main.ast.nodes.declaration.MainDeclaration;
@@ -53,24 +54,6 @@ public class CodeGenerator extends Visitor<String> {
 
     public String getFreshLabel() {
         return "Label_" + curLabel++;
-    }
-
-    public String getType(Type element) {
-        return switch (element) {
-            case StringType stringType -> "Ljava/lang/String;";
-            case IntType intType -> "Ljava/lang/Integer;";
-            case FptrType fptrType -> "LFptr;";
-            case ListType listType -> "LList;";
-            case BoolType boolType -> "Ljava/lang/Boolean;";
-            default -> Jasmin.EMPTY;
-        };
-    }
-
-    public String getSimpleTypeSign(Type type) {
-        if (isReference(type))
-            return "a";
-        else
-            return "i";
     }
 
     private String getJasminType(Type type) {
@@ -136,48 +119,36 @@ public class CodeGenerator extends Visitor<String> {
         }
     }
 
-    private void addCommand(String command) {
-        try {
-            command = String.join("\n\t\t", command.split("\n"));
-            if (command.startsWith("Label_"))
-                mainFile.write("\t" + command + "\n");
-            else if (command.startsWith("."))
-                mainFile.write(command + "\n");
-            else
-                mainFile.write("\t\t" + command + "\n");
-            mainFile.flush();
-        } catch (IOException ignored) {
-        }
-    }
-
-    private void handleMainClass() {
+    private String handleMainClass() {
         String commands = """
                 .class public Main
                 .super java/lang/Object
                 .method public static main([Ljava/lang/String;)V
-                    .limit stack 128
-                    .limit locals 128
-                    new Main
-                    invokespecial Main/<init>()V
-                    return
+                .limit stack 128
+                .limit locals 128
+                new Main
+                invokespecial Main/<init>()V
+                return
                 .end method
                 """;
-        addCommand(commands);
+        return commands;
     }
 
     @Override
     public String visit(Program program) {
-        handleMainClass();
+        List<String> commands = new LinkedList<>();
+        commands.add(handleMainClass());
 
         for (String funcName : this.visited) {
             try {
                 this.curFunction = SymbolTable.root.getFunctionItem(funcName);
-                this.curFunction.getFunctionDeclaration().accept(this);
+                commands.add(this.curFunction.getFunctionDeclaration().accept(this));
             } catch (ItemNotFound ignored) {
             }
         }
 
-        program.getMain().accept(this);
+        commands.add(program.getMain().accept(this));
+        Jasmin.write(Jasmin.join(commands), mainFile);
         return null;
     }
 
@@ -206,12 +177,11 @@ public class CodeGenerator extends Visitor<String> {
                 commands.add(Jasmin.RETURN);
 
             commands.add(Jasmin.END_METHOD);
-
-            addCommand(Jasmin.join(commands));
         } catch (ItemNotFound ignored) {
         }
         typeChecker.functionDeclarationEnded();
-        return null;
+
+        return Jasmin.join(commands);
     }
 
     @Override
@@ -226,8 +196,7 @@ public class CodeGenerator extends Visitor<String> {
         commands.add(acceptBody(mainDeclaration.getBody()));
         commands.add(Jasmin.RETURN);
         commands.add(Jasmin.END_METHOD);
-        addCommand(Jasmin.join(commands));
-        return null;
+        return Jasmin.join(commands);
     }
 
     public String visit(AccessExpression accessExpression) {
@@ -306,19 +275,19 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     private String store(Expression leftExpr) {
-        Type type = leftExpr.accept(typeChecker);
-        if (isReference(type))
-            return Jasmin.ASTORE;
-        else
-            return Jasmin.ISTORE;
+        return typePrefix(leftExpr) + Jasmin.STORE;
     }
 
     private String load(Expression leftExpr) {
-        Type type = leftExpr.accept(typeChecker);
+        return typePrefix(leftExpr) + Jasmin.LOAD;
+    }
+
+    private String typePrefix(Node operand) {
+        Type type = operand.accept(typeChecker);
         if (isReference(type))
-            return Jasmin.ALOAD;
+            return Jasmin.ADDRESS_TYPE_PREFIX;
         else
-            return Jasmin.ILOAD;
+            return Jasmin.INTEGER_TYPE_PREFIX;
     }
 
     private boolean isReference(Type type) {
@@ -372,17 +341,17 @@ public class CodeGenerator extends Visitor<String> {
 
     @Override
     public String visit(ReturnStatement returnStatement) {
-        String commands = Jasmin.EMPTY;
-        String typeSign = Jasmin.EMPTY;
-        Type retType = null;
-        if (returnStatement.hasRetExpression()) {
-            retType = returnStatement.getReturnExp().accept(typeChecker);
-            typeSign = getSimpleTypeSign(retType);
-            commands += returnStatement.getReturnExp().accept(this);
-            commands += "\n";
-        }
+        List<String> commands = new LinkedList<>();
 
-        return commands + typeSign + Jasmin.RETURN;
+        if (returnStatement.hasRetExpression())
+            commands.addAll(List.of(
+                    returnStatement.getReturnExp().accept(this),
+                    typePrefix(returnStatement) + Jasmin.RETURN
+            ));
+        else
+            commands.add(Jasmin.RETURN);
+
+        return Jasmin.join(commands);
     }
 
     @Override

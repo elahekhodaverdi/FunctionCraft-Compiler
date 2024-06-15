@@ -1,5 +1,7 @@
 package main.visitor.codeGenerator;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 
 public class Jasmin {
@@ -26,6 +28,11 @@ public class Jasmin {
     public static final String INVOKE_STRING_SUBSTRING ="invokevirtual java/lang/String/substring(II)Ljava/lang/String;";
 
     public static final String INVOKE_MAIN_METHOD = "invokestatic Main/%s(%s)%s";
+
+    public static final String INTEGER_TYPE_PREFIX = "i";
+    public static final String ADDRESS_TYPE_PREFIX = "a";
+    public static final String LOAD = "load ";
+    public static final String STORE = "store ";
 
     public static final String DUP = "dup";
     public static final String POP = "pop";
@@ -77,5 +84,22 @@ public class Jasmin {
     }
     public static String refOf(String type) {
         return String.format(REF, type);
+    }
+
+    public static void write(String commands, FileWriter mainFile) {
+        try {
+            for(String command : commands.split("\n")) {
+                if (command.isEmpty())
+                    continue;
+                if (command.startsWith("."))
+                    mainFile.write( command + "\n");
+                else if (command.startsWith("Label_"))
+                    mainFile.write("\t" + command + "\n");
+                else
+                    mainFile.write("\t\t" + command + "\n");
+                mainFile.flush();
+            }
+        } catch (IOException ignored) {
+        }
     }
 }
