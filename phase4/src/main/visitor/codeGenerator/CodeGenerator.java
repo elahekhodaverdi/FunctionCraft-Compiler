@@ -55,25 +55,7 @@ public class CodeGenerator extends Visitor<String> {
     public String getFreshLabel() {
         return "Label_" + curLabel++;
     }
-
-    public String getType(Type element) {
-        return switch (element) {
-            case StringType stringType -> "Ljava/lang/String;";
-            case IntType intType -> "Ljava/lang/Integer;";
-            case FptrType fptrType -> "LFptr;";
-            case ListType listType -> "LList;";
-            case BoolType boolType -> "Ljava/lang/Boolean;";
-            default -> Jasmin.EMPTY;
-        };
-    }
-
-    public String getSimpleTypeSign(Type type) {
-        if (isReference(type))
-            return "a";
-        else
-            return "i";
-    }
-
+    
     private String getJasminType(Type type) {
         if (type instanceof IntType)
             return Jasmin.INT_TYPE;
