@@ -320,5 +320,11 @@ public class CodeGeneratorTest {
         folderName = "integration";
         testCaseNumber = 2;
     }
+
+    @Test
+    public void simple_calculator() {
+        folderName = "integration";
+        testCaseNumber = 3;
+    }
 }
 

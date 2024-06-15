@@ -1,0 +1,36 @@
+Starting comprehensive calculator test...
+-------
+10
++
+20
+=
+30
+-------
+-------
+20
+-
+30
+=
+-10
+-------
+-------
+30
+*
+40
+=
+1200
+-------
+-------
+40
+/
+50
+=
+0
+-------
+Sum of 5 and 10:
+15
+Returned number:
+42
+Unary negation of returned number:
+-42
+Comprehensive calculator test completed.

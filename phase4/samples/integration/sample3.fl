@@ -1,0 +1,86 @@
+def performOperation(a, b, i)
+    if (i == 0)
+      return a + b;
+    end
+
+    if (i == 1)
+      return a - b;
+    end
+
+    if (i == 2)
+      return a * b;
+    end
+
+    if (i == 3)
+      return a / b;
+    end
+
+    return 0;
+end
+
+def sum(a, b)
+    return a + b;
+end
+
+def getNumber()
+    return 42;
+end
+
+def main()
+    puts("Starting comprehensive calculator test...");
+
+    # Simulate a simple calculator loop
+    numbers = [10, 20, 30, 40, 50];
+    operations = ["+", "-", "*", "/"];
+    i = 0;
+    loop do
+        num1 = numbers[i];
+        num2 = numbers[i + 1];
+        operation = operations[i];
+
+        result = performOperation(num1, num2, i);
+
+        op = "";
+
+        if (i == 0)
+          op = "+";
+        end
+
+        if (i == 1)
+          op = "-";
+        end
+
+        if (i == 2)
+          op = "*";
+        end
+
+        if (i == 3)
+          op = "/";
+        end
+        puts("-------");
+        puts(num1);
+        puts(op);
+        puts(num2);
+        puts("=");
+        puts(result);
+        puts("-------");
+        if (i == 3)
+            break;
+        end
+        i = i + 1;
+    end
+
+    # Test additional features
+    sum = sum(5, 10);
+    puts("Sum of 5 and 10:");
+    puts(sum);
+
+    number = getNumber();
+    puts("Returned number:");
+    puts(number);
+    unaryResult = -number;
+    puts("Unary negation of returned number:");
+    puts(unaryResult);
+
+    puts("Comprehensive calculator test completed.");
+end
