@@ -225,6 +225,12 @@ public class CodeGeneratorTest {
     }
 
     @Test
+    public void all_assign_operators() {
+        folderName = "assignStatement";
+        testCaseNumber = 7;
+    }
+
+    @Test
     public void len_statement() {
         folderName = "lenStatement";
         testCaseNumber = 1;

@@ -1,0 +1,17 @@
+def main()
+    a = [1,2,3];
+    b = 100;
+    c = 200;
+    d = 300;
+    e = 180;
+    a[1]  += 6;
+    b -= 45;
+    c /= 4;
+    d *= 3;
+    e %= 72;
+    puts(a);
+    puts(b);
+    puts(c);
+    puts(d);
+    puts(e);
+end
