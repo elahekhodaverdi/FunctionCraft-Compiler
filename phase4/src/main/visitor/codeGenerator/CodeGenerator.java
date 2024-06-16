@@ -201,7 +201,6 @@ public class CodeGenerator extends Visitor<String> {
 
     public String visit(AccessExpression accessExpression) {
         List<String> commands = new LinkedList<>();
-
         if (accessExpression.isFunctionCall()) {
             try {
                 Identifier accessedIdentifier = (Identifier) accessExpression.getAccessedExpression();
@@ -215,13 +214,16 @@ public class CodeGenerator extends Visitor<String> {
                     commands.add(arg.accept(this));
 
                 commands.add(Jasmin.INVOKE_MAIN_METHOD.formatted(functionName, argsType, returnType));
-            }catch (ItemNotFound ignored) {}
+            } catch (ItemNotFound ignored) {
+            }
         } else {
+
             commands.addAll(List.of(
                     accessExpression.getAccessedExpression().accept(this),
                     accessExpression.getDimentionalAccess().getFirst().accept(this),
                     Jasmin.INVOKE_ARRAY_LIST_GET
             ));
+
             Type accessType = getListType(accessExpression.getAccessedExpression());
             if (accessType instanceof StringType || accessType instanceof FptrType)
                 commands.add(Jasmin.CHECKCAST + Jasmin.STRING_TYPE);
@@ -250,25 +252,35 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(AssignStatement assignStatement) {
         List<String> commands = new LinkedList<>();
-
+        AssignOperator op = assignStatement.getAssignOperator();
         String rightValue = assignStatement.getAssignExpression().accept(this);
         int leftSlot = slotOf(assignStatement.getAssignedId().getName());
 
-        if (assignStatement.isAccessList())
-            commands.addAll(List.of(
-                    Jasmin.ALOAD + leftSlot,
-                    assignStatement.getAccessListExpression().accept(this),
-                    rightValue,
-                    convertToNonPrimitive(assignStatement.getAssignExpression()),
-                    Jasmin.CHECKCAST + Jasmin.OBJECT_TYPE,
-                    Jasmin.INVOKE_ARRAY_LIST_SET,
-                    Jasmin.POP
-            ));
-        else
-            commands.addAll(List.of(
-                    rightValue,
-                    store(assignStatement.getAssignExpression()) + leftSlot
-            ));
+        if (assignStatement.isAccessList()) {
+
+            commands.add(Jasmin.ALOAD + leftSlot);
+            commands.add(assignStatement.getAccessListExpression().accept(this));
+            if (needToLoadAssignedExpression(op)) {
+                ArrayList<Expression> indexes = new ArrayList<>();
+                indexes.add(assignStatement.getAccessListExpression());
+                AccessExpression access = new AccessExpression(assignStatement.getAssignedId(), null);
+                access.setDimentionalAccess(indexes);
+                commands.add(access.accept(this));
+            }
+            commands.add(rightValue);
+            commands.add(getAssignOperationJasminCode(op));
+            commands.add(convertToNonPrimitive(assignStatement.getAssignExpression()));
+            commands.add(Jasmin.CHECKCAST + Jasmin.OBJECT_TYPE);
+            commands.add(Jasmin.INVOKE_ARRAY_LIST_SET);
+            commands.add(Jasmin.POP);
+
+        } else {
+            if (needToLoadAssignedExpression(op))
+                commands.add(load(assignStatement.getAssignedId()) + leftSlot);
+            commands.add(rightValue);
+            commands.add(getAssignOperationJasminCode(assignStatement.getAssignOperator()));
+            commands.add(store(assignStatement.getAssignExpression()) + leftSlot);
+        }
 
         assignStatement.accept(typeChecker);
         return Jasmin.join(commands);
@@ -610,5 +622,34 @@ public class CodeGenerator extends Visitor<String> {
             return Jasmin.POP;
         }
         return Jasmin.EMPTY;
+    }
+
+    public boolean needToLoadAssignedExpression(AssignOperator op) {
+        if (op != AssignOperator.ASSIGN)
+            return true;
+        return false;
+    }
+
+    public String getAssignOperationJasminCode(AssignOperator op) {
+        String command = Jasmin.EMPTY;
+
+        switch (op) {
+            case PLUS_ASSIGN:
+                command = Jasmin.IADD;
+                break;
+            case MINUS_ASSIGN:
+                command = Jasmin.ISUB;
+                break;
+            case DIVIDE_ASSIGN:
+                command = Jasmin.IDIV;
+                break;
+            case MULT_ASSIGN:
+                command = Jasmin.IMUL;
+                break;
+            case MOD_ASSIGN:
+                command = Jasmin.IREM;
+                break;
+        }
+        return command;
     }
 }

@@ -25,7 +25,7 @@ public class Jasmin {
     public static final String INVOKE_ARRAY_LIST_SIZE = "invokevirtual java/util/ArrayList/size()I";
 
     public static final String INVOKE_STRING_LENGTH = "invokevirtual java/lang/String/length()I";
-    public static final String INVOKE_STRING_SUBSTRING ="invokevirtual java/lang/String/substring(II)Ljava/lang/String;";
+    public static final String INVOKE_STRING_SUBSTRING = "invokevirtual java/lang/String/substring(II)Ljava/lang/String;";
 
     public static final String INVOKE_MAIN_METHOD = "invokestatic Main/%s(%s)%s";
 
@@ -35,6 +35,7 @@ public class Jasmin {
     public static final String STORE = "store ";
 
     public static final String DUP = "dup";
+    public static final String DUP_X1 = "dup_x1";
     public static final String POP = "pop";
     public static final String SWAP = "swap";
     public static final String ALOAD = "aload ";
@@ -45,6 +46,7 @@ public class Jasmin {
     public static final String IADD = "iadd";
     public static final String IMUL = "imul";
     public static final String IDIV = "idiv";
+    public static final String IREM = "irem";
     public static final String ICONST_0 = "iconst_0";
     public static final String ICONST_1 = "iconst_1";
     public static final String LOAD_CONSTANT = "ldc ";
@@ -80,19 +82,20 @@ public class Jasmin {
     public static final String EMPTY = "";
 
     public static String join(List<String> commands) {
-        return String.join("\n", commands) ;
+        return String.join("\n", commands);
     }
+
     public static String refOf(String type) {
         return String.format(REF, type);
     }
 
     public static void write(String commands, FileWriter mainFile) {
         try {
-            for(String command : commands.split("\n")) {
+            for (String command : commands.split("\n")) {
                 if (command.isEmpty())
                     continue;
                 if (command.startsWith("."))
-                    mainFile.write( command + "\n");
+                    mainFile.write(command + "\n");
                 else if (command.startsWith("Label_"))
                     mainFile.write("\t" + command + "\n");
                 else
