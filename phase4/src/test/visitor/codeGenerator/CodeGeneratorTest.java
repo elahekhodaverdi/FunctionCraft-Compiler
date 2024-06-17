@@ -339,5 +339,11 @@ public class CodeGeneratorTest {
         testCaseNumber = 3;
     }
 
+    @Test
+    public void simple_nested_loop() {
+        folderName = "integration";
+        testCaseNumber = 4;
+    }
+
 }
 
