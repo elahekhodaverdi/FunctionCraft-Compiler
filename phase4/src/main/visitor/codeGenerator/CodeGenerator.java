@@ -512,13 +512,11 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     @Override
-    public String visit(BreakStatement breakStatement) {
-        return Jasmin.GOTO + breakLabels.getLast();
-    }
+    public String visit(BreakStatement breakStatement) { return Jasmin.GOTO + breakLabels.getFirst(); }
 
     @Override
     public String visit(NextStatement nextStatement) {
-        return Jasmin.GOTO + afterLabels.getLast();
+        return Jasmin.GOTO + afterLabels.getFirst();
     }
 
     @Override
