@@ -209,10 +209,12 @@ public class CodeGenerator extends Visitor<String> {
 
                 String argsType = getJasminType(functionItem.getArgumentTypes());
                 String returnType = getJasminType(functionItem.getReturnType());
-
                 for (Expression arg : accessExpression.getArguments())
                     commands.add(arg.accept(this));
-
+                ArrayList<VarDeclaration> functionArgs = functionItem.getFunctionDeclaration().getArgs();
+                List<VarDeclaration> defaultValues = functionArgs.subList(accessExpression.getArguments().size(), functionArgs.size());
+                for (VarDeclaration arg : defaultValues)
+                    commands.add(arg.getDefaultVal().accept(this));
                 commands.add(Jasmin.INVOKE_MAIN_METHOD.formatted(functionName, argsType, returnType));
             } catch (ItemNotFound ignored) {
             }
