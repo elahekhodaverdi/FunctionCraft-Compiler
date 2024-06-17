@@ -1,0 +1,9 @@
+def f(a, [b = 2])
+    puts(a + 10);
+    puts(b + 10);
+end
+
+def main()
+    f(2, 3);
+    f(1);
+end

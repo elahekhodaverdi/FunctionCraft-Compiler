@@ -298,6 +298,12 @@ public class CodeGeneratorTest {
     }
 
     @Test
+    public void default_values_in_function_call() {
+        folderName = "functionDeclaration";
+        testCaseNumber = 11;
+    }
+
+    @Test
     public void return_in_do_loop_scope_of_function() {
         folderName = "functionDeclaration";
         testCaseNumber = 6;
