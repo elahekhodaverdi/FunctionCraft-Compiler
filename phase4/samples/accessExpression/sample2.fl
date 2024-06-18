@@ -1,0 +1,23 @@
+def f()
+    return [true, false];
+end
+
+def g()
+    return [1, 2];
+end
+
+def h()
+    return ["true", "false"];
+end
+
+def main()
+    a = f();
+    b = g();
+    c = h();
+    puts(a[0]);
+    puts(b[0]);
+    puts(c[0]);
+    if (a[0])
+        puts("here");
+    end
+end

@@ -351,5 +351,11 @@ public class CodeGeneratorTest {
         testCaseNumber = 1;
     }
 
+    @Test
+    public void list_indexing_for_returns() {
+        folderName = "accessExpression";
+        testCaseNumber = 2;
+    }
+
 }
 
