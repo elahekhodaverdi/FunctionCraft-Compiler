@@ -1,0 +1,9 @@
+
+def main()
+    a = [true, false];
+    b = ["string", "fff"];
+    c = [3, 4];
+    puts(a[0]);
+    puts(b[1]);
+    puts(c[0]);
+end
