@@ -60,7 +60,7 @@ public class CodeGenerator extends Visitor<String> {
         if (type instanceof IntType)
             return Jasmin.INT_TYPE;
         else if (type instanceof BoolType)
-            return Jasmin.BOOLEAN_TYPE;
+            return Jasmin.BOOL_TYPE;
         else if (type instanceof StringType || type instanceof FptrType)
             return Jasmin.refOf(Jasmin.STRING_TYPE);
         else if (type instanceof ListType)
@@ -230,9 +230,13 @@ public class CodeGenerator extends Visitor<String> {
             Type accessType = getListType(accessExpression.getAccessedExpression());
             if (accessType instanceof StringType || accessType instanceof FptrType)
                 commands.add(Jasmin.CHECKCAST + Jasmin.STRING_TYPE);
-            else {
+            else if (accessType instanceof IntType) {
                 commands.add(Jasmin.CHECKCAST + Jasmin.INTEGER_TYE);
                 commands.add(Jasmin.INTEGER_TO_INT);
+            } else {
+                commands.add(Jasmin.CHECKCAST + Jasmin.BOOLEAN_TYPE);
+                commands.add(Jasmin.BOOLEAN_TO_BOOL);
+                commands.add(convertBoolToIntValue());
             }
         }
         return Jasmin.join(commands);
@@ -513,7 +517,9 @@ public class CodeGenerator extends Visitor<String> {
     }
 
     @Override
-    public String visit(BreakStatement breakStatement) { return Jasmin.GOTO + breakLabels.getFirst(); }
+    public String visit(BreakStatement breakStatement) {
+        return Jasmin.GOTO + breakLabels.getFirst();
+    }
 
     @Override
     public String visit(NextStatement nextStatement) {
@@ -652,5 +658,18 @@ public class CodeGenerator extends Visitor<String> {
                 break;
         }
         return command;
+    }
+
+    private String convertBoolToIntValue() {
+        String label1 = getFreshLabel();
+        String label2 = getFreshLabel();
+        ArrayList<String> commands = new ArrayList<>();
+        commands.addAll(List.of(Jasmin.IF_EQ + label1,
+                Jasmin.ICONST_1,
+                Jasmin.GOTO + label2,
+                label1 + ":",
+                Jasmin.ICONST_0,
+                label2 + ":"));
+        return Jasmin.join(commands);
     }
 }

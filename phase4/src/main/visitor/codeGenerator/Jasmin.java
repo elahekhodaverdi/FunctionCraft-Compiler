@@ -13,7 +13,7 @@ public class Jasmin {
     public static final String INT_TO_INTEGER = "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;";
     public static final String INTEGER_TO_INT = "invokevirtual java/lang/Integer/intValue()I";
     public static final String BOOL_TO_BOOLEAN = "invokestatic java/lang/Boolean/valueOf(Z)Ljava/lang/Boolean;";
-
+    public static final String BOOLEAN_TO_BOOL = "invokevirtual java/lang/Boolean/booleanValue()Z";
     public static final String NEW_LIST = "new List";
     public static final String NEW_FUNCTION_POINTER = "new Fptr";
     public static final String INVOKE_LIST_ININT = "invokespecial List/<init>(Ljava/util/ArrayList;)V";
@@ -69,9 +69,11 @@ public class Jasmin {
     public static final String OBJECT_TYPE = "java/lang/Object";
     public static final String STRING_TYPE = "java/lang/String";
     public static final String INTEGER_TYE = "java/lang/Integer";
+    public static final String BOOLEAN_TYPE = "java/lang/Boolean";
     public static final String ARRAY_LIST_TYPE = "java/util/ArrayList";
+
     public static final String INT_TYPE = "I";
-    public static final String BOOLEAN_TYPE = "Z";
+    public static final String BOOL_TYPE = "Z";
     public static final String VOID_TYPE = "V";
 
     public static final String BEGIN_METHOD = ".method public static  %s(%s)%s";
