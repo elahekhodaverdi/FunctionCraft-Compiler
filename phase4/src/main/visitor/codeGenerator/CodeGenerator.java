@@ -187,6 +187,7 @@ public class CodeGenerator extends Visitor<String> {
     @Override
     public String visit(MainDeclaration mainDeclaration) {
         slots.clear();
+        slotOf("");
         List<String> commands = new LinkedList<>();
         commands.add(".method public <init>()V");
         commands.add(Jasmin.DEFAULT_LIMIT_STACK);
