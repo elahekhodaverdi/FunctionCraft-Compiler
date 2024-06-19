@@ -230,13 +230,9 @@ public class CodeGenerator extends Visitor<String> {
             Type accessType = getListType(accessExpression.getAccessedExpression());
             if (accessType instanceof StringType || accessType instanceof FptrType)
                 commands.add(Jasmin.CHECKCAST + Jasmin.STRING_TYPE);
-            else if (accessType instanceof IntType) {
+            else if (accessType instanceof IntType || accessType instanceof BoolType) {
                 commands.add(Jasmin.CHECKCAST + Jasmin.INTEGER_TYE);
                 commands.add(Jasmin.INTEGER_TO_INT);
-            } else {
-                commands.add(Jasmin.CHECKCAST + Jasmin.BOOLEAN_TYPE);
-                commands.add(Jasmin.BOOLEAN_TO_BOOL);
-                commands.add(convertBoolToIntValue());
             }
         }
         return Jasmin.join(commands);
@@ -561,10 +557,8 @@ public class CodeGenerator extends Visitor<String> {
 
     private String convertToNonPrimitive(Expression expression) {
         Type type = expression.accept(typeChecker);
-        if (type instanceof IntType)
+        if (type instanceof IntType || type instanceof BoolType)
             return Jasmin.INT_TO_INTEGER;
-        if (type instanceof BoolType)
-            return Jasmin.BOOL_TO_BOOLEAN;
 
         return Jasmin.EMPTY;
     }
@@ -658,18 +652,5 @@ public class CodeGenerator extends Visitor<String> {
                 break;
         }
         return command;
-    }
-
-    private String convertBoolToIntValue() {
-        String label1 = getFreshLabel();
-        String label2 = getFreshLabel();
-        ArrayList<String> commands = new ArrayList<>();
-        commands.addAll(List.of(Jasmin.IF_EQ + label1,
-                Jasmin.ICONST_1,
-                Jasmin.GOTO + label2,
-                label1 + ":",
-                Jasmin.ICONST_0,
-                label2 + ":"));
-        return Jasmin.join(commands);
     }
 }

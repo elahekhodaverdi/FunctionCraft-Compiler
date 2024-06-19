@@ -39,8 +39,6 @@ public class Jasmin {
     public static final String POP = "pop";
     public static final String SWAP = "swap";
     public static final String ALOAD = "aload ";
-    public static final String ILOAD = "iload ";
-    public static final String ASTORE = "astore ";
     public static final String ISTORE = "istore ";
     public static final String ISUB = "isub";
     public static final String IADD = "iadd";
