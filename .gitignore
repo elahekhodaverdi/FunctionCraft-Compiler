@@ -1,7 +1,6 @@
 */gen
 */out
 */.idea
-*/*.pdf
 */main/grammar/.antlr/
 */src/main/grammar/.antlr/
 */src/parsers/
